@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ExtensionsField</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Sales Page</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="icon" href="https://iili.io/JpY272t.png" type="image/png">  
   <style>
     body {
       background-color: #f8f9fa;
@@ -66,7 +67,7 @@
       margin-top: 50px;
       text-align: center;
       width: 80%; 
-      max-width: 900px; 
+      max-width: 1200px; /* Increased max-width for 4 columns */
     }
 
     h1 {
@@ -74,19 +75,22 @@
       margin-bottom: 20px;
     }
 
+    /* Enhanced Grid View using CSS Grid */
+    #productsContainer {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); /* 4 columns */
+      gap: 20px; /* Space between grid items */
+    }
+
     .product-card {
       background-color: #ffffff; 
       border: 1px solid #dee2e6;
       border-radius: 8px;
       padding: 20px;
-      margin: 20px;
-      display: inline-block; 
-      vertical-align: top; /* Align cards to the top */
       text-align: left;
       position: relative;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
       transition: transform 0.2s ease; 
-      width: calc(25% - 40px); /* Adjust for desired number of columns */
     }
 
     .product-card:hover {
@@ -281,21 +285,32 @@
       transform: translateX(20px);
     }
 
+    /* Responsive styling (for smaller screens) */
     @media (max-width: 900px) {
-      .product-card {
-        width: calc(50% - 40px); 
+      #productsContainer {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns */
       }
     }
 
     @media (max-width: 600px) {
-      .product-card {
-        width: 100%; 
-        margin: 20px 0; 
+      #productsContainer {
+        grid-template-columns: 1fr; /* 1 column */
       }
 
       .info-dialog {
         width: 90%;
       }
+    }
+
+    .page-title {
+      display: flex;
+      align-items: center; /* Vertically align title and icon */
+    }
+
+    .page-title img {
+      width: 30px; /* Adjust icon size as needed */
+      height: 30px;
+      margin-right: 10px; /* Add spacing between icon and title */
     }
   </style>
 </head>
@@ -306,7 +321,10 @@
   </div>
 
   <div class="container">
-    <h1>Product Sales Page</h1>
+    <div class="page-title">
+      <img src="https://via.placeholder.com/30" alt="Tap Icon"> <h1>Product Sales Page</h1> 
+    </div>
+
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="Search products...">
     </div>
@@ -329,7 +347,8 @@
     const dialogOverlay = document.getElementById('dialogOverlay');
     const themeToggle = document.getElementById('themeToggle');
 
-    const products = [{
+    const products = [
+    {
         "name": "Product 1",
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
         "price": 9.99,
@@ -879,7 +898,8 @@
         "isVerified": false,
         "date": "2023-03-23"
     }
-];
+]
+;
 
     function displayProducts(productsToDisplay) {
       productsContainer.innerHTML = '';
