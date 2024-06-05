@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Sales Page</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      color: #343a40;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    body.dark-theme {
+      background-color: #343a40;
+      color: #f8f9fa;
+    }
+
+    body.dark-theme .container {
+      background-color: #21252b;
+    }
+
+    body.dark-theme .product-card {
+      background-color: #282c34;
+      border-color: #343a40;
+    }
+
+    body.dark-theme h2, 
+    body.dark-theme p, 
+    body.dark-theme .publish-date {
+      color: #f8f9fa;
+    }
+
+    body.dark-theme button {
+      background-color: #6FDCE3; 
+      color: #21252b; 
+    }
+
+    body.dark-theme button:hover {
+      background-color: #50b8c0;
+    }
+
+    body.dark-theme .info-dialog {
+      background-color: #282c34;
+      border-color: #343a40;
+    }
+
+    body.dark-theme .info-dialog h3,
+    body.dark-theme .info-dialog p {
+      color: #f8f9fa;
+    }
+
+    .container {
+      background-color: #ffffff; 
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+      margin-top: 50px;
+      text-align: center;
+      width: 80%; 
+      max-width: 900px; 
+    }
+
+    h1 {
+      color: #007bff;
+      margin-bottom: 20px;
+    }
+
+    .product-card {
+      background-color: #ffffff; 
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px;
+      display: inline-block;
+      width: calc(25% - 40px); 
+      text-align: left;
+      position: relative;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s ease; 
+    }
+
+    .product-card:hover {
+      transform: translateY(-2px); 
+    }
+
+    .publisher-info {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .publisher-image {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .publisher-name {
+      font-weight: 600;
+      display: flex; 
+      align-items: center; 
+    }
+
+    .verified-icon {
+      color: #6FDCE3;
+      font-size: 1.2em; 
+      margin-left: 5px; 
+    }
+
+    .publish-date {
+      font-style: italic;
+      color: #6c757d; 
+      font-size: 0.8em; 
+      margin-left: 10px; 
+    }
+
+    h2 {
+      color: #343a40; 
+      margin-bottom: 10px;
+    }
+
+    p {
+      line-height: 1.6;
+      color: #495057; 
+    }
+
+    button {
+      background-color: #007bff; 
+      color: #ffffff; 
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0069d9;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      border: 1px solid #ced4da; 
+      border-radius: 5px;
+      flex-grow: 1;
+      margin-right: 10px;
+      font-family: inherit;
+    }
+
+    .type-indicator {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 5px 10px;
+      border-radius: 20px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 1;
+    }
+
+    .type-indicator.free {
+      background-color: #28a745; 
+    }
+
+    .type-indicator.paid {
+      background-color: #ffc107; 
+    }
+
+    .info-dialog {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      background-color: #ffffff;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+      text-align: center;
+      z-index: 10; 
+    }
+
+    .dialog-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 9; 
+    }
+
+    .info-dialog h3 {
+      color: #007bff; 
+      margin-bottom: 10px;
+    }
+
+    .info-dialog p {
+      color: #343a40; 
+      margin-bottom: 15px;
+    }
+
+    .info-dialog button {
+      background-color: #007bff;
+      color: #ffffff;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background-color 0.3s ease;
+    }
+
+    .info-dialog button:hover {
+      background-color: #0069d9;
+    }
+
+    .theme-switcher {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .theme-switcher label {
+      margin-right: 10px;
+      color: #343a40; 
+    }
+
+    .theme-switcher input[type="checkbox"] {
+      appearance: none;
+      width: 40px;
+      height: 20px;
+      background: #ccc;
+      border-radius: 20px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .theme-switcher input:checked {
+      background: #007bff;
+    }
+
+    .theme-switcher input:before {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      background: #fff;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+
+    .theme-switcher input:checked:before {
+      transform: translateX(20px);
+    }
+
+    @media (max-width: 900px) {
+      .product-card {
+        width: calc(50% - 40px); 
+      }
+    }
+
+    @media (max-width: 600px) {
+      .product-card {
+        width: 100%; 
+        margin: 20px 0; 
+      }
+
+      .info-dialog {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="theme-switcher">
+    <label for="themeToggle">Dark Mode</label>
+    <input type="checkbox" id="themeToggle">
+  </div>
+
+  <div class="container">
+    <h1>Product Sales Page</h1>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search products...">
+    </div>
+    <div id="productsContainer"></div>
+
+    <div class="info-dialog" id="infoDialog">
+        <h3></h3>
+        <p></p>
+        <button id="closeDialog">Close</button>
+    </div>
+
+    <div class="dialog-overlay" id="dialogOverlay"></div>
+  </div>
+
+  <script>
+    const productsContainer = document.getElementById("productsContainer");
+    const searchInput = document.getElementById("searchInput");
+    const infoDialog = document.getElementById("infoDialog");
+    const closeDialogButton = document.getElementById("closeDialog");
+    const dialogOverlay = document.getElementById('dialogOverlay');
+    const themeToggle = document.getElementById('themeToggle');
+
+    const products = [
+        {
+            "name": "Product 1",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            "price": 9.99,
+            "paymentUrl": "https://www.example.com/payment/product1",
+            "type": "paid",
+            "publisherImageURL": "https://via.placeholder.com/50", 
+            "publisherName": "Publisher 1",
+            "isVerified": true,
+            "date": "2023-10-26"
+        },
+        {
+            "name": "Product 2",
+            "description": "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+            "price": 0,
+            "paymentUrl": "https://www.example.com/download/product2",
+            "type": "free",
+            "publisherImageURL": "https://via.placeholder.com/50",
+            "publisherName": "Publisher 2",
+            "isVerified": false,
+            "date": "2023-10-20"
+        },
+        {
+            "name": "Product 3",
+            "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+            "price": 29.99,
+            "paymentUrl": "https://www.example.com/payment/product3",
+            "type": "paid",
+            "publisherImageURL": "https://via.placeholder.com/50", 
+            "publisherName": "Publisher 3",
+            "isVerified": true,
+            "date": "2023-10-15"
+        },
+        {
+            "name": "Product 4",
+            "description": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+            "price": 15.99,
+            "paymentUrl": "https://www.example.com/payment/product4",
+            "type": "paid",
+            "publisherImageURL": "https://via.placeholder.com/50", 
+            "publisherName": "Publisher 4",
+            "isVerified": false,
+            "date": "2023-10-10"
+        },
+        {
+            "name": "Product 5",
+            "description": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            "price": 0,
+            "paymentUrl": "https://www.example.com/download/product5",
+            "type": "free",
+            "publisherImageURL": "https://via.placeholder.com/50", 
+            "publisherName": "Publisher 5",
+            "isVerified": true,
+            "date": "2023-10-05"
+        }
+    ];
+
+    function displayProducts(productsToDisplay) {
+      productsContainer.innerHTML = '';
+
+      productsToDisplay.forEach(product => {
+        let buttonText = product.type === "paid" ? "Buy Now" : "Download Now";
+        let buttonUrl = product.type === "paid" ? product.paymentUrl : product.paymentUrl;
+        
+        let verifiedIcon = product.isVerified 
+            ? `<span class="material-icons verified-icon">verified</span>` 
+            : ''; 
+
+        const productCard = `
+          <div class="product-card" data-type="${product.type}">
+            <div class="type-indicator ${product.type}" data-type="${product.type}">${product.type.toUpperCase()}</div>
+            <div class="publisher-info">
+              <img class="publisher-image" src="${product.publisherImageURL}" alt="Publisher Image">
+              <div>
+                <span class="publisher-name">${product.publisherName} ${verifiedIcon}</span>
+                <p class="publish-date">${product.date}</p>
+              </div>
+            </div>
+            <h2>${product.name}</h2>
+            <p>${product.description}</p>
+            <p>Price: $${product.price.toFixed(2)}</p>
+            <a href="${buttonUrl}" target="_blank">
+              <button>${buttonText}</button>
+            </a>
+          </div>
+        `;
+        productsContainer.innerHTML += productCard;
+      });
+
+      const typeIndicators = document.querySelectorAll('.type-indicator');
+      typeIndicators.forEach(indicator => {
+        indicator.addEventListener('click', showInfoDialog);
+      });
+    }
+
+    function showInfoDialog(event) {
+      const type = event.target.dataset.type;
+      let dialogTitle, dialogMessage;
+
+      if (type === 'free') {
+        dialogTitle = 'Free Product';
+        dialogMessage = 'This product is free! You can download it directly by clicking "Download Now."';
+      } else if (type === 'paid') {
+        dialogTitle = 'Paid Product';
+        dialogMessage = 'This product is paid. Please proceed to checkout to make a purchase.';
+      }
+
+      infoDialog.querySelector('h3').textContent = dialogTitle;
+      infoDialog.querySelector('p').textContent = dialogMessage;
+      infoDialog.style.display = 'block';
+      dialogOverlay.style.display = 'block';
+    }
+
+    closeDialogButton.addEventListener('click', () => {
+      infoDialog.style.display = 'none';
+      dialogOverlay.style.display = 'none';
+    });
+
+    dialogOverlay.addEventListener('click', () => {
+      infoDialog.style.display = 'none';
+      dialogOverlay.style.display = 'none'; 
+    });
+
+    displayProducts(products);
+
+    searchInput.addEventListener("input", () => {
+      const searchTerm = searchInput.value.toLowerCase();
+      const filteredProducts = products.filter(product => {
+        return product.name.toLowerCase().includes(searchTerm);
+      });
+      displayProducts(filteredProducts);
+    });
+
+    themeToggle.addEventListener('change', () => {
+      document.body.classList.toggle('dark-theme', themeToggle.checked);
+      if (themeToggle.checked) {
+        localStorage.setItem('theme', 'dark');
+      } else {
+        localStorage.setItem('theme', 'light');
+      }
+    });
+
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-theme');
+      themeToggle.checked = true; 
+    }
+  </script>
+</body>
+</html>
