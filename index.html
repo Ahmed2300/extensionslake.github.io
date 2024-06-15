@@ -379,6 +379,70 @@
       border-radius: 8px 8px 0 0;
       margin-bottom: 10px;
     }
+
+    header { 
+      background-color: #f8f9fa; 
+      padding: 15px 0;
+      width: 100%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px; 
+    }
+
+    .logo {
+      display: flex;
+      align-items: center; 
+    }
+
+    .logo img {
+      margin-right: 10px;
+    }
+
+    nav ul { 
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+    }
+
+    nav li {
+      margin-left: 30px; /* Increased spacing */
+    }
+
+    nav a { 
+      text-decoration: none;
+      color: #343a40;
+      font-weight: 500;
+      transition: color 0.3s ease;
+      position: relative; /* For underline effect */
+      padding-bottom: 5px; /* Space for underline */
+    }
+
+    nav a:hover {
+      color: #007bff;
+    }
+
+    nav a::before { /* Underline effect */
+      content: "";
+      position: absolute;
+      width: 0%; 
+      height: 2px; 
+      bottom: 0;
+      left: 0;
+      background-color: #007bff; 
+      transition: width 0.3s ease;
+    }
+
+    nav a:hover::before {
+      width: 100%;
+    }
   </style>
 </head>
 <body>
