@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Extensions Lake</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="icon" href="https://iili.io/JpYa2r7.png" type="image/png">  
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Extensions Lake</title>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+      <link rel="icon" href="https://iili.io/JpYa2r7.png" type="image/png">   
   <style>
     body {
       background-color: #f8f9fa;
@@ -100,7 +101,6 @@
       color: #f8f9fa;
     }
 
-    /* Header Styles */
     header {
       background-color: #f8f9fa; 
       padding: 15px 0;
@@ -166,10 +166,10 @@
 
     #productsContainer {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
       gap: 20px; 
       overflow-y: auto;
-      max-height: 500px; 
+      max-height: 80vh; 
       padding: 10px;
     }
 
@@ -374,7 +374,7 @@
     .theme-switcher input:checked:before {
       transform: translateX(20px);
     }
-    /* Footer Styles */
+    
     footer {
       background-color: #343a40; 
       color: white;
@@ -384,14 +384,11 @@
       width: 100%;
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
       #productsContainer {
-        grid-template-columns: 1fr; 
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       }
 
-      .info-dialog {
-        width: 90%;
-      }
       nav ul {
         flex-direction: column; 
         align-items: center; 
@@ -402,25 +399,27 @@
       }
     }
   </style>
-</head>
-<body>
-  <header>
-    <div class="header-content">
-        <div class="logo">
-            <img src="https://iili.io/JpY7UV2.md.png" width="40px" alt="Logo"> 
-            <h1>Extensions Lake</h1> 
-        </div>
-        <nav>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Products</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
-        </nav>
+<header>
+  <div class="header-content">
+    <div class="logo">
+      <img src="https://iili.io/JpY7UV2.md.png" width="40px" alt="Logo"> 
+      <h1>Extensions Lake</h1> 
     </div>
+    <nav>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Products</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="menu-toggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
 </header>
-
   <div class="theme-switcher">
     <label for="themeToggle">Dark Mode</label>
     <input type="checkbox" id="themeToggle">
@@ -458,6 +457,8 @@
     const databaseURL = "https://mypro-f9c43-default-rtdb.firebaseio.com/"; 
     const apiKey = "AIzaSyBfDYW18AJSfb03Cm_lR-SCZpTbcnLH1Qk"; 
 
+    let allProducts = [];
+
     function fetchProducts() {
       fetch(`${databaseURL}/.json?auth=${apiKey}`)
         .then(response => {
@@ -467,8 +468,8 @@
           return response.json();
         })
         .then(data => {
-          const productsArray = Object.values(data);
-          displayProducts(productsArray);
+          allProducts = Object.values(data);
+          displayProducts(allProducts);
         })
         .catch(error => {
           console.error('There has been a problem with your fetch operation:', error);
@@ -545,7 +546,7 @@
 
     searchInput.addEventListener("input", () => {
       const searchTerm = searchInput.value.toLowerCase();
-      const filteredProducts = products.filter(product => {
+      const filteredProducts = allProducts.filter(product => {
         return product.name.toLowerCase().includes(searchTerm);
       });
       displayProducts(filteredProducts);
