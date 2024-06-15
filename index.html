@@ -207,6 +207,10 @@
       cursor: pointer;
       font-family: inherit;
       transition: background-color 0.3s ease;
+      margin-bottom: 5px;
+      display: block;
+      text-align: left; 
+      text-decoration: none; 
     }
     button:hover {
       background-color: #0069d9;
@@ -378,71 +382,23 @@
       object-fit: cover; 
       border-radius: 8px 8px 0 0;
       margin-bottom: 10px;
-    }
-
-    header { 
-      background-color: #f8f9fa; 
-      padding: 15px 0;
-      width: 100%;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .header-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px; 
-    }
-
-    .logo {
-      display: flex;
+      display: flex; 
       align-items: center; 
+      justify-content: center;
     }
-
-    .logo img {
-      margin-right: 10px;
+    .extension-image img { 
+      max-width: 100%;
+      max-height: 100%;
     }
-
-    nav ul { 
-      list-style: none;
-      margin: 0;
-      padding: 0;
+    .button-group {
       display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-top: 10px;
     }
-
-    nav li {
-      margin-left: 30px; /* Increased spacing */
-    }
-
-    nav a { 
-      text-decoration: none;
-      color: #343a40;
-      font-weight: 500;
-      transition: color 0.3s ease;
-      position: relative; /* For underline effect */
-      padding-bottom: 5px; /* Space for underline */
-    }
-
-    nav a:hover {
-      color: #007bff;
-    }
-
-    nav a::before { /* Underline effect */
-      content: "";
-      position: absolute;
-      width: 0%; 
-      height: 2px; 
-      bottom: 0;
-      left: 0;
-      background-color: #007bff; 
-      transition: width 0.3s ease;
-    }
-
-    nav a:hover::before {
-      width: 100%;
-    }
+    .button-group a { /* Target the <a> tags inside the button group */
+  text-decoration: none; 
+}
   </style>
 </head>
 <body>
@@ -523,6 +479,12 @@
         let verifiedIcon = product.isVerified 
             ? `<span class="material-icons verified-icon">verified</span>` 
             : ''; 
+        let imageElement = document.createElement(product.coverImageURL.endsWith('.gif') ? 'img' : 'img'); 
+        imageElement.src = product.coverImageURL;
+        imageElement.alt = `${product.name} Cover`;
+        let extensionImageContainer = document.createElement('div');
+        extensionImageContainer.classList.add('extension-image');
+        extensionImageContainer.appendChild(imageElement);
         const productCard = `
           <div class="product-card" data-type="${product.type}" style="background-color: var(--card-bg-${(index % 20) + 1});">
             <div class="type-indicator ${product.type}" data-type="${product.type}">${product.type.toUpperCase()}</div>
@@ -533,13 +495,18 @@
                 <p class="publish-date">${product.date}</p>
               </div>
             </div>
-            <img src="${product.coverImageURL}" alt="${product.name} Cover" class="extension-image">
+            ${extensionImageContainer.outerHTML} 
             <h2>${product.name}</h2>
             <p>${product.description}</p>
             <p>Price: $${product.price.toFixed(2)}</p>
-            <a href="${buttonUrl}" target="_blank">
-              <button>${buttonText}</button>
-            </a>
+            <div class="button-group">
+              <a href="${buttonUrl}" target="_blank">
+                <button>${buttonText}</button>
+              </a>
+              <a href="${product.topicURL}" target="_blank">
+                <button style="background-color: #FF9843;">Visit Official Topic</button> 
+              </a>
+            </div>
           </div>
         `;
         productsContainer.innerHTML += productCard;
