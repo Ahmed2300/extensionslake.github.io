@@ -10,7 +10,7 @@
     body {
       background-color: #f8f9fa;
       color: #343a40;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Roboto', sans-serif; 
       margin: 0;
       padding: 0;
       display: flex;
@@ -19,6 +19,13 @@
       transition: background-color 0.3s ease, color 0.3s ease;
     }
     body {
+      --primary-color: #007bff; 
+      --secondary-color: #FF9843;
+      --background-color: #f8f9fa;
+      --text-color: #343a40;
+      --card-background: #ffffff;
+      --card-border: #dee2e6;
+      --shadow-color: rgba(0, 0, 0, 0.1);
       --card-bg-1: #f0f8ff; 
       --card-bg-2: #f5f5dc; 
       --card-bg-3: #ffe4c4; 
@@ -41,8 +48,12 @@
       --card-bg-20: #ffffe0;
     }
     body.dark-theme {
-      background-color: #343a40;
-      color: #f8f9fa;
+      --background-color: #343a40;
+      --text-color: #f8f9fa;
+      --card-background: #21252b;
+      --card-border: #343a40;
+      --shadow-color: rgba(255, 255, 255, 0.1);
+      --primary-color: #6FDCE3; 
       --card-bg-1: #4b5563; 
       --card-bg-2: #374151; 
       --card-bg-3: #4338ca; 
@@ -64,37 +75,11 @@
       --card-bg-19: #a3e635; 
       --card-bg-20: #4ade80;
     }
-    body.dark-theme .container {
-      background-color: #21252b;
-    }
-    body.dark-theme .product-card {
-      border-color: #343a40;
-    }
-    body.dark-theme h2, 
-    body.dark-theme p, 
-    body.dark-theme .publish-date {
-      color: #f8f9fa;
-    }
-    body.dark-theme button {
-      background-color: #6FDCE3; 
-      color: #21252b; 
-    }
-    body.dark-theme button:hover {
-      background-color: #50b8c0;
-    }
-    body.dark-theme .info-dialog {
-      background-color: #282c34;
-      border-color: #343a40;
-    }
-    body.dark-theme .info-dialog h3,
-    body.dark-theme .info-dialog p {
-      color: #f8f9fa;
-    }
     header {
-      background-color: #f8f9fa; 
-      padding: 15px 0;
+      background-color: var(--background-color); 
+      padding: 20px 0;
       width: 100%;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 5px var(--shadow-color); 
     }
     .header-content {
       display: flex;
@@ -102,7 +87,7 @@
       align-items: center;
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 20px;
+      padding: 0 20px; 
     }
     .logo {
       display: flex;
@@ -118,29 +103,44 @@
       display: flex; 
     }
     nav li {
-      margin-left: 20px; 
+      margin-left: 30px; 
     }
     nav a {
       text-decoration: none;
-      color: #343a40;
-      font-weight: 500; 
-      transition: color 0.3s ease; 
+      color: var(--text-color);
+      font-weight: 500;
+      transition: color 0.3s ease;
+      position: relative; 
+      padding-bottom: 5px; 
     }
     nav a:hover {
-      color: #007bff; 
+      color: var(--primary-color);
+    }
+    nav a::before {
+      content: "";
+      position: absolute;
+      width: 0%; 
+      height: 2px; 
+      bottom: 0;
+      left: 0;
+      background-color: var(--primary-color); 
+      transition: width 0.3s ease;
+    }
+    nav a:hover::before {
+      width: 100%;
     }
     .container {
-      background-color: #ffffff; 
+      background-color: var(--card-background); 
       padding: 30px;
       border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+      box-shadow: 0 4px 8px var(--shadow-color); 
       margin: 50px auto; 
       text-align: center;
       width: 80%; 
       max-width: 1200px; 
     }
     h1 {
-      color: #007bff;
+      color: var(--primary-color);
       margin-bottom: 20px;
     }
     #productsContainer {
@@ -152,16 +152,18 @@
       padding: 10px;
     }
     .product-card {
-      border: 1px solid #dee2e6;
+      border: 1px solid var(--card-border);
       border-radius: 8px;
       padding: 20px;
       text-align: left;
       position: relative;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      transition: transform 0.2s ease, background-color 0.3s ease; 
+      background-color: var(--card-background);
+      box-shadow: 0 2px 4px var(--shadow-color);
+      transition: transform 0.2s ease, box-shadow 0.2s ease; 
     }
     .product-card:hover {
-      transform: translateY(-2px); 
+      transform: translateY(-5px); 
+      box-shadow: 0 4px 8px var(--shadow-color);
     }
     .publisher-info {
       display: flex;
@@ -180,7 +182,7 @@
       align-items: center; 
     }
     .verified-icon {
-      color: #6FDCE3;
+      color: var(--primary-color); 
       font-size: 1.2em; 
       margin-left: 5px; 
     }
@@ -191,15 +193,15 @@
       margin-left: 10px; 
     }
     h2 {
-      color: #343a40; 
+      color: var(--text-color); 
       margin-bottom: 10px;
     }
     p {
       line-height: 1.6;
-      color: #495057; 
+      color: var(--text-color);
     }
     button {
-      background-color: #007bff; 
+      background-color: var(--primary-color); 
       color: #ffffff; 
       border: none;
       padding: 10px 20px;
@@ -207,27 +209,48 @@
       cursor: pointer;
       font-family: inherit;
       transition: background-color 0.3s ease;
-      margin-bottom: 5px;
-      display: block;
+      margin-bottom: 5px; 
+      display: block; 
       text-align: left; 
       text-decoration: none; 
+      width: 100%; 
+      box-shadow: 0px 2px 4px var(--shadow-color);
     }
     button:hover {
-      background-color: #0069d9;
+      background-color: darken(var(--primary-color), 10%); 
+    }
+    .search-and-filters {
+      display: flex;
+      flex-direction: column; 
+      align-items: stretch; 
+      margin-bottom: 20px;
     }
     .search-box {
-      display: flex;
-      align-items: center;
-      margin-bottom: 20px;
-      width: 100%;
+      margin-bottom: 10px; 
     }
     input[type="text"] {
       padding: 10px;
       border: 1px solid #ced4da; 
       border-radius: 5px;
-      flex-grow: 1;
-      margin-right: 10px;
+      width: 100%; 
       font-family: inherit;
+      box-shadow: 0px 2px 4px var(--shadow-color);
+    }
+    .filter-group {
+      display: flex;
+      align-items: center; 
+      margin-bottom: 10px; 
+    }
+    .filter-group label {
+      margin-right: 10px; 
+      font-weight: bold;
+    }
+    .filter-group select,
+    .filter-group input[type="number"] {
+      padding: 8px;
+      border: 1px solid #ced4da;
+      border-radius: 5px;
+      box-shadow: 0px 2px 4px var(--shadow-color); 
     }
     .type-indicator {
       position: absolute;
@@ -239,6 +262,7 @@
       font-weight: bold;
       cursor: pointer;
       z-index: 1;
+      box-shadow: 0px 2px 4px var(--shadow-color);
     }
     .type-indicator.free {
       background-color: #28a745; 
@@ -252,13 +276,14 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 300px;
-      background-color: #ffffff;
-      border: 1px solid #dee2e6;
+      width: 80%; 
+      max-width: 500px; 
+      background-color: var(--card-background); 
+      border: 1px solid var(--card-border); 
       border-radius: 8px;
       padding: 20px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-      text-align: center;
+      box-shadow: 0 4px 8px var(--shadow-color); 
+      text-align: left; 
       z-index: 10; 
     }
     .dialog-overlay {
@@ -272,16 +297,16 @@
       z-index: 9; 
     }
     .info-dialog h3 {
-      color: #007bff; 
+      color: var(--primary-color); 
       margin-bottom: 10px;
     }
     .info-dialog p {
-      color: #343a40; 
+      color: var(--text-color); 
       margin-bottom: 15px;
     }
     .info-dialog button {
-      background-color: #007bff;
-      color: #ffffff;
+      background-color: var(--primary-color); 
+      color: #ffffff; 
       border: none;
       padding: 10px 15px;
       border-radius: 5px;
@@ -290,7 +315,7 @@
       transition: background-color 0.3s ease;
     }
     .info-dialog button:hover {
-      background-color: #0069d9;
+      background-color: darken(var(--primary-color), 10%);
     }
     .theme-switcher {
       position: absolute;
@@ -301,7 +326,7 @@
     }
     .theme-switcher label {
       margin-right: 10px;
-      color: #343a40; 
+      color: var(--text-color); 
     }
     .theme-switcher input[type="checkbox"] {
       appearance: none;
@@ -313,7 +338,7 @@
       cursor: pointer;
     }
     .theme-switcher input:checked {
-      background: #007bff;
+      background: var(--primary-color); 
     }
     .theme-switcher input:before {
       content: '';
@@ -358,7 +383,7 @@
     .loading-animation div {
       width: 10px;
       height: 10px;
-      background-color: #007bff;
+      background-color: var(--primary-color); 
       margin: 0 5px;
       border-radius: 50%;
       animation: bounce 1s infinite ease-in-out;
@@ -380,16 +405,17 @@
       width: 100%;
       height: 150px;
       object-fit: cover; 
-      border-radius: 8px 8px 0 0; /* Added corner radius */
+      border-radius: 8px 8px 0 0; 
       margin-bottom: 10px;
       display: flex; 
       align-items: center; 
       justify-content: center;
+      overflow: hidden; 
     }
     .extension-image img { 
       max-width: 100%;
       max-height: 100%;
-      border-radius: 8px 8px 0 0; /* Added corner radius */
+      border-radius: 8px 8px 0 0; 
     }
     .button-group {
       display: flex;
@@ -397,9 +423,24 @@
       align-items: flex-start;
       margin-top: 10px;
     }
-    .button-group a { /* Target the <a> tags inside the button group */
-  text-decoration: none; 
-}
+    .button-group a {
+      text-decoration: none; 
+    }
+    .description-container p { 
+      margin-bottom: 0; 
+    }
+    .description-text {
+      display: -webkit-box;
+      -webkit-line-clamp: 3; 
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .read-more {
+      color: var(--primary-color); 
+      cursor: pointer;
+      margin-top: 5px;
+      text-align: left; 
+    }
   </style>
 </head>
 <body>
@@ -424,8 +465,24 @@
     <input type="checkbox" id="themeToggle">
   </div>
   <div class="container">
-    <div class="search-box">
-      <input type="text" id="searchInput" placeholder="Search products...">
+    <div class="search-and-filters">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search products...">
+      </div>
+      <div class="filter-group">
+        <label for="typeFilter">Type:</label>
+        <select id="typeFilter">
+          <option value="all">All</option>
+          <option value="free">Free</option>
+          <option value="paid">Paid</option>
+        </select>
+      </div>
+      <div class="filter-group" id="priceFilterGroup" style="display: none;">
+        <label for="minPrice">Min Price:</label>
+        <input type="number" id="minPrice" min="0" step="0.01">
+        <label for="maxPrice">Max Price:</label>
+        <input type="number" id="maxPrice" min="0" step="0.01">
+      </div>
     </div>
     <div id="productsContainer">
       <div class="loading-animation">
@@ -435,8 +492,8 @@
       </div>
     </div>
     <div class="info-dialog" id="infoDialog">
-        <h3></h3>
-        <p></p>
+        <h3 id="dialogTitle"></h3>
+        <p id="dialogDescription"></p>
         <button id="closeDialog">Close</button>
     </div>
     <div class="dialog-overlay" id="dialogOverlay"></div>
@@ -449,12 +506,19 @@
     const productsContainer = document.getElementById("productsContainer");
     const searchInput = document.getElementById("searchInput");
     const infoDialog = document.getElementById("infoDialog");
+    const dialogTitle = document.getElementById("dialogTitle");
+    const dialogDescription = document.getElementById("dialogDescription");
     const closeDialogButton = document.getElementById("closeDialog");
     const dialogOverlay = document.getElementById('dialogOverlay');
     const themeToggle = document.getElementById('themeToggle');
+    const typeFilter = document.getElementById('typeFilter');
+    const priceFilterGroup = document.getElementById('priceFilterGroup');
+    const minPriceInput = document.getElementById('minPrice');
+    const maxPriceInput = document.getElementById('maxPrice');
     const databaseURL = "https://mypro-f9c43-default-rtdb.firebaseio.com/"; 
     const apiKey = "AIzaSyBfDYW18AJSfb03Cm_lR-SCZpTbcnLH1Qk"; 
     let allProducts = [];
+    const maxDescriptionLength = 150;
     function fetchProducts() {
       fetch(`${databaseURL}/.json?auth=${apiKey}`)
         .then(response => {
@@ -486,6 +550,7 @@
         let extensionImageContainer = document.createElement('div');
         extensionImageContainer.classList.add('extension-image');
         extensionImageContainer.appendChild(imageElement);
+        const truncatedDescription = truncateDescription(product.description, maxDescriptionLength);
         const productCard = `
           <div class="product-card" data-type="${product.type}" style="background-color: var(--card-bg-${(index % 20) + 1});">
             <div class="type-indicator ${product.type}" data-type="${product.type}">${product.type.toUpperCase()}</div>
@@ -498,7 +563,10 @@
             </div>
             ${extensionImageContainer.outerHTML} 
             <h2>${product.name}</h2>
-            <p>${product.description}</p>
+            <div class="description-container">
+              <p class="description-text">${truncatedDescription}</p>
+              <span class="read-more" style="color: var(--primary-color); cursor: pointer;" onclick="showFullDescription(this)">Read More</span>
+            </div>
             <p>Price: $${product.price.toFixed(2)}</p>
             <div class="button-group">
               <a href="${buttonUrl}" target="_blank">
@@ -515,6 +583,10 @@
       const typeIndicators = document.querySelectorAll('.type-indicator');
       typeIndicators.forEach(indicator => {
         indicator.addEventListener('click', showInfoDialog);
+      });
+      const descriptionTexts = document.querySelectorAll('.description-text');
+      descriptionTexts.forEach(textElement => {
+        textElement.innerHTML = truncateDescription(textElement.textContent, maxDescriptionLength);
       });
     }
     function showInfoDialog(event) {
@@ -540,15 +612,46 @@
       infoDialog.style.display = 'none';
       dialogOverlay.style.display = 'none'; 
     });
+    function showFullDescription(element) {
+      const card = element.closest('.product-card');
+      const productName = card.querySelector('h2').textContent;
+      const fullDescription = allProducts.find(p => p.name === productName).description;
+      dialogTitle.textContent = productName;
+      dialogDescription.textContent = fullDescription;
+      infoDialog.style.display = 'block';
+      dialogOverlay.style.display = 'block';
+    }
+    function truncateDescription(description, maxLength) {
+      if (description.length > maxLength) {
+        return description.substring(0, maxLength) + 
+               '... ';
+      }
+      return description;
+    }
     fetchProducts(); 
     searchInput.addEventListener("input", () => {
+      applyFilters(); 
+    });
+    typeFilter.addEventListener('change', () => {
+      priceFilterGroup.style.display = (typeFilter.value === 'paid') ? 'flex' : 'none';
+      applyFilters(); 
+    });
+    minPriceInput.addEventListener('input', applyFilters);
+    maxPriceInput.addEventListener('input', applyFilters);
+    function applyFilters() {
       const searchTerm = searchInput.value.toLowerCase();
+      const selectedType = typeFilter.value;
+      const minPrice = parseFloat(minPriceInput.value) || 0; 
+      const maxPrice = parseFloat(maxPriceInput.value) || Infinity; 
       const filteredProducts = allProducts.filter(product => {
-        return product.name.toLowerCase().includes(searchTerm) || 
-               product.description.toLowerCase().includes(searchTerm); 
+        const matchesType = selectedType === 'all' || product.type === selectedType;
+        const matchesPrice = product.price >= minPrice && product.price <= maxPrice;
+        const matchesSearch = product.name.toLowerCase().includes(searchTerm) || 
+               product.description.toLowerCase().includes(searchTerm);
+        return matchesType && matchesPrice && matchesSearch;
       });
       displayProducts(filteredProducts);
-    });
+    }
     themeToggle.addEventListener('change', () => {
       document.body.classList.toggle('dark-theme', themeToggle.checked);
       if (themeToggle.checked) {
