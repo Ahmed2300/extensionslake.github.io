@@ -556,6 +556,244 @@
       box-shadow: 0 2px 4px var(--shadow-color);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
+
+
+
+
+
+
+
+
+
+body {
+      background-color: #f8f9fa;
+      color: #343a40;
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      --primary-color: #007bff;
+      --secondary-color: #FF9843;
+      --background-color: #f8f9fa;
+      --text-color: #343a40;
+      --card-background: #ffffff;
+      --card-border: #dee2e6;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+      --footer-background: #343a40;
+      --footer-text: white;
+    }
+
+    body.dark-theme {
+      --background-color: #343a40;
+      --text-color: #f8f9fa;
+      --card-background: #21252b;
+      --card-border: #343a40;
+      --shadow-color: rgba(255, 255, 255, 0.1);
+      --primary-color: #6FDCE3;
+    }
+
+    header {
+      background-color: var(--background-color);
+      padding: 20px 0;
+      width: 100%;
+      box-shadow: 0 2px 5px var(--shadow-color);
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo img {
+      margin-right: 10px;
+    }
+
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+    }
+
+    nav li {
+      margin-left: 30px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--text-color);
+      font-weight: 500;
+      transition: color 0.3s ease;
+      position: relative;
+      padding-bottom: 5px;
+    }
+
+    nav a:hover {
+      color: var(--primary-color);
+    }
+
+    nav a.active {
+      color: var(--primary-color);
+    }
+
+    nav a::before {
+      content: "";
+      position: absolute;
+      width: 0%;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background-color: var(--primary-color);
+      transition: width 0.3s ease;
+    }
+
+    nav a:hover::before {
+      width: 100%;
+    }
+
+    .container {
+      background-color: var(--card-background);
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px var(--shadow-color);
+      margin: 50px auto;
+      text-align: center;
+      width: 80%;
+      max-width: 1200px;
+    }
+
+    h1 {
+      color: var(--primary-color);
+      margin-bottom: 20px;
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 300px; 
+      margin: 0 auto; 
+    }
+
+    .auth-form label {
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .auth-form input {
+      padding: 8px;
+      border: 1px solid #ced4da;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      box-shadow: 0px 2px 4px var(--shadow-color);
+    }
+
+    .auth-form button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      box-shadow: 0px 2px 4px var(--shadow-color);
+    }
+
+    .auth-form button:hover {
+      background-color: darken(var(--primary-color), 10%);
+    }
+
+    .google-login {
+      margin-top: 15px;
+      width: 100%;
+    }
+
+    .google-login button {
+      background-color: #4285F4;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      box-shadow: 0px 2px 4px var(--shadow-color);
+    }
+
+    .google-login button:hover {
+      background-color: darken(#4285F4, 10%);
+    }
+
+    .google-login .material-icons {
+      margin-right: 5px; 
+    }
+
+    footer {
+      background-color: var(--footer-background);
+      text-align: center;
+      padding: 20px 0;
+      margin-top: 50px;
+      width: 100%;
+    }
+
+    footer p {
+      color: var(--footer-text);
+    }
+
+    .theme-switcher {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .theme-switcher label {
+      margin-right: 10px;
+      color: var(--text-color);
+    }
+
+    .theme-switcher input[type="checkbox"] {
+      appearance: none;
+      width: 40px;
+      height: 20px;
+      background: #ccc;
+      border-radius: 20px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .theme-switcher input:checked {
+      background: var(--primary-color);
+    }
+
+    .theme-switcher input:before {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      background: #fff;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+
+    .theme-switcher input:checked:before {
+      transform: translateX(20px);
+    }
+    
   </style>
 </head>
 <body>
