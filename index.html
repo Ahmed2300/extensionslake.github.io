@@ -538,6 +538,24 @@
     #googleSignInButton {
       width: 100%; 
     }
+    #productsContainer {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
+      gap: 20px;
+      padding: 10px;
+    }
+
+    /* Individual card styles */
+    .product-card {
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 20px;
+      text-align: left;
+      position: relative;
+      background-color: var(--card-background);
+      box-shadow: 0 2px 4px var(--shadow-color);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
   </style>
 </head>
 <body>
