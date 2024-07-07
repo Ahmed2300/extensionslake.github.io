@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Add Product - Extensions Lake</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="icon" href="https://iili.io/JpY272t.png" type="image/png">  
+  <link rel="icon" href="https://iili.io/JpY272t.png" type="image/png">
   <style>
     body {
       background-color: #f8f9fa;
@@ -28,7 +28,7 @@
       margin-top: 50px;
       text-align: left;
       width: 80%;
-      max-width: 600px; 
+      max-width: 600px;
     }
 
     h1 {
@@ -57,6 +57,16 @@
       border: 1px solid #ced4da;
       border-radius: 5px;
       font-family: inherit;
+      transition: border-color 0.3s ease;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    input[type="url"]:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #007bff;
+      outline: none;
     }
 
     button {
@@ -68,33 +78,39 @@
       cursor: pointer;
       font-family: inherit;
       transition: background-color 0.3s ease;
-      display: block; 
-      margin: 20px auto 0; 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 20px auto 0;
     }
 
     button:hover {
       background-color: #0069d9;
     }
 
+    .material-icons {
+      margin-right: 8px;
+    }
+
     .success-message {
-      background-color: #d4edda; 
-      border-color: #c3e6cb; 
-      color: #155724; 
-      padding: 10px 15px; 
-      border: 1px solid transparent; 
-      border-radius: 4px; 
+      background-color: #d4edda;
+      border-color: #c3e6cb;
+      color: #155724;
+      padding: 10px 15px;
+      border: 1px solid transparent;
+      border-radius: 4px;
       margin-top: 20px;
       display: none;
-      text-align: center; 
+      text-align: center;
     }
 
     .user-card {
-      background-color: #ffffff; 
+      background-color: #ffffff;
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      margin-bottom: 20px; 
-      text-align: center; 
+      margin-bottom: 20px;
+      text-align: center;
     }
 
     .user-card img {
@@ -110,15 +126,15 @@
 
     .auth-buttons {
       display: flex;
-      justify-content: center; 
+      justify-content: center;
       align-items: center;
-      margin-top: 10px; 
+      margin-top: 10px;
     }
 
     .auth-buttons button {
       margin: 0 5px;
       padding: 8px 15px;
-      background-color: #FF9843; 
+      background-color: #FF9843;
       color: white;
       border: none;
       border-radius: 5px;
@@ -127,11 +143,11 @@
     }
 
     .auth-buttons button:hover {
-      background-color: darken(#FF9843, 10%); 
+      background-color: #e57c23;
     }
 
     #logoutBtn {
-      background-color: #FF6969; 
+      background-color: #FF6969;
       color: white;
       border: none;
       padding: 8px 15px;
@@ -141,17 +157,17 @@
     }
 
     #logoutBtn:hover {
-      background-color: darken(red, 10%); 
+      background-color: #e05555;
     }
 
     .google-signin-btn {
       display: inline-flex;
-      align-items: center; 
-      background-color: #4285F4; 
+      align-items: center;
+      background-color: #4285F4;
       color: white;
       border: none;
-      padding: 10px 20px; 
-      border-radius: 5px; 
+      padding: 10px 20px;
+      border-radius: 5px;
       cursor: pointer;
       transition: background-color 0.3s ease;
       text-decoration: none;
@@ -163,12 +179,12 @@
 
     .icon-container {
       display: flex;
-      align-items: center; 
-      margin-right: 10px; 
+      align-items: center;
+      margin-right: 10px;
     }
 
     .google-logo {
-      width: 20px; 
+      width: 20px;
       height: 20px;
     }
 
@@ -177,14 +193,14 @@
     }
 
     #coverImagePreview {
-      max-width: 100%; 
-      max-height: 200px; 
+      max-width: 100%;
+      max-height: 200px;
       display: none;
       margin-bottom: 10px;
     }
 
     .file-upload-button {
-      background-color: #007bff; 
+      background-color: #007bff;
       color: white;
       border: none;
       padding: 10px 20px;
@@ -192,7 +208,7 @@
       cursor: pointer;
       font-family: inherit;
       margin-bottom: 10px;
-      display: none; 
+      display: none;
     }
 
     .file-upload-button:hover {
@@ -201,20 +217,20 @@
 
     .cover-image-options label {
       display: block;
-      margin-bottom: 5px; 
+      margin-bottom: 5px;
     }
 
     #publisherImagePreview {
-      width: 80px; 
-      height: 80px; 
-      border-radius: 50%; 
-      object-fit: cover; 
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
     }
   </style>
 </head>
 <body>
   <div class="container" id="authContainer"></div>
-  <div class="container" id="productFormContainer" style="display: none;"> 
+  <div class="container" id="productFormContainer" style="display: none;">
     <h1>Add New Extension</h1>
     <div id="userCard"></div>
     <form id="addProductForm">
@@ -238,7 +254,7 @@
         <label>Choose Cover Image Source:</label>
         <input type="radio" id="coverImageURLRadio" name="coverImageSource" value="url" checked>
         <label for="coverImageURLRadio">From URL:</label>
-        <input type="url" id="coverImageURL" name="coverImageURL" oninput="previewImageFromURL()"> 
+        <input type="url" id="coverImageURL" name="coverImageURL" oninput="previewImageFromURL()">
         <br>
         <input type="radio" id="coverImageUploadRadio" name="coverImageSource" value="upload">
         <label for="coverImageUploadRadio">Upload Image:</label>
@@ -257,24 +273,11 @@
           <option value="free">Free</option>
         </select>
       </div>
-      <div class="form-group">
-        <label for="publisherImageURL">Publisher Image:</label>
-        <img id="publisherImagePreview" src="" alt="Publisher Image"> 
-        <input type="hidden" id="publisherImageURL" name="publisherImageURL">
-      </div>
-      <div class="form-group">
-        <label for="publisherName">Publisher Name:</label>
-        <label id="publisherNameLabel"></label> 
-        <input type="hidden" id="publisherName" name="publisherName">
-      </div>
-      <div class="form-group">
-        <label for="isVerified">Is Verified?</label>
-        <input type="checkbox" id="isVerified" name="isVerified">
-      </div>
-      <button type="submit">Add Product</button>
-      <div class="success-message" id="successMessage">
-        Product added successfully!
-      </div>
+      <button type="submit">
+        <span class="material-icons">add</span>
+        Add Product
+      </button>
+      <div id="successMessage" class="success-message">Product added successfully!</div>
     </form>
   </div>
 
@@ -340,7 +343,7 @@
           publisherImageURLInput.value = publisherImagePreview.src; 
           const logoutBtn = document.getElementById('logoutBtn');
           logoutBtn.addEventListener('click', () => {
-            auth.signOut().then(() => {
+            signOut(auth).then(() => {
               currentUser = null;
               updateAuthDisplay();
             }).catch(error => {
@@ -504,5 +507,6 @@
       initApp();
     });
   </script>
+
 </body>
 </html>
