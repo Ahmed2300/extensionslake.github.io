@@ -416,7 +416,6 @@ footer {
   color: white
 }
 
-/* Styles for the Sign In/Sign Up buttons */
 .auth-buttons {
   display: flex;
   align-items: center;
@@ -814,7 +813,7 @@ footer {
     <p>About Us - We are a company dedicated to providing high-quality extensions.</p>
     <p>© 2023 Extensions Lake. All rights reserved.</p>
   </footer>
-
+   
   <script type="module"> 
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-analytics.js";
@@ -1060,8 +1059,15 @@ footer {
             <img src="${currentUser.photoURL || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'}" alt="User Profile Picture">
             <h3>${currentUser.displayName || currentUser.email.split('@')[0]}</h3>
             <p>${currentUser.email}</p>
+            <button id="logoutBtn">Logout</button>
           </div>
         `;
+        const logoutBtn = document.getElementById('logoutBtn');
+        logoutBtn.addEventListener('click', () => {
+          localStorage.removeItem('currentUser');
+          currentUser = null; 
+          updateAuthDisplay();
+        });      
       } else {
         authButtons.style.display = "flex";
         userCard.innerHTML = "";
@@ -1076,7 +1082,6 @@ footer {
         updateAuthDisplay(); 
       }
     });
-  
   </script>
 </body>
 </html>
