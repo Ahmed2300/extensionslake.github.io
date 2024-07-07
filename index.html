@@ -686,17 +686,66 @@ footer {
     }
 
     .signup-dialog {
-      display: none;
-      position: fixed;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      background-color: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      z-index: 100; 
-    }
+  display: none;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+  z-index: 100;
+  overflow: hidden; /* For the border radius to work properly */
+}
+
+
+.dialog-content {
+  padding: 30px; 
+  text-align: center;
+}
+
+.dialog-title {
+  margin-top: 0;
+  font-size: 1.8em; 
+  color: var(--primary-color); 
+}
+
+.dialog-message {
+  margin-bottom: 20px; 
+  color: #555; 
+}
+
+.google-signin-btn {
+  display: inline-flex; /* Align icon and text horizontally */
+  align-items: center; 
+  background-color: #4285F4; /* Google blue color */
+  color: white;
+  border: none;
+  padding: 10px 20px; 
+  border-radius: 5px; 
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-decoration: none; /* Remove underline from button text */
+}
+
+.google-signin-btn:hover {
+  background-color: #357ae8; /* Darker blue on hover */
+}
+
+.icon-container {
+  display: flex;
+  align-items: center; 
+  margin-right: 10px; 
+}
+
+.google-logo {
+  width: 20px; /* Adjust the size of the Google logo */
+  height: 20px;
+}
+
+.btn-text {
+  font-weight: bold;
+}
 
     .dialog-overlay { 
       display: none;
@@ -794,11 +843,16 @@ footer {
 
   <div class="dialog-overlay" id="dialogOverlay"></div>
   <div class="signup-dialog" id="signupDialog">
-    <h2>Sign Up with Google</h2>
-    <button id="googleSignInButton">
-        <span class="material-icons">account_circle</span> 
-        Sign Up with Google
-    </button>
+    <div class="dialog-content"> 
+      <h2 class="dialog-title">Sign Up with Google</h2>
+      <p class="dialog-message">Access personalized features and contribute to the community by signing up.</p>
+      <button id="googleSignInButton" class="google-signin-btn">
+        <span class="icon-container">
+          <img src="https://iili.io/dKDr0W7.png" alt="Google Logo" class="google-logo">
+        </span>
+        <span class="btn-text">Sign Up with Google</span>
+      </button>
+    </div>
   </div>
 
   <div class="container">
