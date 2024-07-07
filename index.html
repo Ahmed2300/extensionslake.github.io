@@ -736,7 +736,7 @@ footer {
     }
 
     #logoutBtn {
-      background-color: red; 
+      background-color: #FF6969; 
       color: white;
       border: none;
       padding: 8px 15px;
@@ -908,7 +908,7 @@ footer {
           return response.json();
         })
         .then(data => {
-          allProducts = Object.values(data);
+          allProducts = data; 
           displayProducts(allProducts);
         })
         .catch(error => {
@@ -918,82 +918,86 @@ footer {
     }
   
     function displayProducts(productsToDisplay) {
-  productsContainer.innerHTML = '';
-  productsToDisplay.forEach((product, index) => {
-    let buttonText = product.type === "paid" ? "Buy Now" : "Download Now";
-    let buttonUrl = product.type === "paid" ? product.paymentUrl : product.paymentUrl;
-    let verifiedIcon = product.isVerified
-        ? `<span class="material-icons verified-icon">verified</span>`
-        : '';
-    let imageElement = document.createElement(product.coverImageURL.endsWith('.gif') ? 'img' : 'img');
-    imageElement.src = product.coverImageURL;
-    imageElement.alt = `${product.name} Cover`;
-    let extensionImageContainer = document.createElement('div');
-    extensionImageContainer.classList.add('extension-image');
-    extensionImageContainer.appendChild(imageElement);
-    const truncatedDescription = truncateDescription(product.description, maxDescriptionLength);
-    const heartCount = product.Heart_Num || 0;
-    const productCard = `
-      <div class="product-card" data-type="${product.type}" data-product-id="${product.id}" style="background-color: var(--card-bg-${(index % 20) + 1});">
-        <div class="type-indicator ${product.type}" data-type="${product.type}">${product.type.toUpperCase()}</div>
-        <div class="publisher-info">
-          <img class="publisher-image" src="${product.publisherImageURL}" alt="Publisher Image">
-          <div>
-            <span class="publisher-name">${product.publisherName} ${verifiedIcon}</span>
-            <p class="publish-date">${product.date}</p>
+      productsContainer.innerHTML = '';
+  
+      const productKeys = Object.keys(productsToDisplay);
+  
+      productKeys.forEach((productId, index) => {
+        const product = productsToDisplay[productId];
+  
+        let buttonText = product.type === "paid" ? "Buy Now" : "Download Now";
+        let buttonUrl = product.type === "paid" ? product.paymentUrl : product.paymentUrl;
+        let verifiedIcon = product.isVerified
+            ? `<span class="material-icons verified-icon">verified</span>`
+            : '';
+        let imageElement = document.createElement(product.coverImageURL.endsWith('.gif') ? 'img' : 'img');
+        imageElement.src = product.coverImageURL;
+        imageElement.alt = `${product.name} Cover`;
+        let extensionImageContainer = document.createElement('div');
+        extensionImageContainer.classList.add('extension-image');
+        extensionImageContainer.appendChild(imageElement);
+        const truncatedDescription = truncateDescription(product.description, maxDescriptionLength);
+        const heartCount = product.Heart_Num || 0;
+        const productCard = `
+          <div class="product-card" data-type="${product.type}" data-product-id="${productId}" style="background-color: var(--card-bg-${(index % 20) + 1});">
+            <div class="type-indicator ${product.type}" data-type="${product.type}">${product.type.toUpperCase()}</div>
+            <div class="publisher-info">
+              <img class="publisher-image" src="${product.publisherImageURL}" alt="Publisher Image">
+              <div>
+                <span class="publisher-name">${product.publisherName} ${verifiedIcon}</span>
+                <p class="publish-date">${product.date}</p>
+              </div>
+            </div>
+            ${extensionImageContainer.outerHTML} 
+            <h2>${product.name}</h2>
+            <div class="description-container">
+              <p class="description-text">${truncatedDescription}</p>
+              <span class="read-more" style="color: var(--primary-color); cursor: pointer;">Read More</span> 
+            </div>
+            <p>Price: $${product.price.toFixed(2)}</p>
+            <div class="button-group">
+              <a href="${buttonUrl}" target="_blank">
+                <button>${buttonText}</button>
+              </a>
+              <a href="${product.topicURL}" target="_blank">
+                <button style="background-color: #FF9843;">Visit Official Topic</button> 
+              </a>
+            </div>
+            <span class="heart-icon material-icons" onclick="toggleHeart(this)">favorite_border</span>
+            <span class="heart-count">${heartCount}</span>
           </div>
-        </div>
-        ${extensionImageContainer.outerHTML} 
-        <h2>${product.name}</h2>
-        <div class="description-container">
-          <p class="description-text">${truncatedDescription}</p>
-          <span class="read-more" style="color: var(--primary-color); cursor: pointer;">Read More</span> 
-        </div>
-        <p>Price: $${product.price.toFixed(2)}</p>
-        <div class="button-group">
-          <a href="${buttonUrl}" target="_blank">
-            <button>${buttonText}</button>
-          </a>
-          <a href="${product.topicURL}" target="_blank">
-            <button style="background-color: #FF9843;">Visit Official Topic</button> 
-          </a>
-        </div>
-        <span class="heart-icon material-icons" onclick="toggleHeart(this)">favorite_border</span>
-        <span class="heart-count">${heartCount}</span>
-      </div>
-    `;
-    productsContainer.innerHTML += productCard;
-  });
-
-  const typeIndicators = document.querySelectorAll('.type-indicator');
-  typeIndicators.forEach(indicator => {
-    indicator.addEventListener('click', showInfoDialog);
-  });
-
-  const descriptionTexts = document.querySelectorAll('.description-text');
-  descriptionTexts.forEach(textElement => {
-    textElement.innerHTML = truncateDescription(textElement.textContent, maxDescriptionLength);
-  });
-
-  const heartIcons = document.querySelectorAll('.heart-icon');
-  heartIcons.forEach(icon => {
-    icon.addEventListener('click', () => {
-      if (currentUser) {
-        toggleHeart(icon);
-      } else {
-        alert('Please sign in to interact with hearts.');
-      }
-    });
-  });
-
-  // Add event listeners to "Read More" spans
-  const readMoreSpans = document.querySelectorAll('.read-more');
-  readMoreSpans.forEach(span => {
-    span.addEventListener('click', () => {
-      showFullDescription(span);
-    });
-  }); 
-}
+        `;
+        productsContainer.innerHTML += productCard;
+      });
+  
+      const typeIndicators = document.querySelectorAll('.type-indicator');
+      typeIndicators.forEach(indicator => {
+        indicator.addEventListener('click', showInfoDialog);
+      });
+  
+      const descriptionTexts = document.querySelectorAll('.description-text');
+      descriptionTexts.forEach(textElement => {
+        textElement.innerHTML = truncateDescription(textElement.textContent, maxDescriptionLength);
+      });
+  
+      const heartIcons = document.querySelectorAll('.heart-icon');
+      heartIcons.forEach(icon => {
+        icon.addEventListener('click', () => {
+          if (currentUser) {
+            toggleHeart(icon);
+          } else {
+            alert('Please sign in to interact with hearts.');
+          }
+        });
+      });
+  
+      const readMoreSpans = document.querySelectorAll('.read-more');
+      readMoreSpans.forEach(span => {
+        span.addEventListener('click', () => {
+          showFullDescription(span);
+        });
+      }); 
+    }
   
     function showInfoDialog(event) {
       const type = event.target.dataset.type;
@@ -1025,11 +1029,13 @@ footer {
     function showFullDescription(element) {
       const card = element.closest('.product-card');
       const productName = card.querySelector('h2').textContent;
-      const fullDescription = allProducts.find(p => p.name === productName).description;
+      const productId = card.dataset.productId; 
+      const fullDescription = allProducts[productId].description; 
+  
       dialogTitle.textContent = productName;
       dialogDescription.textContent = fullDescription;
-      infoDialog.style.display = 'block'; // Make the dialog visible
-      dialogOverlay.style.display = 'block'; // Show the overlay
+      infoDialog.style.display = 'block'; 
+      dialogOverlay.style.display = 'block'; 
     }
   
     function truncateDescription(description, maxLength) {
@@ -1059,31 +1065,23 @@ footer {
     }
   
     function updateHeartCountInDatabase(productId, newCount) {
-  const productIndex = allProducts.findIndex(product => product.id === productId);
-  if (productIndex !== -1) {
-    allProducts[productIndex].Heart_Num = newCount;
-
-    // Update only the Heart_Num field in the database
-    fetch(`${databaseURL}/${productId}.json?auth=${apiKey}`, {
-      method: 'PATCH', // Use PATCH to update a specific field
-      body: JSON.stringify({ Heart_Num: newCount }),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8'
-      }
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      // Handle success (e.g., show a success message)
-      console.log('Heart count updated successfully!'); 
-    })
-    .catch(error => {
-      console.error('There has been a problem updating the heart count:', error);
-      // Handle error (e.g., revert UI changes, show error message)
-    });
-  }
-}
+      fetch(`${databaseURL}/${productId}.json?auth=${apiKey}`, {
+        method: 'PATCH', 
+        body: JSON.stringify({ Heart_Num: newCount }),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8'
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        console.log('Heart count updated successfully!'); 
+      })
+      .catch(error => {
+        console.error('There has been a problem updating the heart count:', error);
+      });
+    }
   
     fetchProducts();
   
@@ -1180,5 +1178,6 @@ footer {
       }
     });
   </script>
+ 
 </body>
 </html>
