@@ -695,7 +695,7 @@ footer {
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
   z-index: 100;
-  overflow: hidden; /* For the border radius to work properly */
+  overflow: hidden; 
 }
 
 
@@ -716,20 +716,20 @@ footer {
 }
 
 .google-signin-btn {
-  display: inline-flex; /* Align icon and text horizontally */
+  display: inline-flex; 
   align-items: center; 
-  background-color: #4285F4; /* Google blue color */
+  background-color: #4285F4; 
   color: white;
   border: none;
   padding: 10px 20px; 
   border-radius: 5px; 
   cursor: pointer;
   transition: background-color 0.3s ease;
-  text-decoration: none; /* Remove underline from button text */
+  text-decoration: none; 
 }
 
 .google-signin-btn:hover {
-  background-color: #357ae8; /* Darker blue on hover */
+  background-color: #357ae8; 
 }
 
 .icon-container {
@@ -739,7 +739,7 @@ footer {
 }
 
 .google-logo {
-  width: 20px; /* Adjust the size of the Google logo */
+  width: 20px; 
   height: 20px;
 }
 
@@ -978,7 +978,6 @@ footer {
   
       productKeys.forEach((productId, index) => {
         const product = productsToDisplay[productId];
-        // Ensure list_of_hearers exists and is an array
         if (!product.list_of_hearers) {
           product.list_of_hearers = [];
         }
@@ -997,12 +996,11 @@ footer {
         const truncatedDescription = truncateDescription(product.description, maxDescriptionLength);
         const heartCount = product.Heart_Num || 0;
         
-        // Set initial heart icon based on user's liking status
         let heartIcon = 'favorite_border';
-        let heartColor = ''; // Default color
+        let heartColor = ''; 
         if (currentUser && product.list_of_hearers.includes(currentUser.uid)) {
           heartIcon = 'favorite';
-          heartColor = 'style="color: #FF6969;"'; // Red color when liked
+          heartColor = 'style="color: #FF6969;"'; 
         }
   
         const productCard = `
@@ -1127,16 +1125,14 @@ footer {
       const userIndex = product.list_of_hearers.indexOf(currentUser.uid);
   
       if (userIndex === -1) {
-        // User hasn't liked it yet
         product.list_of_hearers.push(currentUser.uid);
         icon.textContent = 'favorite';
         icon.style.color = '#FF6969'; 
         currentCount++;
       } else {
-        // User has liked it, so unlike it
         product.list_of_hearers.splice(userIndex, 1);
         icon.textContent = 'favorite_border';
-        icon.style.color = ''; // Revert to default color
+        icon.style.color = ''; 
         currentCount--;
       }
   
@@ -1240,18 +1236,24 @@ footer {
             <h3>${currentUser.displayName || currentUser.email.split('@')[0]}</h3>
             <p>${currentUser.email}</p>
             <button id="logoutBtn">Logout</button>
+            <a href="add new product.html"> 
+              <button id="addNewProductBtn" style="background-color: #50B498;">Add New Product</button>
+            </a>
           </div>
         `;
+
         const logoutBtn = document.getElementById('logoutBtn');
+        const addNewProductBtn = document.getElementById('addNewProductBtn');
+
         logoutBtn.addEventListener('click', () => {
           localStorage.removeItem('currentUser');
           currentUser = null;
-          updateAuthDisplay();
-          fetchProducts(); // Refetch to update UI based on logged-out state
+          updateAuthDisplay(); 
+          fetchProducts();
         });
       } else {
         authButtons.style.display = "flex";
-        userCard.innerHTML = "";
+        userCard.innerHTML = ""; 
       }
     }
   
@@ -1261,7 +1263,7 @@ footer {
       if (cachedUser) {
         currentUser = JSON.parse(cachedUser);
         updateAuthDisplay();
-        fetchProducts(); // Fetch products on load if user is logged in
+        fetchProducts(); 
       }
     });
   </script>
