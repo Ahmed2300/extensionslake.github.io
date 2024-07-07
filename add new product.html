@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Product - Extensions Lake</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="icon" href="https://iili.io/JpY272t.png" type="image/png">  
+  <style>
+    body {
+      background-color: #f8f9fa;
+      color: #343a40;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .container {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-top: 50px;
+      text-align: left;
+      width: 80%;
+      max-width: 600px; 
+    }
+
+    h1 {
+      color: #007bff;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="url"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ced4da;
+      border-radius: 5px;
+      font-family: inherit;
+    }
+
+    button {
+      background-color: #007bff;
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background-color 0.3s ease;
+      display: block; 
+      margin: 20px auto 0; 
+    }
+
+    button:hover {
+      background-color: #0069d9;
+    }
+
+    .success-message {
+      background-color: #d4edda; 
+      border-color: #c3e6cb; 
+      color: #155724; 
+      padding: 10px 15px; 
+      border: 1px solid transparent; 
+      border-radius: 4px; 
+      margin-top: 20px;
+      display: none;
+      text-align: center; 
+    }
+    .user-card {
+      background-color: #ffffff; 
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px; 
+      text-align: center; 
+    }
+
+    .user-card img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .user-card h3 {
+      margin-top: 10px;
+    }
+
+    .auth-buttons {
+      display: flex;
+      justify-content: center; 
+      align-items: center;
+      margin-top: 10px; 
+    }
+
+    .auth-buttons button {
+      margin: 0 5px;
+      padding: 8px 15px;
+      background-color: #FF9843; 
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .auth-buttons button:hover {
+      background-color: darken(#FF9843, 10%); 
+    }
+
+    #logoutBtn {
+      background-color: #FF6969; 
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #logoutBtn:hover {
+      background-color: darken(red, 10%); 
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="authContainer">
+    </div>
+
+  <div class="container" id="productFormContainer" style="display: none;"> 
+    <h1>Add New Extension</h1>
+
+    <div id="userCard"></div>
+
+    <form id="addProductForm">
+      <div class="form-group">
+        <label for="productName">Product Name:</label>
+        <input type="text" id="productName" name="productName" required>
+      </div>
+
+      <div class="form-group">
+        <label for="productDescription">Description:</label>
+        <textarea id="productDescription" name="productDescription" rows="4" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="productPrice">Price (Use 0 for free products):</label>
+        <input type="number" id="productPrice" name="productPrice" min="0" step="0.01" required>
+      </div>
+
+      <div class="form-group">
+        <label for="paymentUrl">Payment URL (Leave blank for free products):</label>
+        <input type="url" id="paymentUrl" name="paymentUrl">
+      </div>
+
+      <div class="form-group">
+        <label for="coverImageURL">Cover Image URL:</label>
+        <input type="url" id="coverImageURL" name="coverImageURL" required>
+      </div>
+
+      <div class="form-group">
+        <label for="topicURL">Official Topic URL:</label>
+        <input type="url" id="topicURL" name="topicURL" required>
+      </div>
+
+      <div class="form-group">
+        <label for="productType">Type:</label>
+        <select id="productType" name="productType" required>
+          <option value="paid">Paid</option>
+          <option value="free">Free</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="publisherImageURL">Publisher Image URL:</label>
+        <input type="url" id="publisherImageURL" name="publisherImageURL" required>
+      </div>
+
+      <div class="form-group">
+        <label for="publisherName">Publisher Name:</label>
+        <label id="publisherNameLabel"></label> <input type="hidden" id="publisherName" name="publisherName">
+      </div>
+
+      <div class="form-group">
+        <label for="isVerified">Is Verified?</label>
+        <input type="checkbox" id="isVerified" name="isVerified">
+      </div>
+
+      <button type="submit">Add Product</button>
+      <div class="success-message" id="successMessage">
+        Product added successfully!
+      </div>
+    </form>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const databaseURL = "https://mypro-f9c43-default-rtdb.firebaseio.com/";
+        const apiKey = "AIzaSyBfDYW18AJSfb03Cm_lR-SCZpTbcnLH1Qk";
+        const addProductForm = document.getElementById('addProductForm');
+        const successMessage = document.getElementById('successMessage');
+        const userCard = document.getElementById('userCard');
+        const authContainer = document.getElementById('authContainer');
+        const productFormContainer = document.getElementById('productFormContainer');
+        const publisherNameLabel = document.getElementById('publisherNameLabel');
+        let currentUser = null;
+
+        function initApp() {
+          auth.onAuthStateChanged(user => {
+            currentUser = user;
+            updateAuthDisplay(); 
+          });
+        }
+
+        function updateAuthDisplay() {
+          if (currentUser) {
+            userCard.innerHTML = `
+              <div class="user-card">
+                <img src="${currentUser.photoURL || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'}" alt="User Profile Picture">
+                <h3>${currentUser.displayName || currentUser.email.split('@')[0]}</h3>
+                <p>${currentUser.email}</p>
+                <button id="logoutBtn">Logout</button>
+              </div>
+            `;
+
+            publisherNameLabel.textContent = currentUser.displayName || currentUser.email.split('@')[0];
+
+            const logoutBtn = document.getElementById('logoutBtn');
+            logoutBtn.addEventListener('click', () => {
+              auth.signOut().then(() => {
+                console.log('User signed out successfully');
+                currentUser = null;
+                updateAuthDisplay();
+              }).catch(error => {
+                console.error("Error signing out:", error);
+              });
+            });
+          } else {
+            authContainer.innerHTML = `
+              <h2>Please sign in to add a product</h2>
+              <div class="auth-buttons">
+                <button onclick="signIn()">Sign In</button>
+                <button onclick="signUp()">Sign Up</button>
+              </div>
+            `;
+            userCard.innerHTML = ''; 
+            publisherNameLabel.textContent = ''; 
+          }
+          toggleFormDisplay();
+        }
+
+        function toggleFormDisplay() {
+          if (currentUser) {
+            productFormContainer.style.display = 'block';
+            authContainer.style.display = 'none';
+          } else {
+            productFormContainer.style.display = 'none';
+            authContainer.style.display = 'block'; 
+          }
+        }
+
+        addProductForm.addEventListener('submit', (event) => {
+          event.preventDefault();
+
+          if (!currentUser) {
+            alert("Please sign in to add a product.");
+            return;
+          }
+
+          const productName = addProductForm.productName.value;
+
+          const newProduct = {
+            name: productName,
+            description: addProductForm.productDescription.value,
+            price: parseFloat(addProductForm.productPrice.value),
+            paymentUrl: addProductForm.paymentUrl.value,
+            coverImageURL: addProductForm.coverImageURL.value,
+            topicURL: addProductForm.topicURL.value,
+            type: addProductForm.productType.value,
+            publisherImageURL: addProductForm.publisherImageURL.value,
+            publisherName: currentUser.displayName || currentUser.email.split('@')[0],
+            publisher_ID: currentUser.uid,
+            isVerified: addProductForm.isVerified.checked,
+            date: new Date().toISOString().slice(0, 10)
+          };
+
+          const productURL = `${databaseURL}/${encodeURIComponent(productName)}.json?auth=${apiKey}`;
+
+          fetch(productURL, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newProduct)
+          })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            console.log('Product added successfully!', response);
+            addProductForm.reset();
+            successMessage.style.display = 'block';
+            setTimeout(() => {
+              successMessage.style.display = 'none';
+            }, 3000);
+          })
+          .catch(error => {
+            console.error('There has been a problem adding the product:', error);
+          });
+        });
+        initApp();
+    });
+  </script>
+</body>
+</html>
