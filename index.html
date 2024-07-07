@@ -1059,28 +1059,31 @@ footer {
     }
   
     function updateHeartCountInDatabase(productId, newCount) {
-      const productIndex = allProducts.findIndex(product => product.id === productId);
-      if (productIndex !== -1) {
-        allProducts[productIndex].Heart_Num = newCount;
-  
-        // Update the heart count in the database
-        fetch(`${databaseURL}/${productId}.json?auth=${apiKey}`, {
-          method: 'PATCH', 
-          body: JSON.stringify({ Heart_Num: newCount }),
-          headers: {
-            'Content-type': 'application/json; charset=UTF-8'
-          }
-        })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-        })
-        .catch(error => {
-          console.error('There has been a problem updating the heart count:', error);
-        });
+  const productIndex = allProducts.findIndex(product => product.id === productId);
+  if (productIndex !== -1) {
+    allProducts[productIndex].Heart_Num = newCount;
+
+    // Update only the Heart_Num field in the database
+    fetch(`${databaseURL}/${productId}.json?auth=${apiKey}`, {
+      method: 'PATCH', // Use PATCH to update a specific field
+      body: JSON.stringify({ Heart_Num: newCount }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8'
       }
-    }
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      // Handle success (e.g., show a success message)
+      console.log('Heart count updated successfully!'); 
+    })
+    .catch(error => {
+      console.error('There has been a problem updating the heart count:', error);
+      // Handle error (e.g., revert UI changes, show error message)
+    });
+  }
+}
   
     fetchProducts();
   
