@@ -87,6 +87,7 @@
       display: none;
       text-align: center; 
     }
+
     .user-card {
       background-color: #ffffff; 
       padding: 20px;
@@ -181,72 +182,98 @@
       display: none;
       margin-bottom: 10px;
     }
+
+    .file-upload-button {
+      background-color: #007bff; 
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: inherit;
+      margin-bottom: 10px; 
+    }
+
+    .file-upload-button:hover {
+      background-color: #0069d9;
+    }
+
+    .cover-image-options label {
+      display: block;
+      margin-bottom: 5px; 
+    }
   </style>
 </head>
 <body>
-    <div class="container" id="authContainer"></div>
-    <div class="container" id="productFormContainer" style="display: none;"> 
-      <h1>Add New Extension</h1>
-      <div id="userCard"></div>
-      <form id="addProductForm">
-        <div class="form-group">
-          <label for="productName">Product Name:</label>
-          <input type="text" id="productName" name="productName" required>
-        </div>
-        <div class="form-group">
-          <label for="productDescription">Description:</label>
-          <textarea id="productDescription" name="productDescription" rows="4" required></textarea>
-        </div>
-        <div class="form-group">
-          <label for="productPrice">Price (Use 0 for free products):</label>
-          <input type="number" id="productPrice" name="productPrice" min="0" step="0.01" required>
-        </div>
-        <div class="form-group">
-          <label for="paymentUrl">Payment URL (Leave blank for free products):</label>
-          <input type="url" id="paymentUrl" name="paymentUrl">
-        </div>
-        <div class="form-group">
-          <label for="coverImageURL">Cover Image URL:</label>
-          <img id="coverImagePreview" src="" alt="Cover Image Preview">
-          <input type="url" id="coverImageURL" name="coverImageURL" oninput="previewImageFromURL()"> 
-          <input type="file" id="coverImageUpload" accept="image/*" onchange="previewImageFromFile()">
-        </div>
-        <div class="form-group">
-          <label for="topicURL">Official Topic URL:</label>
-          <input type="url" id="topicURL" name="topicURL" required>
-        </div>
-        <div class="form-group">
-          <label for="productType">Type:</label>
-          <select id="productType" name="productType" required>
-            <option value="paid">Paid</option>
-            <option value="free">Free</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="publisherImageURL">Publisher Image URL:</label>
-          <input type="url" id="publisherImageURL" name="publisherImageURL" required>
-        </div>
-        <div class="form-group">
-          <label for="publisherName">Publisher Name:</label>
-          <label id="publisherNameLabel"></label> 
-          <input type="hidden" id="publisherName" name="publisherName">
-        </div>
-        <div class="form-group">
-          <label for="isVerified">Is Verified?</label>
-          <input type="checkbox" id="isVerified" name="isVerified">
-        </div>
-        <button type="submit">Add Product</button>
-        <div class="success-message" id="successMessage">
-          Product added successfully!
-        </div>
-      </form>
-    </div>
-  
-    <script type="module">
+  <div class="container" id="authContainer"></div>
+  <div class="container" id="productFormContainer" style="display: none;"> 
+    <h1>Add New Extension</h1>
+    <div id="userCard"></div>
+    <form id="addProductForm">
+      <div class="form-group">
+        <label for="productName">Product Name:</label>
+        <input type="text" id="productName" name="productName" required>
+      </div>
+      <div class="form-group">
+        <label for="productDescription">Description:</label>
+        <textarea id="productDescription" name="productDescription" rows="4" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="productPrice">Price (Use 0 for free products):</label>
+        <input type="number" id="productPrice" name="productPrice" min="0" step="0.01" required>
+      </div>
+      <div class="form-group">
+        <label for="paymentUrl">Payment URL (Leave blank for free products):</label>
+        <input type="url" id="paymentUrl" name="paymentUrl">
+      </div>
+      <div class="form-group cover-image-options">
+        <label>Choose Cover Image Source:</label>
+        <input type="radio" id="coverImageURLRadio" name="coverImageSource" value="url" checked>
+        <label for="coverImageURLRadio">From URL:</label>
+        <input type="url" id="coverImageURL" name="coverImageURL" oninput="previewImageFromURL()"> 
+        <br>
+        <input type="radio" id="coverImageUploadRadio" name="coverImageSource" value="upload">
+        <label for="coverImageUploadRadio">Upload Image:</label>
+        <input type="file" id="coverImageUpload" accept="image/*" style="display: none;" onchange="previewImageFromFile()">
+        <button type="button" class="file-upload-button" onclick="triggerFileUpload()">Choose File</button>
+        <img id="coverImagePreview" src="" alt="Cover Image Preview">
+      </div>
+      <div class="form-group">
+        <label for="topicURL">Official Topic URL:</label>
+        <input type="url" id="topicURL" name="topicURL" required>
+      </div>
+      <div class="form-group">
+        <label for="productType">Type:</label>
+        <select id="productType" name="productType" required>
+          <option value="paid">Paid</option>
+          <option value="free">Free</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="publisherImageURL">Publisher Image URL:</label>
+        <input type="url" id="publisherImageURL" name="publisherImageURL" readonly> 
+      </div>
+      <div class="form-group">
+        <label for="publisherName">Publisher Name:</label>
+        <label id="publisherNameLabel"></label> 
+        <input type="hidden" id="publisherName" name="publisherName">
+      </div>
+      <div class="form-group">
+        <label for="isVerified">Is Verified?</label>
+        <input type="checkbox" id="isVerified" name="isVerified">
+      </div>
+      <button type="submit">Add Product</button>
+      <div class="success-message" id="successMessage">
+        Product added successfully!
+      </div>
+    </form>
+  </div>
+
+  <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-analytics.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js';
-  
+
     const firebaseConfig = {
       apiKey: "AIzaSyCgy_AToJkB7iIkAf8A9yKYLGRcn6q3DGc",
       authDomain: "mypro-f9c43.firebaseapp.com",
@@ -257,11 +284,11 @@
       appId: "1:457342163754:web:9f428caeea9ad5c5d11c53",
       measurementId: "G-YS7GD676WC"
     };
-  
+
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const auth = getAuth(app);
-  
+
     document.addEventListener('DOMContentLoaded', () => {
       const databaseURL = "https://mypro-f9c43-default-rtdb.firebaseio.com/";
       const apiKey = "AIzaSyBfDYW18AJSfb03Cm_lR-SCZpTbcnLH1Qk";
@@ -271,18 +298,22 @@
       const authContainer = document.getElementById('authContainer');
       const productFormContainer = document.getElementById('productFormContainer');
       const publisherNameLabel = document.getElementById('publisherNameLabel');
+      const publisherImageURLInput = document.getElementById('publisherImageURL');
       const imgbbApiKey = '591f55a2f11247ad2c9dc9faf9df0836';
       const coverImageUpload = document.getElementById('coverImageUpload');
       const coverImagePreview = document.getElementById('coverImagePreview');
+      const coverImageURLRadio = document.getElementById('coverImageURLRadio');
+      const coverImageUploadRadio = document.getElementById('coverImageUploadRadio');
+      const coverImageURLInput = document.getElementById('coverImageURL');
       let currentUser = null;
-  
+
       function initApp() {
         auth.onAuthStateChanged(user => {
           currentUser = user;
           updateAuthDisplay(); 
         });
       }
-  
+
       function updateAuthDisplay() {
         if (currentUser) {
           userCard.innerHTML = `
@@ -294,6 +325,7 @@
             </div>
           `;
           publisherNameLabel.textContent = currentUser.displayName || currentUser.email.split('@')[0];
+          publisherImageURLInput.value = currentUser.photoURL || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
           const logoutBtn = document.getElementById('logoutBtn');
           logoutBtn.addEventListener('click', () => {
             auth.signOut().then(() => {
@@ -315,10 +347,11 @@
           `;
           userCard.innerHTML = '';
           publisherNameLabel.textContent = '';
+          publisherImageURLInput.value = '';
         }
         toggleFormDisplay(); 
       }
-  
+
       function toggleFormDisplay() {
         if (currentUser) {
           productFormContainer.style.display = 'block';
@@ -328,7 +361,7 @@
           authContainer.style.display = 'block'; 
         }
       }
-  
+
       addProductForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         if (!currentUser) {
@@ -380,7 +413,7 @@
           console.error('There has been a problem adding the product:', error);
         });
       });
-  
+
       async function uploadImageToImgBB(imageFile) {
         const formData = new FormData();
         formData.append('image', imageFile);
@@ -400,7 +433,7 @@
           return null;
         }
       }
-  
+
       window.signInWithGoogle = () => {
         const provider = new GoogleAuthProvider();
         signInWithPopup(auth, provider)
@@ -411,7 +444,7 @@
             console.error("Error signing in with Google:", error);
           });
       };
-  
+
       window.previewImageFromURL = () => {
         const url = document.getElementById('coverImageURL').value;
         if (url) {
@@ -422,7 +455,7 @@
           coverImagePreview.style.display = 'none';
         }
       };
-  
+
       window.previewImageFromFile = () => {
         const fileInput = document.getElementById('coverImageUpload');
         if (fileInput.files && fileInput.files[0]) {
@@ -437,10 +470,27 @@
           coverImagePreview.style.display = 'none';
         }
       };
-  
+
+      window.triggerFileUpload = () => {
+        coverImageUpload.click(); 
+      };
+
+      coverImageURLRadio.addEventListener('change', () => {
+        coverImageURLInput.style.display = 'block';
+        coverImageUpload.style.display = 'none';
+        coverImagePreview.src = ''; // Clear preview if switching to URL
+        coverImagePreview.style.display = 'none';
+      });
+
+      coverImageUploadRadio.addEventListener('change', () => {
+        coverImageURLInput.style.display = 'none';
+        coverImageUpload.style.display = 'block';
+        coverImagePreview.src = ''; // Clear preview if switching to upload
+        coverImagePreview.style.display = 'none';
+      });
+
       initApp();
     });
   </script>
-  
-  </body>
+</body>
 </html>
