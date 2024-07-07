@@ -22,28 +22,28 @@
 
     .container {
       background-color: #ffffff;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 40px 50px; /* Increased padding */
+      border-radius: 12px; /* Softer corners */
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* More pronounced shadow */
       margin-top: 50px;
       text-align: left;
       width: 80%;
-      max-width: 600px; 
+      max-width: 700px; 
     }
 
     h1 {
-      color: #007bff;
-      margin-bottom: 20px;
+      color: #28a745; /* Greener color */
+      margin-bottom: 30px;
       text-align: center;
     }
 
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 25px;
     }
 
     label {
       display: block;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
       font-weight: 600;
     }
 
@@ -53,27 +53,37 @@
     select,
     textarea {
       width: 100%;
-      padding: 10px;
+      padding: 12px; /* Increased padding */
       border: 1px solid #ced4da;
-      border-radius: 5px;
+      border-radius: 6px; /* Softer corners */
       font-family: inherit;
+      transition: border-color 0.3s ease; /* Smooth transition */
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    input[type="url"]:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #80bdff; /* Highlight on focus */
+      outline: none;
     }
 
     button {
-      background-color: #007bff;
+      background-color: #28a745; /* Greener color */
       color: #ffffff;
       border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
+      padding: 12px 24px; /* Increased padding */
+      border-radius: 6px; /* Softer corners */
       cursor: pointer;
       font-family: inherit;
       transition: background-color 0.3s ease;
       display: block; 
-      margin: 20px auto 0; 
+      margin: 30px auto 0; /* Increased top margin */
     }
 
     button:hover {
-      background-color: #0069d9;
+      background-color: #218838; /* Darker green on hover */
     }
 
     .success-message {
@@ -91,37 +101,38 @@
     .user-card {
       background-color: #ffffff; 
       padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      margin-bottom: 20px; 
+      border-radius: 12px; /* Softer corners */
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Softer shadow */
+      margin-bottom: 30px; 
       text-align: center; 
     }
 
     .user-card img {
-      width: 100px;
-      height: 100px;
+      width: 120px; /* Larger image */
+      height: 120px;
       border-radius: 50%;
       object-fit: cover;
+      margin-bottom: 15px; /* Added margin */
     }
 
     .user-card h3 {
-      margin-top: 10px;
+      margin-top: 0; /* Reset margin */
     }
 
     .auth-buttons {
       display: flex;
       justify-content: center; 
       align-items: center;
-      margin-top: 10px; 
+      margin-top: 20px; 
     }
 
     .auth-buttons button {
-      margin: 0 5px;
-      padding: 8px 15px;
+      margin: 0 8px;
+      padding: 10px 20px;
       background-color: #FF9843; 
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px; /* Softer corners */
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
@@ -131,17 +142,17 @@
     }
 
     #logoutBtn {
-      background-color: #FF6969; 
+      background-color: #dc3545; /* Bootstrap danger color */
       color: white;
       border: none;
-      padding: 8px 15px;
-      border-radius: 5px;
+      padding: 10px 20px;
+      border-radius: 6px; /* Softer corners */
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
 
     #logoutBtn:hover {
-      background-color: darken(red, 10%); 
+      background-color: darken(#dc3545, 10%); 
     }
 
     .google-signin-btn {
@@ -151,7 +162,7 @@
       color: white;
       border: none;
       padding: 10px 20px; 
-      border-radius: 5px; 
+      border-radius: 6px; /* Softer corners */
       cursor: pointer;
       transition: background-color 0.3s ease;
       text-decoration: none;
@@ -181,6 +192,7 @@
       max-height: 200px; 
       display: none;
       margin-bottom: 10px;
+      border-radius: 8px; /* Softer corners */
     }
 
     .file-upload-button {
@@ -188,7 +200,7 @@
       color: white;
       border: none;
       padding: 10px 20px;
-      border-radius: 5px;
+      border-radius: 6px; /* Softer corners */
       cursor: pointer;
       font-family: inherit;
       margin-bottom: 10px;
@@ -211,271 +223,71 @@
       object-fit: cover; 
     }
 
-    .container {
-  background-color: #ffffff;
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  margin-top: 50px;
-  text-align: left;
-  width: 80%;
-  max-width: 600px; 
-}
+    /* Style for error messages */
+    .error-message {
+      color: red;
+      font-size: 0.8em;
+      margin-top: 5px;
+    }
 
-h1 {
-  color: #007bff;
-  margin-bottom: 30px;
-  text-align: center;
-}
+    .form-group select,
+    .form-group input[type="checkbox"] {
+      width: auto; /* Allow checkboxes and selects to take their natural width */
+    }
 
-.form-group {
-  margin-bottom: 25px;
-}
-
-label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 600;
-}
-
-input[type="text"],
-input[type="number"],
-input[type="url"],
-textarea {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ced4da;
-  border-radius: 6px;
-  font-family: inherit;
-  box-sizing: border-box;
-}
-
-select {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ced4da;
-  border-radius: 6px;
-  font-family: inherit;
-  box-sizing: border-box;
-  -webkit-appearance: none; 
-  -moz-appearance: none;
-  appearance: none;
-  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7 10L12 15L17 10" stroke="%23343a40" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>') no-repeat 95% center;
-  background-size: 18px 12px; 
-}
-
-input[type="checkbox"] {
-  margin-left: 10px;
-  width: auto; 
-  height: auto; 
-  transform: scale(1.25);
-}
-
-button {
-  background-color: #007bff;
-  color: #ffffff;
-  border: none;
-  padding: 12px 25px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background-color 0.3s ease;
-  display: block;
-  margin: 30px auto 0; 
-  font-weight: 600;
-}
-
-button:hover {
-  background-color: #0069d9;
-}
-
-.success-message {
-  background-color: #d4edda;
-  border-color: #c3e6cb;
-  color: #155724;
-  padding: 10px 15px;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  margin-top: 20px;
-  display: none;
-  text-align: center;
-}
-
-.user-card {
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.user-card img {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 15px; 
-}
-
-.user-card h3 {
-  margin-top: 0; 
-  margin-bottom: 8px; 
-  font-size: 1.3em;
-}
-
-.auth-buttons {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px; 
-}
-
-.auth-buttons button {
-  margin: 0 8px;
-  padding: 10px 20px;
-  background-color: #FF9843;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-weight: 600; 
-}
-
-.auth-buttons button:hover {
-  background-color: darken(#FF9843, 10%);
-}
-
-#logoutBtn {
-  background-color: #FF6969;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-weight: 600;
-}
-
-#logoutBtn:hover {
-  background-color: darken(red, 10%);
-}
-
-.google-signin-btn {
-  display: inline-flex;
-  align-items: center;
-  background-color: #4285F4;
-  color: white;
-  border: none;
-  padding: 12px 25px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  text-decoration: none;
-  font-weight: 600; 
-}
-
-.google-signin-btn:hover {
-  background-color: #357ae8;
-}
-
-.icon-container {
-  display: flex;
-  align-items: center;
-  margin-right: 10px; 
-}
-
-.google-logo {
-  width: 20px;
-  height: 20px;
-}
-
-.btn-text {
-  font-weight: bold;
-}
-
-#coverImagePreview {
-  max-width: 100%;
-  max-height: 200px;
-  display: none;
-  margin-bottom: 10px;
-  border-radius: 8px;
-}
-
-.file-upload-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 12px 25px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-family: inherit;
-  margin-bottom: 10px;
-  display: none;
-  font-weight: 600;
-}
-
-.file-upload-button:hover {
-  background-color: #0069d9;
-}
-
-.cover-image-options label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-#publisherImagePreview {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.error-message {
-  color: red;
-  font-size: 0.8em;
-  margin-top: 5px;
-}
+    .form-group input[type="checkbox"] {
+      margin-left: 10px; /* Add some space between checkbox and label */
+    }
   </style>
 </head>
 <body>
   <div class="container" id="authContainer"></div>
-  <div class="container" id="productFormContainer" style="display: none;"> 
+  <div class="container" id="productFormContainer" style="display: none;">
     <h1>Add New Extension</h1>
     <div id="userCard"></div>
     <form id="addProductForm">
       <div class="form-group">
         <label for="productName">Product Name:</label>
         <input type="text" id="productName" name="productName" required>
+        <div class="error-message" id="productNameError"></div> 
       </div>
       <div class="form-group">
         <label for="productDescription">Description:</label>
         <textarea id="productDescription" name="productDescription" rows="4" required></textarea>
+        <div class="error-message" id="productDescriptionError"></div> 
       </div>
       <div class="form-group">
         <label for="productPrice">Price (Use 0 for free products):</label>
         <input type="number" id="productPrice" name="productPrice" min="0" step="0.01" required>
+        <div class="error-message" id="productPriceError"></div> 
       </div>
       <div class="form-group">
         <label for="paymentUrl">Payment URL (Leave blank for free products):</label>
         <input type="url" id="paymentUrl" name="paymentUrl">
+        <div class="error-message" id="paymentUrlError"></div> 
       </div>
+
       <div class="form-group cover-image-options">
         <label>Choose Cover Image Source:</label>
-        <input type="radio" id="coverImageURLRadio" name="coverImageSource" value="url" checked>
-        <label for="coverImageURLRadio">From URL:</label>
-        <input type="url" id="coverImageURL" name="coverImageURL" oninput="previewImageFromURL()"> 
-        <br>
-        <input type="radio" id="coverImageUploadRadio" name="coverImageSource" value="upload">
-        <label for="coverImageUploadRadio">Upload Image:</label>
+        <div>
+          <input type="radio" id="coverImageURLRadio" name="coverImageSource" value="url" checked>
+          <label for="coverImageURLRadio">From URL:</label>
+        </div>
+        <input type="url" id="coverImageURL" name="coverImageURL" oninput="previewImageFromURL()">
+        <div class="error-message" id="coverImageError"></div> 
+        <div>
+          <input type="radio" id="coverImageUploadRadio" name="coverImageSource" value="upload">
+          <label for="coverImageUploadRadio">Upload Image:</label>
+        </div>
         <input type="file" id="coverImageUpload" accept="image/*" style="display: none;" onchange="previewImageFromFile()">
         <button type="button" class="file-upload-button" onclick="triggerFileUpload()">Choose File</button>
         <img id="coverImagePreview" src="" alt="Cover Image Preview">
       </div>
+
       <div class="form-group">
         <label for="topicURL">Official Topic URL:</label>
         <input type="url" id="topicURL" name="topicURL" required>
+        <div class="error-message" id="topicURLError"></div> 
       </div>
       <div class="form-group">
         <label for="productType">Type:</label>
@@ -483,16 +295,6 @@ button:hover {
           <option value="paid">Paid</option>
           <option value="free">Free</option>
         </select>
-      </div>
-      <div class="form-group">
-        <label for="publisherImageURL">Publisher Image:</label>
-        <img id="publisherImagePreview" src="" alt="Publisher Image"> 
-        <input type="hidden" id="publisherImageURL" name="publisherImageURL">
-      </div>
-      <div class="form-group">
-        <label for="publisherName">Publisher Name:</label>
-        <label id="publisherNameLabel"></label> 
-        <input type="hidden" id="publisherName" name="publisherName">
       </div>
       <div class="form-group">
         <label for="isVerified">Is Verified?</label>
@@ -504,7 +306,6 @@ button:hover {
       </div>
     </form>
   </div>
-
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-analytics.js";
