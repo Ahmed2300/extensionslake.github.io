@@ -191,7 +191,8 @@
       border-radius: 5px;
       cursor: pointer;
       font-family: inherit;
-      margin-bottom: 10px; 
+      margin-bottom: 10px;
+      display: none; 
     }
 
     .file-upload-button:hover {
@@ -201,6 +202,13 @@
     .cover-image-options label {
       display: block;
       margin-bottom: 5px; 
+    }
+
+    #publisherImagePreview {
+      width: 80px; 
+      height: 80px; 
+      border-radius: 50%; 
+      object-fit: cover; 
     }
   </style>
 </head>
@@ -250,8 +258,9 @@
         </select>
       </div>
       <div class="form-group">
-        <label for="publisherImageURL">Publisher Image URL:</label>
-        <input type="url" id="publisherImageURL" name="publisherImageURL" readonly> 
+        <label for="publisherImageURL">Publisher Image:</label>
+        <img id="publisherImagePreview" src="" alt="Publisher Image"> 
+        <input type="hidden" id="publisherImageURL" name="publisherImageURL">
       </div>
       <div class="form-group">
         <label for="publisherName">Publisher Name:</label>
@@ -305,6 +314,8 @@
       const coverImageURLRadio = document.getElementById('coverImageURLRadio');
       const coverImageUploadRadio = document.getElementById('coverImageUploadRadio');
       const coverImageURLInput = document.getElementById('coverImageURL');
+      const fileUploadButton = document.querySelector('.file-upload-button');
+      const publisherImagePreview = document.getElementById('publisherImagePreview');
       let currentUser = null;
 
       function initApp() {
@@ -325,7 +336,8 @@
             </div>
           `;
           publisherNameLabel.textContent = currentUser.displayName || currentUser.email.split('@')[0];
-          publisherImageURLInput.value = currentUser.photoURL || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
+          publisherImagePreview.src = currentUser.photoURL || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'; 
+          publisherImageURLInput.value = publisherImagePreview.src; 
           const logoutBtn = document.getElementById('logoutBtn');
           logoutBtn.addEventListener('click', () => {
             auth.signOut().then(() => {
@@ -472,20 +484,20 @@
       };
 
       window.triggerFileUpload = () => {
-        coverImageUpload.click(); 
+        coverImageUpload.click();
       };
 
       coverImageURLRadio.addEventListener('change', () => {
         coverImageURLInput.style.display = 'block';
-        coverImageUpload.style.display = 'none';
-        coverImagePreview.src = ''; // Clear preview if switching to URL
+        fileUploadButton.style.display = 'none'; 
+        coverImagePreview.src = ''; 
         coverImagePreview.style.display = 'none';
       });
 
       coverImageUploadRadio.addEventListener('change', () => {
         coverImageURLInput.style.display = 'none';
-        coverImageUpload.style.display = 'block';
-        coverImagePreview.src = ''; // Clear preview if switching to upload
+        fileUploadButton.style.display = 'block'; 
+        coverImagePreview.src = '';
         coverImagePreview.style.display = 'none';
       });
 
