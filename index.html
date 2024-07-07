@@ -736,18 +736,30 @@ footer {
     }
 
     #logoutBtn {
-  background-color: #FF6969; /* Set background color to red */
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
+      background-color: red; 
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    #logoutBtn:hover {
+      background-color: darken(red, 10%); 
+    }
 
-#logoutBtn:hover {
-  background-color: darken(#962525, 10%); /* Darken red on hover */
-}
+    .heart-icon {
+      cursor: pointer;
+      font-size: 1.5em; 
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+
+    .heart-count {
+      vertical-align: middle;
+    }
+
   </style>
 </head>
 <body>
@@ -832,22 +844,22 @@ footer {
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-analytics.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup } from 'https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js';
-  
+
     const firebaseConfig = {
-      apiKey: "AIzaSyCgy_AToJkB7iIkAf8A9yKYLGRcn6q3DGc",
-      authDomain: "mypro-f9c43.firebaseapp.com",
-      databaseURL: "https://mypro-f9c43-default-rtdb.firebaseio.com",
-      projectId: "mypro-f9c43",
-      storageBucket: "mypro-f9c43.appspot.com",
-      messagingSenderId: "457342163754",
-      appId: "1:457342163754:web:9f428caeea9ad5c5d11c53",
-      measurementId: "G-YS7GD676WC"
+      apiKey: "YOUR_API_KEY", 
+      authDomain: "YOUR_AUTH_DOMAIN",
+      databaseURL: "YOUR_DATABASE_URL",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID",
+      measurementId: "YOUR_MEASUREMENT_ID"
     };
-  
+
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const auth = getAuth(app); 
-  
+
     const productsContainer = document.getElementById("productsContainer");
     const searchInput = document.getElementById("searchInput");
     const infoDialog = document.getElementById("infoDialog");
@@ -860,8 +872,8 @@ footer {
     const priceFilterGroup = document.getElementById('priceFilterGroup');
     const minPriceInput = document.getElementById('minPrice');
     const maxPriceInput = document.getElementById('maxPrice');
-    const databaseURL = "https://mypro-f9c43-default-rtdb.firebaseio.com/"; 
-    const apiKey = "AIzaSyBfDYW18AJSfb03Cm_lR-SCZpTbcnLH1Qk"; 
+    const databaseURL = "https://mypro-f9c43-default-rtdb.firebaseio.com/";
+    const apiKey = "YOUR_API_KEY"; 
     const signInBtn = document.getElementById("signInBtn");
     const signUpBtn = document.getElementById("signUpBtn");
     const authButtons = document.getElementById("authButtons"); 
@@ -871,7 +883,7 @@ footer {
     let allProducts = [];
     const maxDescriptionLength = 150;
     let currentUser = null; 
-  
+
     async function googleSignIn() {
       const provider = new GoogleAuthProvider();
       try {
@@ -881,11 +893,12 @@ footer {
         signupDialog.style.display = "none";
         dialogOverlay.style.display = "none";
         updateAuthDisplay();
+        fetchProducts(); 
       } catch (error) {
         console.error("Error signing in with Google:", error);
       }
     }
-  
+
     function fetchProducts() {
       fetch(`${databaseURL}/.json?auth=${apiKey}`)
         .then(response => {
@@ -903,7 +916,7 @@ footer {
           productsContainer.innerHTML = '<p>Error loading products. Please try again later.</p>';
         });
     }
-  
+
     function displayProducts(productsToDisplay) {
       productsContainer.innerHTML = '';
       productsToDisplay.forEach((product, index) => {
@@ -919,8 +932,9 @@ footer {
         extensionImageContainer.classList.add('extension-image');
         extensionImageContainer.appendChild(imageElement);
         const truncatedDescription = truncateDescription(product.description, maxDescriptionLength);
+        const heartCount = product.Heart_Num || 0;
         const productCard = `
-          <div class="product-card" data-type="${product.type}" style="background-color: var(--card-bg-${(index % 20) + 1});">
+          <div class="product-card" data-type="${product.type}" data-product-id="${product.id}" style="background-color: var(--card-bg-${(index % 20) + 1});">
             <div class="type-indicator ${product.type}" data-type="${product.type}">${product.type.toUpperCase()}</div>
             <div class="publisher-info">
               <img class="publisher-image" src="${product.publisherImageURL}" alt="Publisher Image">
@@ -944,10 +958,13 @@ footer {
                 <button style="background-color: #FF9843;">Visit Official Topic</button> 
               </a>
             </div>
+            <span class="heart-icon material-icons" onclick="toggleHeart(this)">favorite_border</span>
+            <span class="heart-count">${heartCount}</span>
           </div>
         `;
         productsContainer.innerHTML += productCard;
       });
+
       const typeIndicators = document.querySelectorAll('.type-indicator');
       typeIndicators.forEach(indicator => {
         indicator.addEventListener('click', showInfoDialog);
@@ -956,8 +973,19 @@ footer {
       descriptionTexts.forEach(textElement => {
         textElement.innerHTML = truncateDescription(textElement.textContent, maxDescriptionLength);
       });
+
+      const heartIcons = document.querySelectorAll('.heart-icon');
+      heartIcons.forEach(icon => {
+        icon.addEventListener('click', () => {
+          if (currentUser) {
+            toggleHeart(icon);
+          } else {
+            alert('Please sign in to interact with hearts.');
+          }
+        });
+      });
     }
-  
+
     function showInfoDialog(event) {
       const type = event.target.dataset.type;
       let dialogTitle, dialogMessage;
@@ -973,18 +1001,18 @@ footer {
       infoDialog.style.display = 'block';
       dialogOverlay.style.display = 'block';
     }
-  
+
     closeDialogButton.addEventListener('click', () => {
       infoDialog.style.display = 'none';
       dialogOverlay.style.display = 'none';
     });
-  
+
     dialogOverlay.addEventListener('click', () => {
       signupDialog.style.display = "none"; 
       infoDialog.style.display = 'none';
       dialogOverlay.style.display = 'none'; 
     });
-  
+
     function showFullDescription(element) {
       const card = element.closest('.product-card');
       const productName = card.querySelector('h2').textContent;
@@ -994,34 +1022,80 @@ footer {
       infoDialog.style.display = 'block';
       dialogOverlay.style.display = 'block';
     }
-  
+
     function truncateDescription(description, maxLength) {
       if (description.length > maxLength) {
         return description.substring(0, maxLength) + '... ';
       }
       return description;
     }
-  
-    fetchProducts(); 
-  
+
+    function toggleHeart(icon) {
+      const card = icon.closest('.product-card');
+      const productId = card.dataset.productId;
+      const heartCountSpan = card.querySelector('.heart-count');
+      let currentCount = parseInt(heartCountSpan.textContent, 10);
+
+      if (icon.textContent === 'favorite_border') {
+        // Heart is not filled, add a like
+        icon.textContent = 'favorite';
+        currentCount++;
+      } else {
+        // Heart is filled, remove a like
+        icon.textContent = 'favorite_border';
+        currentCount--;
+      }
+
+      heartCountSpan.textContent = currentCount;
+
+      updateHeartCountInDatabase(productId, currentCount);
+    }
+
+    function updateHeartCountInDatabase(productId, newCount) {
+      const productIndex = allProducts.findIndex(product => product.id === productId);
+      if (productIndex !== -1) {
+        allProducts[productIndex].Heart_Num = newCount;
+
+        fetch(`${databaseURL}/${productId}.json?auth=${apiKey}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ Heart_Num: newCount }),
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8'
+          }
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          // You may want to update the UI or display a success message here
+        })
+        .catch(error => {
+          console.error('There has been a problem updating the heart count:', error);
+          // Handle error, possibly revert the UI changes
+        });
+      }
+    }
+
+    fetchProducts();
+
     searchInput.addEventListener("input", () => {
       applyFilters(); 
     });
-  
+
     typeFilter.addEventListener('change', () => {
       priceFilterGroup.style.display = (typeFilter.value === 'paid') ? 'flex' : 'none';
       applyFilters(); 
     });
-  
+
     minPriceInput.addEventListener('input', applyFilters);
     maxPriceInput.addEventListener('input', applyFilters);
-  
+
     function applyFilters() {
       const searchTerm = searchInput.value.toLowerCase();
       const selectedType = typeFilter.value;
       const minPrice = parseFloat(minPriceInput.value) || 0; 
       const maxPrice = parseFloat(maxPriceInput.value) || Infinity; 
-  
+
       const filteredProducts = allProducts.filter(product => {
         const matchesType = selectedType === 'all' || product.type === selectedType;
         const matchesPrice = product.price >= minPrice && product.price <= maxPrice;
@@ -1029,13 +1103,13 @@ footer {
                product.description.toLowerCase().includes(searchTerm);
         return matchesType && matchesPrice && matchesSearch;
       });
-  
+
       displayProducts(filteredProducts);
     }
-  
+
     themeToggle.addEventListener('change', () => {
       document.body.classList.toggle('dark-theme', themeToggle.checked);
-  
+
       if (themeToggle.checked) {
         document.documentElement.style.setProperty('--footer-background', '#343a40');
         document.documentElement.style.setProperty('--footer-text', 'white');
@@ -1046,25 +1120,25 @@ footer {
         localStorage.setItem('theme', 'light');
       }
     });
-  
+
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
       document.body.classList.add('dark-theme');
       themeToggle.checked = true; 
     }
-  
+
     signInBtn.addEventListener("click", () => {
       signupDialog.style.display = "block";
       dialogOverlay.style.display = "block";
     });
-  
+
     signUpBtn.addEventListener("click", () => {
       signupDialog.style.display = "block";
       dialogOverlay.style.display = "block";
     });
-  
+
     googleSignInButton.addEventListener('click', googleSignIn);
-  
+
     function updateAuthDisplay() {
       if (currentUser) {
         authButtons.style.display = "none";
@@ -1087,7 +1161,7 @@ footer {
         userCard.innerHTML = "";
       }
     }
-  
+
     updateAuthDisplay();
     window.addEventListener('load', () => {
       const cachedUser = localStorage.getItem('currentUser');
@@ -1096,6 +1170,6 @@ footer {
         updateAuthDisplay(); 
       }
     });
-  </script>
+</script>
 </body>
 </html>
