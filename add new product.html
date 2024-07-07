@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Add Product - Extensions Lake</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="icon" href="https://iili.io/JpY272t.png" type="image/png">  
   <style>
     body {
-      background-color: #f8f9fa;
-      color: #343a40;
+      background-color: #f4f6f8;
+      color: #333;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 0;
@@ -23,8 +23,8 @@
     .container {
       background-color: #ffffff;
       padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
       margin-top: 50px;
       text-align: left;
       width: 80%;
@@ -32,7 +32,7 @@
     }
 
     h1 {
-      color: #007bff;
+      color: #2962ff; 
       margin-bottom: 20px;
       text-align: center;
     }
@@ -53,33 +53,35 @@
     select,
     textarea {
       width: 100%;
-      padding: 10px;
-      border: 1px solid #ced4da;
-      border-radius: 5px;
+      padding: 12px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
       font-family: inherit;
+      box-sizing: border-box; 
     }
 
     button {
-      background-color: #007bff;
+      background-color: #2962ff; 
       color: #ffffff;
       border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
+      padding: 12px 24px;
+      border-radius: 8px;
       cursor: pointer;
       font-family: inherit;
       transition: background-color 0.3s ease;
       display: block; 
       margin: 20px auto 0; 
+      font-weight: 500;
     }
 
     button:hover {
-      background-color: #0069d9;
+      background-color: #0056c8; 
     }
 
     .success-message {
-      background-color: #d4edda; 
-      border-color: #c3e6cb; 
-      color: #155724; 
+      background-color: #c8e6c9; 
+      border-color: #81c784; 
+      color: #2e7d32;
       padding: 10px 15px; 
       border: 1px solid transparent; 
       border-radius: 4px; 
@@ -91,21 +93,23 @@
     .user-card {
       background-color: #ffffff; 
       padding: 20px;
-      border-radius: 8px;
+      border-radius: 12px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       margin-bottom: 20px; 
       text-align: center; 
     }
 
     .user-card img {
-      width: 100px;
-      height: 100px;
+      width: 120px;
+      height: 120px;
       border-radius: 50%;
       object-fit: cover;
+      border: 4px solid #e0e0e0; 
     }
 
     .user-card h3 {
       margin-top: 10px;
+      color: #2962ff;
     }
 
     .auth-buttons {
@@ -117,13 +121,14 @@
 
     .auth-buttons button {
       margin: 0 5px;
-      padding: 8px 15px;
+      padding: 10px 20px;
       background-color: #FF9843; 
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       cursor: pointer;
       transition: background-color 0.3s ease;
+      font-weight: 500; 
     }
 
     .auth-buttons button:hover {
@@ -131,17 +136,18 @@
     }
 
     #logoutBtn {
-      background-color: #FF6969; 
+      background-color: #f44336; 
       color: white;
       border: none;
-      padding: 8px 15px;
-      border-radius: 5px;
+      padding: 10px 20px;
+      border-radius: 8px;
       cursor: pointer;
       transition: background-color 0.3s ease;
+      font-weight: 500; 
     }
 
     #logoutBtn:hover {
-      background-color: darken(red, 10%); 
+      background-color: darken(#f44336, 10%); 
     }
 
     .google-signin-btn {
@@ -150,11 +156,12 @@
       background-color: #4285F4; 
       color: white;
       border: none;
-      padding: 10px 20px; 
-      border-radius: 5px; 
+      padding: 12px 24px; 
+      border-radius: 8px; 
       cursor: pointer;
       transition: background-color 0.3s ease;
       text-decoration: none;
+      font-weight: 500;
     }
 
     .google-signin-btn:hover {
@@ -181,27 +188,34 @@
       max-height: 200px; 
       display: none;
       margin-bottom: 10px;
+      border-radius: 8px; 
     }
 
     .file-upload-button {
-      background-color: #007bff; 
+      background-color: #2962ff; 
       color: white;
       border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
+      padding: 12px 24px;
+      border-radius: 8px;
       cursor: pointer;
       font-family: inherit;
       margin-bottom: 10px;
       display: none; 
+      font-weight: 500; 
     }
 
     .file-upload-button:hover {
-      background-color: #0069d9;
+      background-color: #0056c8; 
     }
 
     .cover-image-options label {
-      display: block;
+      display: flex;
+      align-items: center; 
       margin-bottom: 5px; 
+    }
+
+    .cover-image-options input[type="radio"] {
+      margin-right: 8px;
     }
 
     #publisherImagePreview {
@@ -210,32 +224,58 @@
       border-radius: 50%; 
       object-fit: cover; 
     }
+
+    .material-symbols-outlined {
+      font-variation-settings:
+      'FILL' 0,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 48
+    }
+
+    .form-group .material-symbols-outlined {
+      font-size: 1.2rem;
+      vertical-align: middle;
+      margin-right: 5px;
+    }
   </style>
 </head>
 <body>
   <div class="container" id="authContainer"></div>
   <div class="container" id="productFormContainer" style="display: none;"> 
-    <h1>Add New Extension</h1>
+    <h1><span class="material-symbols-outlined">
+        add_circle
+        </span> Add New Extension</h1>
     <div id="userCard"></div>
     <form id="addProductForm">
       <div class="form-group">
-        <label for="productName">Product Name:</label>
+        <label for="productName"><span class="material-symbols-outlined">
+          extension
+          </span> Product Name:</label>
         <input type="text" id="productName" name="productName" required>
       </div>
       <div class="form-group">
-        <label for="productDescription">Description:</label>
+        <label for="productDescription"><span class="material-symbols-outlined">
+          description
+          </span> Description:</label>
         <textarea id="productDescription" name="productDescription" rows="4" required></textarea>
       </div>
       <div class="form-group">
-        <label for="productPrice">Price (Use 0 for free products):</label>
+        <label for="productPrice"><span class="material-symbols-outlined">
+          attach_money
+          </span> Price (Use 0 for free products):</label>
         <input type="number" id="productPrice" name="productPrice" min="0" step="0.01" required>
       </div>
       <div class="form-group">
-        <label for="paymentUrl">Payment URL (Leave blank for free products):</label>
+        <label for="paymentUrl"><span class="material-symbols-outlined">
+          payment
+          </span> Payment URL (Leave blank for free products):</label>
         <input type="url" id="paymentUrl" name="paymentUrl">
       </div>
       <div class="form-group cover-image-options">
-        <label>Choose Cover Image Source:</label>
+        <label><span class="material-symbols-outlined">
+          image
+          </span> Choose Cover Image Source:</label>
         <input type="radio" id="coverImageURLRadio" name="coverImageSource" value="url" checked>
         <label for="coverImageURLRadio">From URL:</label>
         <input type="url" id="coverImageURL" name="coverImageURL" oninput="previewImageFromURL()"> 
@@ -247,28 +287,38 @@
         <img id="coverImagePreview" src="" alt="Cover Image Preview">
       </div>
       <div class="form-group">
-        <label for="topicURL">Official Topic URL:</label>
+        <label for="topicURL"><span class="material-symbols-outlined">
+          forum
+          </span> Official Topic URL:</label>
         <input type="url" id="topicURL" name="topicURL" required>
       </div>
       <div class="form-group">
-        <label for="productType">Type:</label>
+        <label for="productType"><span class="material-symbols-outlined">
+          category
+          </span> Type:</label>
         <select id="productType" name="productType" required>
           <option value="paid">Paid</option>
           <option value="free">Free</option>
         </select>
       </div>
       <div class="form-group">
-        <label for="publisherImageURL">Publisher Image:</label>
+        <label for="publisherImageURL"><span class="material-symbols-outlined">
+          account_circle
+          </span> Publisher Image:</label>
         <img id="publisherImagePreview" src="" alt="Publisher Image"> 
         <input type="hidden" id="publisherImageURL" name="publisherImageURL">
       </div>
       <div class="form-group">
-        <label for="publisherName">Publisher Name:</label>
+        <label for="publisherName"><span class="material-symbols-outlined">
+          person
+          </span> Publisher Name:</label>
         <label id="publisherNameLabel"></label> 
         <input type="hidden" id="publisherName" name="publisherName">
       </div>
       <div class="form-group">
-        <label for="isVerified">Is Verified?</label>
+        <label for="isVerified"><span class="material-symbols-outlined">
+          verified
+          </span> Is Verified?</label>
         <input type="checkbox" id="isVerified" name="isVerified">
       </div>
       <button type="submit">Add Product</button>
@@ -277,7 +327,6 @@
       </div>
     </form>
   </div>
-
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-analytics.js";
