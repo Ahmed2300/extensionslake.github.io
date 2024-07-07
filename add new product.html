@@ -145,8 +145,7 @@
   </style>
 </head>
 <body>
-  <div class="container" id="authContainer">
-    </div>
+  <div class="container" id="authContainer"></div>
 
   <div class="container" id="productFormContainer" style="display: none;"> 
     <h1>Add New Extension</h1>
@@ -214,7 +213,26 @@
     </form>
   </div>
 
-  <script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-analytics.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCgy_AToJkB7iIkAf8A9yKYLGRcn6q3DGc",
+      authDomain: "mypro-f9c43.firebaseapp.com",
+      databaseURL: "https://mypro-f9c43-default-rtdb.firebaseio.com",
+      projectId: "mypro-f9c43",
+      storageBucket: "mypro-f9c43.appspot.com",
+      messagingSenderId: "457342163754",
+      appId: "1:457342163754:web:9f428caeea9ad5c5d11c53",
+      measurementId: "G-YS7GD676WC"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth(app);
+
     document.addEventListener('DOMContentLoaded', () => {
         const databaseURL = "https://mypro-f9c43-default-rtdb.firebaseio.com/";
         const apiKey = "AIzaSyBfDYW18AJSfb03Cm_lR-SCZpTbcnLH1Qk";
@@ -249,7 +267,6 @@
             const logoutBtn = document.getElementById('logoutBtn');
             logoutBtn.addEventListener('click', () => {
               auth.signOut().then(() => {
-                console.log('User signed out successfully');
                 currentUser = null;
                 updateAuthDisplay();
               }).catch(error => {
@@ -329,6 +346,35 @@
             console.error('There has been a problem adding the product:', error);
           });
         });
+        
+        window.signIn = () => {
+          const email = prompt("Enter your email:");
+          const password = prompt("Enter your password:");
+          signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+              currentUser = userCredential.user;
+              updateAuthDisplay();
+            })
+            .catch((error) => {
+              console.error("Error signing in:", error);
+              alert(error.message); 
+            });
+        };
+
+        window.signUp = () => {
+          const email = prompt("Enter your email:");
+          const password = prompt("Enter your password:");
+          createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+              currentUser = userCredential.user;
+              updateAuthDisplay();
+            })
+            .catch((error) => {
+              console.error("Error signing up:", error);
+              alert(error.message);
+            });
+        };
+
         initApp();
     });
   </script>
