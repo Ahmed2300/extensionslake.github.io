@@ -286,113 +286,41 @@
         }
 
         function updateAuthDisplay() {
-          if (currentUser) {
-            userCard.innerHTML = `
-              <div class="user-card">
-                <img src="${currentUser.photoURL || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'}" alt="User Profile Picture">
-                <h3>${currentUser.displayName || currentUser.email.split('@')[0]}</h3>
-                <p>${currentUser.email}</p>
-                <button id="logoutBtn">Logout</button>
-              </div>
-            `;
+  if (currentUser) {
+    userCard.innerHTML = `
+      <div class="user-card">
+        <img src="${currentUser.photoURL || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'}" alt="User Profile Picture">
+        <h3>${currentUser.displayName || currentUser.email.split('@')[0]}</h3>
+        <p>${currentUser.email}</p>
+        <button id="logoutBtn">Logout</button>
+      </div>
+    `;
 
-            publisherNameLabel.textContent = currentUser.displayName || currentUser.email.split('@')[0];
+    publisherNameLabel.textContent = currentUser.displayName || currentUser.email.split('@')[0];
 
-            const logoutBtn = document.getElementById('logoutBtn');
-            logoutBtn.addEventListener('click', () => {
-              auth.signOut().then(() => {
-                currentUser = null;
-                updateAuthDisplay();
-              }).catch(error => {
-                console.error("Error signing out:", error);
-              });
-            });
-          } else {
-            authContainer.innerHTML = `
-              <h2>Please sign in to add a product</h2>
-              <button id="googleSignInButton" class="google-signin-btn" onclick="signInWithGoogle()">
-                <span class="icon-container">
-                  <img src="https://iili.io/dKDr0W7.png" alt="Google Logo" class="google-logo">
-                </span>
-                <span class="btn-text">Sign In with Google</span>
-              </button>
-            `;
-            userCard.innerHTML = ''; 
-            publisherNameLabel.textContent = ''; 
-          }
-          toggleFormDisplay();
-        }
-
-        function toggleFormDisplay() {
-          if (currentUser) {
-            productFormContainer.style.display = 'block';
-            authContainer.style.display = 'none';
-          } else {
-            productFormContainer.style.display = 'none';
-            authContainer.style.display = 'block'; 
-          }
-        }
-
-        addProductForm.addEventListener('submit', (event) => {
-          event.preventDefault();
-
-          if (!currentUser) {
-            alert("Please sign in to add a product.");
-            return;
-          }
-
-          const productName = addProductForm.productName.value;
-
-          const newProduct = {
-            name: productName,
-            description: addProductForm.productDescription.value,
-            price: parseFloat(addProductForm.productPrice.value),
-            paymentUrl: addProductForm.paymentUrl.value,
-            coverImageURL: addProductForm.coverImageURL.value,
-            topicURL: addProductForm.topicURL.value,
-            type: addProductForm.productType.value,
-            publisherImageURL: addProductForm.publisherImageURL.value,
-            publisherName: currentUser.displayName || currentUser.email.split('@')[0],
-            publisher_ID: currentUser.uid,
-            isVerified: addProductForm.isVerified.checked,
-            date: new Date().toISOString().slice(0, 10)
-          };
-
-          const productURL = `${databaseURL}/${encodeURIComponent(productName)}.json?auth=${apiKey}`;
-
-          fetch(productURL, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(newProduct)
-          })
-          .then(response => {
-            if (!response.ok) {
-              throw new Error('Network response was not ok');
-            }
-            console.log('Product added successfully!', response);
-            addProductForm.reset();
-            successMessage.style.display = 'block';
-            setTimeout(() => {
-              successMessage.style.display = 'none';
-            }, 3000);
-          })
-          .catch(error => {
-            console.error('There has been a problem adding the product:', error);
-          });
-        });
-        
-        window.signInWithGoogle = () => {
-          const provider = new GoogleAuthProvider();
-          signInWithPopup(auth, provider)
-            .then((result) => {
-              currentUser = result.user;
-              updateAuthDisplay();
-            }).catch((error) => {
-              console.error("Error signing in with Google:", error);
-            });
-        };
+    const logoutBtn = document.getElementById('logoutBtn');
+    logoutBtn.addEventListener('click', () => {
+      auth.signOut().then(() => {
+        currentUser = null;
+        updateAuthDisplay();
+      }).catch(error => {
+        console.error("Error signing out:", error);
+      });
+    });
+  } else {
+    authContainer.innerHTML = `
+      <h2>Please sign in to add a product</h2>
+      <button id="googleSignInButton" class="google-signin-btn" onclick="signInWithGoogle()">
+        <span class="icon-container">
+          <img src="https://iili.io/dKDr0W7.png" alt="Google Logo" class="google-logo">
+        </span>
+        <span class="btn-text">Sign In with Google</span>
+      </button>
+    `;
+    userCard.innerHTML = ''; 
+    publisherNameLabel.textContent = ''; 
+  }
+};
 
         initApp();
     });
