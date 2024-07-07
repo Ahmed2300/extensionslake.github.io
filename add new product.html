@@ -142,10 +142,43 @@
     #logoutBtn:hover {
       background-color: darken(red, 10%); 
     }
+
+    .google-signin-btn {
+      display: inline-flex;
+      align-items: center; 
+      background-color: #4285F4; 
+      color: white;
+      border: none;
+      padding: 10px 20px; 
+      border-radius: 5px; 
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      text-decoration: none;
+    }
+
+    .google-signin-btn:hover {
+      background-color: #357ae8;
+    }
+
+    .icon-container {
+      display: flex;
+      align-items: center; 
+      margin-right: 10px; 
+    }
+
+    .google-logo {
+      width: 20px; 
+      height: 20px;
+    }
+
+    .btn-text {
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
-  <div class="container" id="authContainer"></div>
+  <div class="container" id="authContainer">
+  </div>
 
   <div class="container" id="productFormContainer" style="display: none;"> 
     <h1>Add New Extension</h1>
@@ -198,7 +231,8 @@
 
       <div class="form-group">
         <label for="publisherName">Publisher Name:</label>
-        <label id="publisherNameLabel"></label> <input type="hidden" id="publisherName" name="publisherName">
+        <label id="publisherNameLabel"></label> 
+        <input type="hidden" id="publisherName" name="publisherName">
       </div>
 
       <div class="form-group">
@@ -216,7 +250,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-analytics.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js';
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js';
 
     const firebaseConfig = {
       apiKey: "AIzaSyCgy_AToJkB7iIkAf8A9yKYLGRcn6q3DGc",
@@ -276,10 +310,12 @@
           } else {
             authContainer.innerHTML = `
               <h2>Please sign in to add a product</h2>
-              <div class="auth-buttons">
-                <button onclick="signIn()">Sign In</button>
-                <button onclick="signUp()">Sign Up</button>
-              </div>
+              <button id="googleSignInButton" class="google-signin-btn" onclick="signInWithGoogle()">
+                <span class="icon-container">
+                  <img src="https://iili.io/dKDr0W7.png" alt="Google Logo" class="google-logo">
+                </span>
+                <span class="btn-text">Sign In with Google</span>
+              </button>
             `;
             userCard.innerHTML = ''; 
             publisherNameLabel.textContent = ''; 
@@ -347,31 +383,14 @@
           });
         });
         
-        window.signIn = () => {
-          const email = prompt("Enter your email:");
-          const password = prompt("Enter your password:");
-          signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-              currentUser = userCredential.user;
+        window.signInWithGoogle = () => {
+          const provider = new GoogleAuthProvider();
+          signInWithPopup(auth, provider)
+            .then((result) => {
+              currentUser = result.user;
               updateAuthDisplay();
-            })
-            .catch((error) => {
-              console.error("Error signing in:", error);
-              alert(error.message); 
-            });
-        };
-
-        window.signUp = () => {
-          const email = prompt("Enter your email:");
-          const password = prompt("Enter your password:");
-          createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-              currentUser = userCredential.user;
-              updateAuthDisplay();
-            })
-            .catch((error) => {
-              console.error("Error signing up:", error);
-              alert(error.message);
+            }).catch((error) => {
+              console.error("Error signing in with Google:", error);
             });
         };
 
