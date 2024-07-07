@@ -918,73 +918,82 @@ footer {
     }
   
     function displayProducts(productsToDisplay) {
-      productsContainer.innerHTML = '';
-      productsToDisplay.forEach((product, index) => {
-        let buttonText = product.type === "paid" ? "Buy Now" : "Download Now";
-        let buttonUrl = product.type === "paid" ? product.paymentUrl : product.paymentUrl;
-        let verifiedIcon = product.isVerified
-            ? `<span class="material-icons verified-icon">verified</span>`
-            : '';
-        let imageElement = document.createElement(product.coverImageURL.endsWith('.gif') ? 'img' : 'img');
-        imageElement.src = product.coverImageURL;
-        imageElement.alt = `${product.name} Cover`;
-        let extensionImageContainer = document.createElement('div');
-        extensionImageContainer.classList.add('extension-image');
-        extensionImageContainer.appendChild(imageElement);
-        const truncatedDescription = truncateDescription(product.description, maxDescriptionLength);
-        const heartCount = product.Heart_Num || 0;
-        const productCard = `
-          <div class="product-card" data-type="${product.type}" data-product-id="${product.id}" style="background-color: var(--card-bg-${(index % 20) + 1});">
-            <div class="type-indicator ${product.type}" data-type="${product.type}">${product.type.toUpperCase()}</div>
-            <div class="publisher-info">
-              <img class="publisher-image" src="${product.publisherImageURL}" alt="Publisher Image">
-              <div>
-                <span class="publisher-name">${product.publisherName} ${verifiedIcon}</span>
-                <p class="publish-date">${product.date}</p>
-              </div>
-            </div>
-            ${extensionImageContainer.outerHTML} 
-            <h2>${product.name}</h2>
-            <div class="description-container">
-              <p class="description-text">${truncatedDescription}</p>
-              <span class="read-more" style="color: var(--primary-color); cursor: pointer;" onclick="showFullDescription(this)">Read More</span>
-            </div>
-            <p>Price: $${product.price.toFixed(2)}</p>
-            <div class="button-group">
-              <a href="${buttonUrl}" target="_blank">
-                <button>${buttonText}</button>
-              </a>
-              <a href="${product.topicURL}" target="_blank">
-                <button style="background-color: #FF9843;">Visit Official Topic</button> 
-              </a>
-            </div>
-            <span class="heart-icon material-icons" onclick="toggleHeart(this)">favorite_border</span>
-            <span class="heart-count">${heartCount}</span>
+  productsContainer.innerHTML = '';
+  productsToDisplay.forEach((product, index) => {
+    let buttonText = product.type === "paid" ? "Buy Now" : "Download Now";
+    let buttonUrl = product.type === "paid" ? product.paymentUrl : product.paymentUrl;
+    let verifiedIcon = product.isVerified
+        ? `<span class="material-icons verified-icon">verified</span>`
+        : '';
+    let imageElement = document.createElement(product.coverImageURL.endsWith('.gif') ? 'img' : 'img');
+    imageElement.src = product.coverImageURL;
+    imageElement.alt = `${product.name} Cover`;
+    let extensionImageContainer = document.createElement('div');
+    extensionImageContainer.classList.add('extension-image');
+    extensionImageContainer.appendChild(imageElement);
+    const truncatedDescription = truncateDescription(product.description, maxDescriptionLength);
+    const heartCount = product.Heart_Num || 0;
+    const productCard = `
+      <div class="product-card" data-type="${product.type}" data-product-id="${product.id}" style="background-color: var(--card-bg-${(index % 20) + 1});">
+        <div class="type-indicator ${product.type}" data-type="${product.type}">${product.type.toUpperCase()}</div>
+        <div class="publisher-info">
+          <img class="publisher-image" src="${product.publisherImageURL}" alt="Publisher Image">
+          <div>
+            <span class="publisher-name">${product.publisherName} ${verifiedIcon}</span>
+            <p class="publish-date">${product.date}</p>
           </div>
-        `;
-        productsContainer.innerHTML += productCard;
-      });
-  
-      const typeIndicators = document.querySelectorAll('.type-indicator');
-      typeIndicators.forEach(indicator => {
-        indicator.addEventListener('click', showInfoDialog);
-      });
-      const descriptionTexts = document.querySelectorAll('.description-text');
-      descriptionTexts.forEach(textElement => {
-        textElement.innerHTML = truncateDescription(textElement.textContent, maxDescriptionLength);
-      });
-  
-      const heartIcons = document.querySelectorAll('.heart-icon');
-      heartIcons.forEach(icon => {
-        icon.addEventListener('click', () => {
-          if (currentUser) {
-            toggleHeart(icon);
-          } else {
-            alert('Please sign in to interact with hearts.');
-          }
-        });
-      });
-    }
+        </div>
+        ${extensionImageContainer.outerHTML} 
+        <h2>${product.name}</h2>
+        <div class="description-container">
+          <p class="description-text">${truncatedDescription}</p>
+          <span class="read-more" style="color: var(--primary-color); cursor: pointer;">Read More</span> 
+        </div>
+        <p>Price: $${product.price.toFixed(2)}</p>
+        <div class="button-group">
+          <a href="${buttonUrl}" target="_blank">
+            <button>${buttonText}</button>
+          </a>
+          <a href="${product.topicURL}" target="_blank">
+            <button style="background-color: #FF9843;">Visit Official Topic</button> 
+          </a>
+        </div>
+        <span class="heart-icon material-icons" onclick="toggleHeart(this)">favorite_border</span>
+        <span class="heart-count">${heartCount}</span>
+      </div>
+    `;
+    productsContainer.innerHTML += productCard;
+  });
+
+  const typeIndicators = document.querySelectorAll('.type-indicator');
+  typeIndicators.forEach(indicator => {
+    indicator.addEventListener('click', showInfoDialog);
+  });
+
+  const descriptionTexts = document.querySelectorAll('.description-text');
+  descriptionTexts.forEach(textElement => {
+    textElement.innerHTML = truncateDescription(textElement.textContent, maxDescriptionLength);
+  });
+
+  const heartIcons = document.querySelectorAll('.heart-icon');
+  heartIcons.forEach(icon => {
+    icon.addEventListener('click', () => {
+      if (currentUser) {
+        toggleHeart(icon);
+      } else {
+        alert('Please sign in to interact with hearts.');
+      }
+    });
+  });
+
+  // Add event listeners to "Read More" spans
+  const readMoreSpans = document.querySelectorAll('.read-more');
+  readMoreSpans.forEach(span => {
+    span.addEventListener('click', () => {
+      showFullDescription(span);
+    });
+  }); 
+}
   
     function showInfoDialog(event) {
       const type = event.target.dataset.type;
