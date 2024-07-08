@@ -1034,8 +1034,7 @@ footer {
           heartIcon = 'favorite';
           heartColor = 'style="color: #FF6969;"'; 
         }
-  
-        // Determine file type icon and label
+
         let fileTypeIcon = 'insert_drive_file';
         let fileTypeLabel = product.fileType || 'Unknown'; 
         switch (product.fileType) {
@@ -1228,17 +1227,15 @@ footer {
       const minPrice = parseFloat(minPriceInput.value) || 0;
       const maxPrice = parseFloat(maxPriceInput.value) || Infinity;
   
-      const filteredProducts = Object.fromEntries( 
-        Object.entries(allProducts).filter(([productId, product]) => {
-          const matchesType = selectedType === 'all' || product.type === selectedType;
-          const matchesPrice = product.price >= minPrice && product.price <= maxPrice;
-          const matchesSearch = product.name.toLowerCase().includes(searchTerm) ||
-                 product.description.toLowerCase().includes(searchTerm);
-          return matchesType && matchesPrice && matchesSearch;
-        })
-      );
+      const filteredProducts = Object.values(allProducts).filter(product => {
+        const matchesType = selectedType === 'all' || product.type === selectedType;
+        const matchesPrice = product.price >= minPrice && product.price <= maxPrice;
+        const matchesSearch = product.name.toLowerCase().includes(searchTerm) ||
+               product.description.toLowerCase().includes(searchTerm);
+        return matchesType && matchesPrice && matchesSearch;
+      });
   
-      displayProducts(filteredProducts); 
+      displayProducts(filteredProducts);
     }
   
     themeToggle.addEventListener('change', () => {
