@@ -838,6 +838,7 @@ footer {
         <img src="https://iili.io/JpY7UV2.md.png" width="40px" alt="Logo"> 
         <h1>Extensions Lake</h1> 
       </div>
+
       <nav>
         <ul>
           <li><a href="index.html" class="active">Home</a></li> 
@@ -846,10 +847,12 @@ footer {
           <li><a href="contacts.html">Contact</a></li>
         </ul>
       </nav>
+
       <div class="auth-buttons" id="authButtons"> 
         <button id="signInBtn">Sign In</button>
         <button id="signUpBtn">Sign Up</button>
       </div>
+      
     </div>
   </header>
 
@@ -913,7 +916,7 @@ footer {
         <button id="closeDialog">Close</button>
     </div>
   </div>
-  <footer>
+<footer>
     <p>About Us - We are a company dedicated to providing high-quality extensions.</p>
     <p>for 
       <img src="https://iili.io/dfBx14V.png" alt="Google Chrome Logo" height="30">
@@ -952,7 +955,6 @@ footer {
     const dialogOverlay = document.getElementById('dialogOverlay');
     const themeToggle = document.getElementById('themeToggle');
     const typeFilter = document.getElementById('typeFilter');
-    const dateFilter = document.getElementById('dateFilter'); 
     const priceFilterGroup = document.getElementById('priceFilterGroup');
     const minPriceInput = document.getElementById('minPrice');
     const maxPriceInput = document.getElementById('maxPrice');
@@ -1003,24 +1005,17 @@ footer {
   
     function displayProducts(productsToDisplay) {
       productsContainer.innerHTML = '';
-
-      const sortedProducts = Object.values(productsToDisplay).sort((a, b) => {
-        const dateA = new Date(a.date);
-        const dateB = new Date(b.date);
-        if (dateFilter.value === 'oldest') {
-          return dateA - dateB;
-        } else {
-          return dateB - dateA;
-        }
-      });
   
-      sortedProducts.forEach((product, index) => {
+      const productKeys = Object.keys(productsToDisplay);
+  
+      productKeys.forEach((productId, index) => {
+        const product = productsToDisplay[productId];
         if (!product.list_of_hearers) {
           product.list_of_hearers = [];
         }
   
         let buttonText = product.type === "paid" ? "Buy Now" : "Download Now";
-        let buttonUrl = product.paymentUrl; 
+        let buttonUrl = product.type === "paid" ? product.paymentUrl : product.downloadUrl; 
         let verifiedIcon = product.isVerified
             ? `<span class="material-icons verified-icon">verified</span>`
             : '';
@@ -1075,8 +1070,8 @@ footer {
             </div>
             <p>Price: $${product.price.toFixed(2)}</p>
             <div class="button-group">
-              <a href="${buttonUrl}" target="_blank"> 
-                <button>${buttonText}</button> 
+              <a href="${buttonUrl}" target="_blank">
+                <button>${buttonText}</button>
               </a>
               <a href="${product.topicURL}" target="_blank">
                 <button style="background-color: #FF9843;">Visit Official Topic</button> 
@@ -1088,7 +1083,6 @@ footer {
         `;
         productsContainer.innerHTML += productCard;
       });
-
       const typeIndicators = document.querySelectorAll('.type-indicator');
       typeIndicators.forEach(indicator => {
         indicator.addEventListener('click', showInfoDialog);
@@ -1220,8 +1214,11 @@ footer {
       applyFilters();
     });
   
-    typeFilter.addEventListener('change', applyFilters);
-    dateFilter.addEventListener('change', applyFilters); 
+    typeFilter.addEventListener('change', () => {
+      priceFilterGroup.style.display = (typeFilter.value === 'paid') ? 'flex' : 'none';
+      applyFilters();
+    });
+  
     minPriceInput.addEventListener('input', applyFilters);
     maxPriceInput.addEventListener('input', applyFilters);
   
@@ -1230,22 +1227,20 @@ footer {
       const selectedType = typeFilter.value;
       const minPrice = parseFloat(minPriceInput.value) || 0;
       const maxPrice = parseFloat(maxPriceInput.value) || Infinity;
-
-      // Filter based on all criteria
-      const filteredProducts = Object.fromEntries(
+  
+      const filteredProducts = Object.fromEntries( 
         Object.entries(allProducts).filter(([productId, product]) => {
           const matchesType = selectedType === 'all' || product.type === selectedType;
           const matchesPrice = product.price >= minPrice && product.price <= maxPrice;
-          const matchesSearch =
-            product.name.toLowerCase().includes(searchTerm) ||
-            product.description.toLowerCase().includes(searchTerm);
+          const matchesSearch = product.name.toLowerCase().includes(searchTerm) ||
+                 product.description.toLowerCase().includes(searchTerm);
           return matchesType && matchesPrice && matchesSearch;
         })
       );
-
-      displayProducts(filteredProducts);
+  
+      displayProducts(filteredProducts); 
     }
-
+  
     themeToggle.addEventListener('change', () => {
       document.body.classList.toggle('dark-theme', themeToggle.checked);
   
