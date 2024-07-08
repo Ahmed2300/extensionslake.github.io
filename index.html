@@ -1092,22 +1092,28 @@ footer {
       }); 
     }
   
-   function incrementClickCount(productId, buttonUrl) { 
-      const product = allProducts[productId];
+   function incrementClickCount(productId) {
+    if (!currentUser) {
+      alert('Please sign in to download or buy products.');
+      return false; 
+    }
+
+    const product = allProducts[productId];
+    const userIndex = product.list_of_clickers.indexOf(currentUser.uid);
+
+    if (userIndex === -1) { 
+      product.list_of_clickers.push(currentUser.uid);
       product.clk_NUM = (product.clk_NUM || 0) + 1;
       updateProductInDatabase(productId, product);
+
       const clickCountElement = document.getElementById(`clickCount-${productId}`);
       if (clickCountElement) {
         clickCountElement.querySelector('span:last-child').textContent = product.clk_NUM;
       }
-
-      setTimeout(() => {
-        window.location.href = buttonUrl; 
-      }, 500); 
-
-      return false; 
     }
 
+    return true; 
+  }
     function showInfoDialog(event) {
       const type = event.target.dataset.type;
       let dialogTitle, dialogMessage;
