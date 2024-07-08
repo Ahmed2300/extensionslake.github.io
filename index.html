@@ -1043,7 +1043,6 @@ footer {
           heartColor = 'style="color: #FF6969;"'; 
         }
 
-        // Determine file type icon
         let fileTypeIcon = 'insert_drive_file'; 
         switch(product.fileType) {
           case 'AIX':
@@ -1075,7 +1074,7 @@ footer {
             <h2>${product.name} <span class="material-icons" style="font-size: 1.2em; vertical-align: middle;">${fileTypeIcon}</span></h2>
             <div class="description-container">
               <p class="description-text">${truncatedDescription}</p>
-              <span class="read-more" style="color: var(--primary-color); cursor: pointer;">Read More</span> 
+              <span class="read-more" data-product-id="${product.productId}" style="color: var(--primary-color); cursor: pointer;">Read More</span> 
             </div>
             <p>Price: $${product.price.toFixed(2)}</p>
             <div class="button-group">
@@ -1114,10 +1113,12 @@ footer {
         });
       });
   
+      // Attach event listener after product cards are created
       const readMoreSpans = document.querySelectorAll('.read-more');
       readMoreSpans.forEach(span => {
         span.addEventListener('click', () => {
-          showFullDescription(span);
+          const productId = span.dataset.productId;
+          showFullDescription(productId); 
         });
       }); 
     }
@@ -1149,14 +1150,10 @@ footer {
       dialogOverlay.style.display = 'none';
     });
   
-    function showFullDescription(element) {
-      const card = element.closest('.product-card');
-      const productName = card.querySelector('h2').textContent;
-      const productId = card.dataset.productId; 
-      const fullDescription = allProducts[productId].description; 
-  
-      dialogTitle.textContent = productName;
-      dialogDescription.textContent = fullDescription;
+    function showFullDescription(productId) {
+      const product = allProducts[productId];
+      dialogTitle.textContent = product.name;
+      dialogDescription.textContent = product.description;
       infoDialog.style.display = 'block'; 
       dialogOverlay.style.display = 'block'; 
     }
