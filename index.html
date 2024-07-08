@@ -889,6 +889,13 @@ footer {
           <option value="paid">Paid</option>
         </select>
       </div>
+      <div class="filter-group">
+        <label for="dateFilter">Date:</label>
+        <select id="dateFilter">
+          <option value="newest">Newest to Oldest</option>
+          <option value="oldest">Oldest to Newest</option>
+        </select>
+      </div>
       <div class="filter-group" id="priceFilterGroup" style="display: none;">
         <label for="minPrice">Min Price:</label>
         <input type="number" id="minPrice" min="0" step="0.01">
@@ -918,7 +925,10 @@ footer {
     </p>
     <p>© 2023 Extensions Lake. All rights reserved.</p>
   </footer>
-   
+
+
+
+  
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-analytics.js";
@@ -948,6 +958,7 @@ footer {
     const dialogOverlay = document.getElementById('dialogOverlay');
     const themeToggle = document.getElementById('themeToggle');
     const typeFilter = document.getElementById('typeFilter');
+    const dateFilter = document.getElementById('dateFilter');
     const priceFilterGroup = document.getElementById('priceFilterGroup');
     const minPriceInput = document.getElementById('minPrice');
     const maxPriceInput = document.getElementById('maxPrice');
@@ -998,15 +1009,22 @@ footer {
   
     function displayProducts(productsToDisplay) {
       productsContainer.innerHTML = '';
-  
-      const productKeys = Object.keys(productsToDisplay);
-  
-      productKeys.forEach((productId, index) => {
-        const product = productsToDisplay[productId];
+
+      const sortedProducts = Object.values(productsToDisplay).sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        if (dateFilter.value === 'oldest') {
+          return dateA - dateB; 
+        } else {
+          return dateB - dateA; 
+        }
+      });
+
+      sortedProducts.forEach((product, index) => {
         if (!product.list_of_hearers) {
           product.list_of_hearers = [];
         }
-  
+
         let buttonText = product.type === "paid" ? "Buy Now" : "Download Now";
         let buttonUrl = product.type === "paid" ? product.paymentUrl : product.paymentUrl;
         let verifiedIcon = product.isVerified
@@ -1029,7 +1047,7 @@ footer {
         }
   
         const productCard = `
-          <div class="product-card" data-type="${product.type}" data-product-id="${productId}" style="background-color: var(--card-bg-${(index % 20) + 1});">
+          <div class="product-card" data-type="${product.type}" data-product-id="${product.productId}" style="background-color: var(--card-bg-${(index % 20) + 1});">
             <div class="type-indicator ${product.type}" data-type="${product.type}">${product.type.toUpperCase()}</div>
             <div class="publisher-info">
               <img class="publisher-image" src="${product.publisherImageURL}" alt="Publisher Image">
@@ -1198,6 +1216,8 @@ footer {
       applyFilters();
     });
   
+    dateFilter.addEventListener('change', applyFilters);
+
     minPriceInput.addEventListener('input', applyFilters);
     maxPriceInput.addEventListener('input', applyFilters);
   
