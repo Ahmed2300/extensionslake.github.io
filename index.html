@@ -1006,17 +1006,24 @@ footer {
   
     function displayProducts(productsToDisplay) {
       productsContainer.innerHTML = '';
-  
-      const productKeys = Object.keys(productsToDisplay);
-  
-      productKeys.forEach((productId, index) => {
-        const product = productsToDisplay[productId];
+
+      const sortedProducts = Object.values(productsToDisplay).sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        if (dateFilter.value === 'oldest') {
+          return dateA - dateB; 
+        } else {
+          return dateB - dateA; 
+        }
+      });
+
+      sortedProducts.forEach((product, index) => {
         if (!product.list_of_hearers) {
           product.list_of_hearers = [];
         }
-  
+
         let buttonText = product.type === "paid" ? "Buy Now" : "Download Now";
-        let buttonUrl = product.type === "paid" ? product.paymentUrl : product.paymentUrl;
+        let buttonUrl = product.type === "paid" ? product.paymentUrl : product.downloadUrl; 
         let verifiedIcon = product.isVerified
             ? `<span class="material-icons verified-icon">verified</span>`
             : '';
@@ -1035,9 +1042,27 @@ footer {
           heartIcon = 'favorite';
           heartColor = 'style="color: #FF6969;"'; 
         }
+
+        // Determine file type icon
+        let fileTypeIcon = 'insert_drive_file'; 
+        switch(product.fileType) {
+          case 'AIX':
+          case 'AIA':
+          case 'APK':
+            fileTypeIcon = 'android'; 
+            break;
+          case 'text':
+            fileTypeIcon = 'description';
+            break;
+          case 'OpenSource':
+            fileTypeIcon = 'code';
+            break;
+          default:
+            product.fileType = 'Unknown';
+        }
   
         const productCard = `
-          <div class="product-card" data-type="${product.type}" data-product-id="${productId}" style="background-color: var(--card-bg-${(index % 20) + 1});">
+          <div class="product-card" data-type="${product.type}" data-product-id="${product.productId}" style="background-color: var(--card-bg-${(index % 20) + 1});">
             <div class="type-indicator ${product.type}" data-type="${product.type}">${product.type.toUpperCase()}</div>
             <div class="publisher-info">
               <img class="publisher-image" src="${product.publisherImageURL}" alt="Publisher Image">
@@ -1047,7 +1072,7 @@ footer {
               </div>
             </div>
             ${extensionImageContainer.outerHTML} 
-            <h2>${product.name}</h2>
+            <h2>${product.name} <span class="material-icons" style="font-size: 1.2em; vertical-align: middle;">${fileTypeIcon}</span></h2>
             <div class="description-container">
               <p class="description-text">${truncatedDescription}</p>
               <span class="read-more" style="color: var(--primary-color); cursor: pointer;">Read More</span> 
