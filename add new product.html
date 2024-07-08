@@ -360,7 +360,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-analytics.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js';
-  
+
     const firebaseConfig = {
       apiKey: "AIzaSyCgy_AToJkB7iIkAf8A9yKYLGRcn6q3DGc",
       authDomain: "mypro-f9c43.firebaseapp.com",
@@ -371,388 +371,215 @@
       appId: "1:457342163754:web:9f428caeea9ad5c5d11c53",
       measurementId: "G-YS7GD676WC"
     };
-  
+
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const auth = getAuth(app);
-  
-    const productsContainer = document.getElementById("productsContainer");
-    const searchInput = document.getElementById("searchInput");
-    const infoDialog = document.getElementById("infoDialog");
-    const dialogTitle = document.getElementById("dialogTitle");
-    const dialogDescription = document.getElementById("dialogDescription");
-    const closeDialogButton = document.getElementById("closeDialog");
-    const dialogOverlay = document.getElementById('dialogOverlay');
-    const themeToggle = document.getElementById('themeToggle');
-    const typeFilter = document.getElementById('typeFilter');
-    const priceFilterGroup = document.getElementById('priceFilterGroup');
-    const minPriceInput = document.getElementById('minPrice');
-    const maxPriceInput = document.getElementById('maxPrice');
-    const databaseURL = "https://mypro-f9c43-default-rtdb.firebaseio.com/";
-    const apiKey = "AIzaSyBfDYW18AJSfb03Cm_lR-SCZpTbcnLH1Qk"; 
-    const signInBtn = document.getElementById("signInBtn");
-    const signUpBtn = document.getElementById("signUpBtn");
-    const authButtons = document.getElementById("authButtons");
-    const signupDialog = document.getElementById("signupDialog");
-    const userCard = document.getElementById("userCard");
-    const googleSignInButton = document.getElementById('googleSignInButton');
-    let allProducts = [];
-    const maxDescriptionLength = 150;
-    let currentUser = null;
-  
-    async function googleSignIn() {
-      const provider = new GoogleAuthProvider();
-      try {
-        const result = await signInWithPopup(auth, provider);
-        currentUser = result.user;
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-        signupDialog.style.display = "none";
-        dialogOverlay.style.display = "none";
-        updateAuthDisplay();
-        fetchProducts();
-      } catch (error) {
-        console.error("Error signing in with Google:", error);
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const databaseURL = "https://mypro-f9c43-default-rtdb.firebaseio.com/";
+      const apiKey = "AIzaSyBfDYW18AJSfb03Cm_lR-SCZpTbcnLH1Qk";
+      const addProductForm = document.getElementById('addProductForm');
+      const successMessage = document.getElementById('successMessage');
+      const userCard = document.getElementById('userCard');
+      const authContainer = document.getElementById('authContainer');
+      const productFormContainer = document.getElementById('productFormContainer');
+      const publisherNameLabel = document.getElementById('publisherNameLabel');
+      const publisherImageURLInput = document.getElementById('publisherImageURL');
+      const imgbbApiKey = '591f55a2f11247ad2c9dc9faf9df0836';
+      const coverImageUpload = document.getElementById('coverImageUpload');
+      const coverImagePreview = document.getElementById('coverImagePreview');
+      const coverImageURLRadio = document.getElementById('coverImageURLRadio');
+      const coverImageUploadRadio = document.getElementById('coverImageUploadRadio');
+      const coverImageURLInput = document.getElementById('coverImageURL');
+      const fileUploadButton = document.querySelector('.file-upload-button');
+      const publisherImagePreview = document.getElementById('publisherImagePreview');
+      let currentUser = null;
+
+      function initApp() {
+        auth.onAuthStateChanged(user => {
+          currentUser = user;
+          updateAuthDisplay(); 
+        });
       }
-    }
-  
-    function fetchProducts() {
-      fetch(`${databaseURL}/.json?auth=${apiKey}`)
+
+      function updateAuthDisplay() {
+        if (currentUser) {
+          userCard.innerHTML = `
+            <div class="user-card">
+              <img src="${currentUser.photoURL || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'}" alt="User Profile Picture">
+              <h3>${currentUser.displayName || currentUser.email.split('@')[0]}</h3>
+              <p>${currentUser.email}</p>
+              <button id="logoutBtn">Logout</button>
+            </div>
+          `;
+          publisherNameLabel.textContent = currentUser.displayName || currentUser.email.split('@')[0];
+          publisherImagePreview.src = currentUser.photoURL || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'; 
+          publisherImageURLInput.value = publisherImagePreview.src; 
+          const logoutBtn = document.getElementById('logoutBtn');
+          logoutBtn.addEventListener('click', () => {
+            auth.signOut().then(() => {
+              currentUser = null;
+              updateAuthDisplay();
+            }).catch(error => {
+              console.error("Error signing out:", error);
+            });
+          });
+        } else {
+          authContainer.innerHTML = `
+            <h2>Please sign in to add a product</h2>
+            <button id="googleSignInButton" class="google-signin-btn" onclick="signInWithGoogle()">
+              <span class="icon-container">
+                <img src="https://iili.io/dKDr0W7.png" alt="Google Logo" class="google-logo">
+              </span>
+              <span class="btn-text">Sign In with Google</span>
+            </button>
+          `;
+          userCard.innerHTML = '';
+          publisherNameLabel.textContent = '';
+          publisherImageURLInput.value = '';
+        }
+        toggleFormDisplay(); 
+      }
+
+      function toggleFormDisplay() {
+        if (currentUser) {
+          productFormContainer.style.display = 'block';
+          authContainer.style.display = 'none';
+        } else {
+          productFormContainer.style.display = 'none';
+          authContainer.style.display = 'block'; 
+        }
+      }
+
+      addProductForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (!currentUser) {
+          alert("Please sign in to add a product.");
+          return;
+        }
+        let coverImageURL = addProductForm.coverImageURL.value;
+        if (coverImageUpload.files.length > 0) {
+          coverImageURL = await uploadImageToImgBB(coverImageUpload.files[0]);
+        }
+        if (!coverImageURL) {
+          alert("Please provide a cover image URL or upload an image.");
+          return;
+        }
+        const newProduct = {
+          name: addProductForm.productName.value,
+          description: addProductForm.productDescription.value,
+          price: parseFloat(addProductForm.productPrice.value),
+          paymentUrl: addProductForm.paymentUrl.value,
+          coverImageURL: coverImageURL,
+          topicURL: addProductForm.topicURL.value,
+          type: addProductForm.productType.value,
+          publisherImageURL: addProductForm.publisherImageURL.value,
+          publisherName: currentUser.displayName || currentUser.email.split('@')[0],
+          publisher_ID: currentUser.uid,
+          isVerified: addProductForm.isVerified.checked,
+          date: new Date().toISOString().slice(0, 10)
+        };
+        const productURL = `${databaseURL}/${encodeURIComponent(addProductForm.productName.value)}.json?auth=${apiKey}`;
+        fetch(productURL, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(newProduct)
+        })
         .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
           }
-          return response.json();
-        })
-        .then(data => {
-          allProducts = data;
-          for (const productId in allProducts) {
-            if (allProducts[productId].clk_NUM === undefined) {
-              allProducts[productId].clk_NUM = 0;
-            }
-            if (!allProducts[productId].list_of_hearers) {
-              allProducts[productId].list_of_hearers = [];
-            }
-          }
-          displayProducts(allProducts);
+          console.log('Product added successfully!', response);
+          addProductForm.reset();
+          successMessage.style.display = 'block';
+          setTimeout(() => {
+            successMessage.style.display = 'none';
+          }, 3000);
         })
         .catch(error => {
-          console.error('There has been a problem with your fetch operation:', error);
-          productsContainer.innerHTML = '<p>Error loading products. Please try again later.</p>';
-        });
-    }
-  
-    function displayProducts(productsToDisplay) {
-      productsContainer.innerHTML = '';
-  
-      const productKeys = Object.keys(productsToDisplay);
-  
-      productKeys.forEach((productId, index) => {
-        const product = productsToDisplay[productId];
-
-        let buttonText = product.type === "paid" ? "Buy Now" : "Download Now";
-        let buttonUrl = product.type === "paid" ? product.paymentUrl : product.paymentUrl;
-        let verifiedIcon = product.isVerified
-            ? `<span class="material-icons verified-icon">verified</span>`
-            : '';
-        let imageElement = document.createElement(product.coverImageURL.endsWith('.gif') ? 'img' : 'img');
-        imageElement.src = product.coverImageURL;
-        imageElement.alt = `${product.name} Cover`;
-        let extensionImageContainer = document.createElement('div');
-        extensionImageContainer.classList.add('extension-image');
-        extensionImageContainer.appendChild(imageElement);
-        const truncatedDescription = truncateDescription(product.description, maxDescriptionLength);
-        const heartCount = product.Heart_Num || 0;
-        
-        let heartIcon = 'favorite_border';
-        let heartColor = ''; 
-        if (currentUser && product.list_of_hearers.includes(currentUser.uid)) {
-          heartIcon = 'favorite';
-          heartColor = 'style="color: #FF6969;"'; 
-        }
-  
-        const productCard = `
-          <div class="product-card" data-type="${product.type}" data-product-id="${productId}" style="background-color: var(--card-bg-${(index % 20) + 1});">
-            <div class="click-count" id="clickCount-${productId}">
-              <span class="material-icons" style="font-size: 1.2em; margin-right: 2px;">
-                mouse
-              </span>
-              <span>${product.clk_NUM || 0}</span> 
-            </div> 
-            <div class="type-indicator ${product.type}" data-type="${product.type}">${product.type.toUpperCase()}</div>
-            <div class="publisher-info">
-              <img class="publisher-image" src="${product.publisherImageURL}" alt="Publisher Image">
-              <div>
-                <span class="publisher-name">${product.publisherName} ${verifiedIcon}</span>
-                <p class="publish-date">${product.date}</p>
-              </div>
-            </div>
-            ${extensionImageContainer.outerHTML} 
-            <h2>${product.name}</h2>
-            <div class="description-container">
-              <p class="description-text">${truncatedDescription}</p>
-              <span class="read-more" style="color: var(--primary-color); cursor: pointer;">Read More</span> 
-            </div>
-            <p>Price: $${product.price.toFixed(2)}</p>
-            <div class="button-group">
-              <a href="${buttonUrl}" target="_blank" onclick="return incrementClickCount('${productId}');">
-                <button>${buttonText}</button>
-              </a>
-              <a href="${product.topicURL}" target="_blank">
-                <button style="background-color: #FF9843;">Visit Official Topic</button> 
-              </a>
-            </div>
-            <span class="heart-icon material-icons" onclick="toggleHeart(this)" ${heartColor}>${heartIcon}</span>
-            <span class="heart-count">${heartCount}</span>
-          </div>
-        `;
-        productsContainer.innerHTML += productCard;
-      });
-  
-      const typeIndicators = document.querySelectorAll('.type-indicator');
-      typeIndicators.forEach(indicator => {
-        indicator.addEventListener('click', showInfoDialog);
-      });
-  
-      const descriptionTexts = document.querySelectorAll('.description-text');
-      descriptionTexts.forEach(textElement => {
-        textElement.innerHTML = truncateDescription(textElement.textContent, maxDescriptionLength);
-      });
-  
-      const heartIcons = document.querySelectorAll('.heart-icon');
-      heartIcons.forEach(icon => {
-        icon.addEventListener('click', () => {
-          if (currentUser) {
-            toggleHeart(icon);
-          } else {
-            alert('Please sign in to interact with hearts.');
-          }
+          console.error('There has been a problem adding the product:', error);
         });
       });
-  
-      const readMoreSpans = document.querySelectorAll('.read-more');
-      readMoreSpans.forEach(span => {
-        span.addEventListener('click', () => {
-          showFullDescription(span);
-        });
-      }); 
-    }
-  
-    function incrementClickCount(productId) {
-      const product = allProducts[productId];
-      product.clk_NUM = (product.clk_NUM || 0) + 1;
-      updateProductInDatabase(productId, product); 
-      const clickCountElement = document.getElementById(`clickCount-${productId}`);
-      if (clickCountElement) {
-        clickCountElement.querySelector('span:last-child').textContent = product.clk_NUM;
-      }
-      return true; 
-    }
 
-    function showInfoDialog(event) {
-      const type = event.target.dataset.type;
-      let dialogTitle, dialogMessage;
-      if (type === 'free') {
-        dialogTitle = 'Free Product';
-        dialogMessage = 'This product is free! You can download it directly by clicking "Download Now."';
-      } else if (type === 'paid') {
-        dialogTitle = 'Paid Product';
-        dialogMessage = 'This product is paid. Please proceed to checkout to make a purchase.';
-      }
-      infoDialog.querySelector('h3').textContent = dialogTitle;
-      infoDialog.querySelector('p').textContent = dialogMessage;
-      infoDialog.style.display = 'block';
-      dialogOverlay.style.display = 'block';
-    }
-  
-    closeDialogButton.addEventListener('click', () => {
-      infoDialog.style.display = 'none';
-      dialogOverlay.style.display = 'none';
-    });
-  
-    dialogOverlay.addEventListener('click', () => {
-      signupDialog.style.display = "none";
-      infoDialog.style.display = 'none';
-      dialogOverlay.style.display = 'none';
-    });
-  
-    function showFullDescription(element) {
-      const card = element.closest('.product-card');
-      const productName = card.querySelector('h2').textContent;
-      const productId = card.dataset.productId; 
-      const fullDescription = allProducts[productId].description; 
-  
-      dialogTitle.textContent = productName;
-      dialogDescription.textContent = fullDescription;
-      infoDialog.style.display = 'block'; 
-      dialogOverlay.style.display = 'block'; 
-    }
-  
-    function truncateDescription(description, maxLength) {
-      if (description.length > maxLength) {
-        return description.substring(0, maxLength) + '... ';
-      }
-      return description;
-    }
-  
-    function toggleHeart(icon) {
-      if (!currentUser) {
-        alert('Please sign in to interact with hearts.');
-        return;
-      }
-  
-      const card = icon.closest('.product-card');
-      const productId = card.dataset.productId;
-      const heartCountSpan = card.querySelector('.heart-count');
-      let currentCount = parseInt(heartCountSpan.textContent, 10);
-      const product = allProducts[productId]; 
-  
-      const userIndex = product.list_of_hearers.indexOf(currentUser.uid);
-  
-      if (userIndex === -1) {
-        product.list_of_hearers.push(currentUser.uid);
-        icon.textContent = 'favorite';
-        icon.style.color = '#FF6969'; 
-        currentCount++;
-      } else {
-        product.list_of_hearers.splice(userIndex, 1);
-        icon.textContent = 'favorite_border';
-        icon.style.color = ''; 
-        currentCount--;
-      }
-  
-      heartCountSpan.textContent = currentCount;
-      product.Heart_Num = currentCount; 
-  
-      updateProductInDatabase(productId, product);
-    }
-  
-    function updateProductInDatabase(productId, updatedProduct) {
-      fetch(`${databaseURL}/${productId}.json?auth=${apiKey}`, {
-        method: 'PATCH',
-        body: JSON.stringify(updatedProduct), 
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8'
-        }
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        console.log('Product updated successfully!');
-      })
-      .catch(error => {
-        console.error('There has been a problem updating the product:', error);
-      });
-    }
-  
-  
-    fetchProducts();
-  
-    searchInput.addEventListener("input", () => {
-      applyFilters();
-    });
-  
-    typeFilter.addEventListener('change', () => {
-      priceFilterGroup.style.display = (typeFilter.value === 'paid') ? 'flex' : 'none';
-      applyFilters();
-    });
-  
-    minPriceInput.addEventListener('input', applyFilters);
-    maxPriceInput.addEventListener('input', applyFilters);
-  
-    function applyFilters() {
-      const searchTerm = searchInput.value.toLowerCase();
-      const selectedType = typeFilter.value;
-      const minPrice = parseFloat(minPriceInput.value) || 0;
-      const maxPrice = parseFloat(maxPriceInput.value) || Infinity;
-  
-      const filteredProducts = Object.fromEntries( 
-        Object.entries(allProducts).filter(([productId, product]) => {
-          const matchesType = selectedType === 'all' || product.type === selectedType;
-          const matchesPrice = product.price >= minPrice && product.price <= maxPrice;
-          const matchesSearch = product.name.toLowerCase().includes(searchTerm) ||
-                 product.description.toLowerCase().includes(searchTerm);
-          return matchesType && matchesPrice && matchesSearch;
-        })
-      );
-  
-      displayProducts(filteredProducts); 
-    }
-  
-    themeToggle.addEventListener('change', () => {
-      document.body.classList.toggle('dark-theme', themeToggle.checked);
-  
-      if (themeToggle.checked) {
-        document.documentElement.style.setProperty('--footer-background', '#343a40');
-        document.documentElement.style.setProperty('--footer-text', 'white');
-        localStorage.setItem('theme', 'dark');
-      } else {
-        document.documentElement.style.setProperty('--footer-background', 'black');
-        document.documentElement.style.setProperty('--footer-text', 'white');
-        localStorage.setItem('theme', 'light');
-      }
-    });
-  
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-      document.body.classList.add('dark-theme');
-      themeToggle.checked = true;
-    }
-  
-    signInBtn.addEventListener("click", () => {
-      signupDialog.style.display = "block";
-      dialogOverlay.style.display = "block";
-    });
-  
-    signUpBtn.addEventListener("click", () => {
-      signupDialog.style.display = "block";
-      dialogOverlay.style.display = "block";
-    });
-  
-    googleSignInButton.addEventListener('click', googleSignIn);
-  
-    function updateAuthDisplay() {
-      if (currentUser) {
-        authButtons.style.display = "none";
-        userCard.innerHTML = `
-          <div class="user-card">
-            <img src="${currentUser.photoURL || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'}" alt="User Profile Picture">
-            <h3>${currentUser.displayName || currentUser.email.split('@')[0]}</h3>
-            <p>${currentUser.email}</p>
-            <button id="logoutBtn">Logout</button>
-            <a href="add new product.html"> 
-              <button id="addNewProductBtn" style="background-color: #50B498;">Add New Product</button>
-            </a>
-          </div>
-        `;
-
-        const logoutBtn = document.getElementById('logoutBtn');
-        const addNewProductBtn = document.getElementById('addNewProductBtn');
-
-        logoutBtn.addEventListener('click', () => {
-          auth.signOut().then(() => {
-            localStorage.removeItem('currentUser');
-            currentUser = null;
-            updateAuthDisplay(); 
-            fetchProducts();
-          }).catch(error => {
-            console.error("Error signing out:", error);
+      async function uploadImageToImgBB(imageFile) {
+        const formData = new FormData();
+        formData.append('image', imageFile);
+        try {
+          const response = await fetch(`https://api.imgbb.com/1/upload?key=${imgbbApiKey}`, {
+            method: 'POST',
+            body: formData
           });
-        });
-      } else {
-        authButtons.style.display = "flex";
-        userCard.innerHTML = ""; 
+          if (!response.ok) {
+            throw new Error('Image upload failed');
+          }
+          const data = await response.json();
+          return data.data.url; 
+        } catch (error) {
+          console.error('Error uploading image:', error);
+          alert('Error uploading image. Please try again.');
+          return null;
+        }
       }
-    }
-  
-    updateAuthDisplay();
-    window.addEventListener('load', () => {
-      const cachedUser = localStorage.getItem('currentUser');
-      if (cachedUser) {
-        currentUser = JSON.parse(cachedUser);
-        updateAuthDisplay();
-        fetchProducts(); 
-      }
+
+      window.signInWithGoogle = () => {
+        const provider = new GoogleAuthProvider();
+        signInWithPopup(auth, provider)
+          .then((result) => {
+            currentUser = result.user;
+            updateAuthDisplay();
+          }).catch((error) => {
+            console.error("Error signing in with Google:", error);
+          });
+      };
+
+      window.previewImageFromURL = () => {
+        const url = document.getElementById('coverImageURL').value;
+        if (url) {
+          coverImagePreview.src = url;
+          coverImagePreview.style.display = 'block';
+        } else {
+          coverImagePreview.src = '';
+          coverImagePreview.style.display = 'none';
+        }
+      };
+
+      window.previewImageFromFile = () => {
+        const fileInput = document.getElementById('coverImageUpload');
+        if (fileInput.files && fileInput.files[0]) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            coverImagePreview.src = e.target.result;
+            coverImagePreview.style.display = 'block';
+          };
+          reader.readAsDataURL(fileInput.files[0]);
+        } else {
+          coverImagePreview.src = '';
+          coverImagePreview.style.display = 'none';
+        }
+      };
+
+      window.triggerFileUpload = () => {
+        coverImageUpload.click();
+      };
+
+      coverImageURLRadio.addEventListener('change', () => {
+        coverImageURLInput.style.display = 'block';
+        fileUploadButton.style.display = 'none'; 
+        coverImagePreview.src = ''; 
+        coverImagePreview.style.display = 'none';
+      });
+
+      coverImageUploadRadio.addEventListener('change', () => {
+        coverImageURLInput.style.display = 'none';
+        fileUploadButton.style.display = 'block'; 
+        coverImagePreview.src = '';
+        coverImagePreview.style.display = 'none';
+      });
+
+      initApp();
     });
   </script>
 </body>
