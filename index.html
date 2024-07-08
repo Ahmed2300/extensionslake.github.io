@@ -809,17 +809,25 @@ footer {
       vertical-align: middle;
     }
 
-    .click-count {
-      position: absolute; 
-      top: 10px; 
-      left: 10px; 
-      padding: 5px 10px; 
-      border-radius: 20px; 
-      background-color: rgba(0, 0, 0, 0.7);
-      color: white; 
-      display: flex; 
-      align-items: center; 
-    }
+     footer {
+    background-color: #333; 
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    margin-top: 50px; 
+    width: 100%; 
+    position: relative;
+    bottom: 0;
+  }
+
+  footer p {
+    margin: 5px 0; 
+  }
+
+  footer img { 
+    margin: 0 5px; 
+    vertical-align: middle;
+  }
 
   </style>
 </head>
@@ -911,7 +919,7 @@ footer {
     <p>© 2023 Extensions Lake. All rights reserved.</p>
   </footer>
    
- <script type="module">
+  <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-analytics.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup } from 'https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js';
@@ -980,11 +988,6 @@ footer {
         })
         .then(data => {
           allProducts = data;
-          for (const productId in allProducts) {
-            if (allProducts[productId].clk_NUM === undefined) {
-              allProducts[productId].clk_NUM = 0;
-            }
-          }
           displayProducts(allProducts);
         })
         .catch(error => {
@@ -1027,12 +1030,6 @@ footer {
   
         const productCard = `
           <div class="product-card" data-type="${product.type}" data-product-id="${productId}" style="background-color: var(--card-bg-${(index % 20) + 1});">
-            <div class="click-count" id="clickCount-${productId}">
-              <span class="material-icons" style="font-size: 1.2em; margin-right: 2px;">
-                mouse
-              </span>
-              <span>${product.clk_NUM || 0}</span> 
-            </div> 
             <div class="type-indicator ${product.type}" data-type="${product.type}">${product.type.toUpperCase()}</div>
             <div class="publisher-info">
               <img class="publisher-image" src="${product.publisherImageURL}" alt="Publisher Image">
@@ -1049,7 +1046,7 @@ footer {
             </div>
             <p>Price: $${product.price.toFixed(2)}</p>
             <div class="button-group">
-              <a href="${buttonUrl}" target="_blank" onclick="incrementClickCount('${productId}')">
+              <a href="${buttonUrl}" target="_blank">
                 <button>${buttonText}</button>
               </a>
               <a href="${product.topicURL}" target="_blank">
@@ -1092,28 +1089,6 @@ footer {
       }); 
     }
   
-   function incrementClickCount(productId) {
-    if (!currentUser) {
-      alert('Please sign in to download or buy products.');
-      return false; 
-    }
-
-    const product = allProducts[productId];
-    const userIndex = product.list_of_clickers.indexOf(currentUser.uid);
-
-    if (userIndex === -1) { 
-      product.list_of_clickers.push(currentUser.uid);
-      product.clk_NUM = (product.clk_NUM || 0) + 1;
-      updateProductInDatabase(productId, product);
-
-      const clickCountElement = document.getElementById(`clickCount-${productId}`);
-      if (clickCountElement) {
-        clickCountElement.querySelector('span:last-child').textContent = product.clk_NUM;
-      }
-    }
-
-    return true; 
-  }
     function showInfoDialog(event) {
       const type = event.target.dataset.type;
       let dialogTitle, dialogMessage;
