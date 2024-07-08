@@ -1092,7 +1092,7 @@ footer {
       }); 
     }
   
-    function incrementClickCount(productId) {
+   function incrementClickCount(productId, buttonUrl) { 
       const product = allProducts[productId];
       product.clk_NUM = (product.clk_NUM || 0) + 1;
       updateProductInDatabase(productId, product);
@@ -1100,6 +1100,12 @@ footer {
       if (clickCountElement) {
         clickCountElement.querySelector('span:last-child').textContent = product.clk_NUM;
       }
+
+      setTimeout(() => {
+        window.location.href = buttonUrl; 
+      }, 500); 
+
+      return false; 
     }
 
     function showInfoDialog(event) {
