@@ -1063,7 +1063,7 @@ footer {
               </div>
             </div>
             ${extensionImageContainer.outerHTML} 
-            <h2>${product.name} <span class="material-icons" style="font-size: 1.2em; vertical-align: middle;">${fileTypeIcon}</span> <span style="vertical-align: middle;">${fileTypeLabel}</span></h2>
+            <h2>${product.name} <span class="material-icons" style="font-size: 1.2em; vertical-align: middle; color: #36BA98;">${fileTypeIcon}</span> <span style="vertical-align: middle; color: #36BA98;">${fileTypeLabel}</span></h2> 
             <div class="description-container">
               <p class="description-text" data-full-description="${product.description}">${truncatedDescription}</p>
               <span class="read-more" data-product-id="${productId}" style="color: var(--primary-color); cursor: pointer;">Read More</span> 
@@ -1083,7 +1083,6 @@ footer {
         `;
         productsContainer.innerHTML += productCard;
       });
-  
       const typeIndicators = document.querySelectorAll('.type-indicator');
       typeIndicators.forEach(indicator => {
         indicator.addEventListener('click', showInfoDialog);
