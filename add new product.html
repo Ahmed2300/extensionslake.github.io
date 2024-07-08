@@ -303,15 +303,9 @@
       </div>
       <div class="form-group" id="paymentUrlGroup">
         <label for="paymentUrl"><span class="material-symbols-outlined">
-          credit_card
-          </span> Payment URL:</label>
-        <input type="url" id="paymentUrl" name="paymentUrl">
-      </div>
-      <div class="form-group" id="downloadUrlGroup" style="display: none;">
-        <label for="downloadUrl"><span class="material-symbols-outlined">
           download
-          </span> Download URL:</label>
-        <input type="url" id="downloadUrl" name="downloadUrl">
+          </span> Free URL:</label> 
+        <input type="url" id="paymentUrl" name="paymentUrl">
       </div>
       <div class="form-group cover-image-options">
         <label><span class="material-symbols-outlined">
@@ -332,6 +326,12 @@
           forum
           </span> Official Topic URL:</label>
         <input type="url" id="topicURL" name="topicURL" required>
+      </div>
+      <div class="form-group" id="priceGroup">
+        <label for="productPrice"><span class="material-symbols-outlined">
+          attach_money
+          </span> Price:</label>
+        <input type="number" id="productPrice" name="productPrice" min="0" step="0.01" value="0" readonly> 
       </div>
       <div class="form-group">
         <label for="publisherImageURL"><span class="material-symbols-outlined">
@@ -368,7 +368,7 @@
     </p>
     <p>© 2023 Extensions Lake. All rights reserved.</p>
   </footer>
-  <script type="module">
+    <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-analytics.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js';
@@ -390,7 +390,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       const databaseURL = "https://mypro-f9c43-default-rtdb.firebaseio.com/";
-      const apiKey = "AIzaSyBfDYW18AJSfb03Cm_lR-SCZpTbcnLH1Qk";
+      const apiKey = "AIzaSyBfDYW18AJSfb03Cm_lR-SCZpTbcnLH1Qk"; 
       const addProductForm = document.getElementById('addProductForm');
       const successMessage = document.getElementById('successMessage');
       const userCard = document.getElementById('userCard');
@@ -398,7 +398,7 @@
       const productFormContainer = document.getElementById('productFormContainer');
       const publisherNameLabel = document.getElementById('publisherNameLabel');
       const publisherImageURLInput = document.getElementById('publisherImageURL');
-      const imgbbApiKey = '591f55a2f11247ad2c9dc9faf9df0836';
+      const imgbbApiKey = '591f55a2f11247ad2c9dc9faf9df0836'; 
       const coverImageUpload = document.getElementById('coverImageUpload');
       const coverImagePreview = document.getElementById('coverImagePreview');
       const coverImageURLRadio = document.getElementById('coverImageURLRadio');
@@ -408,7 +408,8 @@
       const publisherImagePreview = document.getElementById('publisherImagePreview');
       const productTypeSelect = document.getElementById('productType');
       const paymentUrlGroup = document.getElementById('paymentUrlGroup');
-      const downloadUrlGroup = document.getElementById('downloadUrlGroup');
+      const priceGroup = document.getElementById('priceGroup');
+      const productPriceInput = document.getElementById('productPrice');
       let currentUser = null;
       let existingProductNames = []; 
 
@@ -477,7 +478,7 @@
         }
 
         const productName = addProductForm.productName.value;
-        
+
         if (existingProductNames.includes(productName)) {
           alert("A product with this name already exists. Please choose a different name.");
           return;
@@ -491,23 +492,27 @@
           alert("Please provide a cover image URL or upload an image.");
           return;
         }
+
         const productType = addProductForm.productType.value;
+        const price = productType === 'paid' ? parseFloat(productPriceInput.value) : 0; 
+
         const newProduct = {
-          name: productName,
+          name: productName, 
           description: addProductForm.productDescription.value,
           fileType: addProductForm.fileType.value, 
           type: productType, 
-          paymentUrl: productType === 'paid' ? addProductForm.paymentUrl.value : '',
-          downloadUrl: productType === 'free' ? addProductForm.downloadUrl.value : '', 
+          paymentUrl: addProductForm.paymentUrl.value, 
           coverImageURL: coverImageURL,
           topicURL: addProductForm.topicURL.value,
           publisherImageURL: addProductForm.publisherImageURL.value,
           publisherName: currentUser.displayName || currentUser.email.split('@')[0],
           publisher_ID: currentUser.uid,
           isVerified: addProductForm.isVerified.checked,
-          date: new Date().toISOString().slice(0, 10)
+          date: new Date().toISOString().slice(0, 10),
+          price: price 
         };
-        const productURL = `${databaseURL}/${encodeURIComponent(addProductForm.productName.value)}.json?auth=${apiKey}`;
+
+        const productURL = `${databaseURL}/${encodeURIComponent(productName)}.json?auth=${apiKey}`;
         fetch(productURL, {
           method: 'PUT',
           headers: {
@@ -521,13 +526,13 @@
           }
           console.log('Product added successfully!', response);
           addProductForm.reset();
+          productPriceInput.value = 0; 
+          productPriceInput.readOnly = true; 
           successMessage.style.display = 'block';
           setTimeout(() => {
             successMessage.style.display = 'none';
           }, 3000);
-
-          // Add new product name to the list
-          existingProductNames.push(productName); 
+          existingProductNames.push(productName);
         })
         .catch(error => {
           console.error('There has been a problem adding the product:', error);
@@ -611,15 +616,17 @@
 
       productTypeSelect.addEventListener('change', () => {
         if (productTypeSelect.value === 'paid') {
-          paymentUrlGroup.style.display = 'block';
-          downloadUrlGroup.style.display = 'none'; 
+          paymentUrlGroup.querySelector('label').innerHTML = '<span class="material-symbols-outlined">credit_card</span> Payment URL:';
+          priceGroup.style.display = 'block';
+          productPriceInput.readOnly = false; 
         } else {
-          paymentUrlGroup.style.display = 'none';
-          downloadUrlGroup.style.display = 'block';
+          paymentUrlGroup.querySelector('label').innerHTML = '<span class="material-symbols-outlined">download</span> Free URL:'; 
+          priceGroup.style.display = 'block';
+          productPriceInput.value = 0; 
+          productPriceInput.readOnly = true; 
         }
       });
 
-      // Function to fetch existing product names from the database
       async function fetchExistingProductNames() {
         try {
           const response = await fetch(`${databaseURL}/.json?auth=${apiKey}`);
@@ -627,9 +634,7 @@
             throw new Error('Network response was not ok');
           }
           const data = await response.json();
-
           existingProductNames = Object.keys(data || {}); 
-          
         } catch (error) {
           console.error("Error fetching existing product names:", error);
         }
