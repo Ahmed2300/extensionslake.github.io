@@ -1222,21 +1222,33 @@ footer {
   minPriceInput.addEventListener('input', applyFilters);
   maxPriceInput.addEventListener('input', applyFilters);
 
-  function applyFilters() {
+ function applyFilters() {
     const searchTerm = searchInput.value.toLowerCase();
     const selectedType = typeFilter.value;
     const minPrice = parseFloat(minPriceInput.value) || 0;
     const maxPrice = parseFloat(maxPriceInput.value) || Infinity;
+    const selectedDateOrder = document.getElementById('dateFilter').value;
 
-    const filteredProducts = Object.values(allProducts).filter(product => { 
-      const matchesType = selectedType === 'all' || product.type === selectedType;
-      const matchesPrice = product.price >= minPrice && product.price <= maxPrice;
-      const matchesSearch = product.name.toLowerCase().includes(searchTerm) ||
-              product.description.toLowerCase().includes(searchTerm);
-      return matchesType && matchesPrice && matchesSearch;
-    });
+    const filteredProducts = Object.values(allProducts)
+      .filter(product => {
+        const matchesType = selectedType === 'all' || product.type === selectedType;
+        const matchesPrice = product.price >= minPrice && product.price <= maxPrice;
+        const matchesSearch = product.name.toLowerCase().includes(searchTerm) ||
+               product.description.toLowerCase().includes(searchTerm);
+        return matchesType && matchesPrice && matchesSearch;
+      })
+      .sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
 
-    displayProducts(filteredProducts); 
+        if (selectedDateOrder === 'newest') {
+          return dateB - dateA; // Sort newest to oldest
+        } else {
+          return dateA - dateB; // Sort oldest to newest
+        }
+      });
+
+    displayProducts(filteredProducts);
   }
 
   themeToggle.addEventListener('change', () => {
