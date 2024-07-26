@@ -220,7 +220,7 @@
         window.confirmationResult.confirm(otp)
           .then(function(result) {
             const user = result.user;
-            messageElement.textContent = "You are logged in successfully!";
+            messageElement.textContent = "You are logged in successfully! User ID: " + user.uid;
             messageElement.classList.remove("error-message");
             messageElement.classList.add("success-message");
           })
