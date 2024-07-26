@@ -1,75 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phone Authentication</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f8f9fa;
+      color: #343a40;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h2 {
+      color: #007bff; 
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      text-align: left;
+    }
+
+    input[type="tel"],
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ced4da;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #28a745; 
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #218838; 
+    }
+
+    #verification-container {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Phone Authentication</h2>
+
+    <div id="phone-form">
+      <label for="phoneNumber">Enter your phone number:</label>
+      <input type="tel" id="phoneNumber" placeholder="+1234567890">
+      <button onclick="sendOTP()">Send OTP</button>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>OTP Sign Up</title>
+    <title>OTP</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
+  </head>
+  <body>
 
-        #holder {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
+    <div id="holder" style="max-width:240px;margin: auto;">
+      <div id="done"></div>
+      <h2>OTP Sign Up</h2>
+      Phone Number:<br>
+      <input type="tel" id="phoneNumber" class="w3-input w3-border w3-round-large" style="width:200px" /><br>
+      <button id="sign-in-button" onclick="submitPhoneNumberAuth()" class="w3-btn w3-ripple w3-blue w3-round-large" style="width:200px">
+        SIGN IN WITH PHONE
+      </button><br><br><br>
 
-        input[type="tel"], input[type="text"] {
-            padding: 12px;
-            margin: 10px 0 20px 0;
-            width: calc(100% - 32px); /* Adjust for padding */
-            box-sizing: border-box;
-        }
+      <div id="recaptcha-container"></div><br><br>
 
-        button {
-            margin-bottom: 15px;
-        }
-
-        #notes {
-            font-size: 0.9em;
-            color: #777;
-        }
-    </style>
-</head>
-<body>
-    <div id="holder">
-        <div id="done" style="margin-bottom: 10px;"></div>
-        <h2>OTP Sign Up</h2>
-        <p>Enter your phone number to get started.</p>
-
-        Phone Number:<br>
-        <input type="tel" id="phoneNumber" class="w3-input w3-border w3-round-large" placeholder="+1234567890" /><br>
-        <button id="sign-in-button" onclick="submitPhoneNumberAuth()" class="w3-btn w3-ripple w3-blue w3-round-large">
-            SIGN IN WITH PHONE
-        </button><br><br>
-
-        <div id="recaptcha-container"></div><br>
-
-        OTP Code:<br>
-        <input type="text" id="code" class="w3-input w3-border w3-round-large" placeholder="Enter OTP code" /><br>
-        <button id="confirm-code" onclick="submitPhoneNumberAuthCode()" class="w3-btn w3-ripple w3-blue w3-round-large">
-            ENTER CODE
-        </button>
-        <p id="notes">
-            1. Enter your full phone number with the country code.<br>
-            2. Complete the reCAPTCHA verification.<br>
-            3. Enter the 6-digit OTP code from your SMS.
-        </p>
+      OTP Code:<br>
+      <input type="text" id="code" class="w3-input w3-border w3-round-large" style="width:200px" /><br>
+      <button id="confirm-code" onclick="submitPhoneNumberAuthCode()" class="w3-btn w3-ripple w3-blue w3-round-large" style="width:200px">
+        ENTER CODE
+      </button>
+      <p id="notes" style="max-width:200px;word-wrap: break-word;">
+        1. Enter phone number with + and country code, then click Sign In with Phone<br>
+        2. Complete the recaptcha<br>
+        3. Get the OTP code from your SMS and type/paste it in, then click Enter Code
+      </p>
     </div>
 
+    <div id="verification-container">
+      <label for="otp">Enter OTP:</label>
+      <input type="text" id="otp" placeholder="Enter 6-digit code">
+      <button onclick="verifyOTP()">Verify OTP</button>
+    </div>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+    <p id="message"></p> 
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-analytics.js";
+    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+
+    const firebaseConfig = {
+
+      apiKey: "AIzaSyCgy_AToJkB7iIkAf8A9yKYLGRcn6q3DGc", 
     <script>
       // Firebase configuration
       var firebaseConfig = {
@@ -81,23 +137,58 @@
     messagingSenderId: "457342163754",
     appId: "1:457342163754:web:9f428caeea9ad5c5d11c53",
     measurementId: "G-YS7GD676WC"
+    };
 };
 
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth(app);
       // Initialize Firebase
       firebase.initializeApp(firebaseConfig);
 
+    let windowConfirmationResult = null;
+    const phoneNumberInput = document.getElementById("phoneNumber");
+    const otpInput = document.getElementById("otp");
+    const messageElement = document.getElementById("message");
+    const phoneForm = document.getElementById("phone-form");
+    const verificationContainer = document.getElementById("verification-container");
+
+    function setupRecaptcha() {
+      window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
+        'size': 'invisible',
+        'callback': (response) => {
+          // reCAPTCHA solved, allow sending OTP
+          sendOTP();
       // Initialize reCaptcha verifier
       window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
         size: 'normal',
         callback: function(response) {
           console.log('reCaptcha resolved');
         }
+      }, auth);
+    }
+
+    function sendOTP() {
+      messageElement.textContent = "Sending OTP...";
       });
 
+      const phoneNumber = phoneNumberInput.value;
+      const appVerifier = window.recaptchaVerifier;
       function submitPhoneNumberAuth() {
         var phoneNumber = document.getElementById("phoneNumber").value;
         var appVerifier = window.recaptchaVerifier;
 
+      signInWithPhoneNumber(auth, phoneNumber, appVerifier)
+        .then((confirmationResult) => {
+          windowConfirmationResult = confirmationResult;
+          messageElement.textContent = "OTP sent!";
+          phoneForm.style.display = "none";
+          verificationContainer.style.display = "block";
+        })
+        .catch((error) => {
+          messageElement.textContent = `Error: ${error.message}`;
+        });
+    }
         firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
           .then(function(confirmationResult) {
             window.confirmationResult = confirmationResult;
@@ -109,22 +200,42 @@
           });
       }
 
+    function verifyOTP() {
+      const otp = otpInput.value;
+      messageElement.textContent = "Verifying...";
       function submitPhoneNumberAuthCode() {
         var code = document.getElementById("code").value;
 
+      if (windowConfirmationResult) {
+        windowConfirmationResult.confirm(otp)
+          .then((result) => {
+            const user = result.user;
+            messageElement.textContent = "You are logged in successfully!";
+            // Redirect to home page or update UI
         window.confirmationResult.confirm(code)
           .then(function(result) {
             var user = result.user;
             document.getElementById("done").innerHTML = "OTP completed";
             console.log('User signed in successfully', user);
           })
+          .catch((error) => {
+            messageElement.textContent = `Error: ${error.message}`;
           .catch(function(error) {
             console.error('Error during confirmation', error);
             alert(error.message);
             document.getElementById("done").innerHTML = "Error: " + error.message;
           });
       }
+    }
 
+    // Initialize reCAPTCHA when the page loads
+    window.onload = () => {
+      setupRecaptcha();
+    };
+  </script>
+  <div id="recaptcha-container"></div> 
+</body>
+</html>
       firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
           console.log("USER LOGGED IN");
