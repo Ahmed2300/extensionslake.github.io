@@ -5,65 +5,79 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Phone Authentication</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap">
   <style>
     body {
       font-family: 'Roboto', sans-serif;
-      background-color: #f8f9fa;
-      color: #343a40;
+      background-color: #f0f2f5;
+      color: #333;
       margin: 0;
-      padding: 0;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
-      min-height: 100vh;
+      align-items: center;
+      height: 100vh;
     }
 
     .container {
-      background-color: #ffffff;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       text-align: center;
       max-width: 400px;
       width: 100%;
     }
 
     h2 {
-      color: #007bff; 
-      margin-bottom: 20px;
+      color: #007bff;
+      margin-bottom: 30px;
+      font-weight: 500;
     }
 
     label {
       display: block;
-      margin-bottom: 5px;
+      margin-bottom: 10px;
       text-align: left;
+      font-weight: 500;
     }
 
-    input[type="tel"],
-    input[type="text"] {
+    .input-group {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .input-group input {
       width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
+      padding: 15px 45px 15px 15px;
       border: 1px solid #ced4da;
       border-radius: 5px;
       box-sizing: border-box;
+      font-size: 16px;
+    }
+
+    .input-group .material-icons {
+      position: absolute;
+      top: 50%;
+      right: 15px;
+      transform: translateY(-50%);
+      color: #6c757d;
     }
 
     button {
-      background-color: #28a745; 
+      background-color: #007bff;
       color: #ffffff;
       border: none;
-      padding: 10px 20px;
+      padding: 15px;
       border-radius: 5px;
       cursor: pointer;
       transition: background-color 0.3s ease;
       width: 100%;
-      box-sizing: border-box;
+      font-size: 16px;
+      font-weight: 500;
     }
 
     button:hover {
-      background-color: #218838; 
+      background-color: #0056b3;
     }
 
     #verification-container {
@@ -71,12 +85,13 @@
     }
 
     #recaptcha-container {
-      margin-bottom: 15px;
+      margin-bottom: 20px;
     }
 
     p#message {
       margin-top: 20px;
       color: #dc3545;
+      font-weight: 500;
     }
   </style>
 </head>
@@ -86,14 +101,20 @@
 
     <div id="phone-form">
       <label for="phoneNumber">Enter your phone number:</label>
-      <input type="tel" id="phoneNumber" placeholder="+1234567890">
+      <div class="input-group">
+        <input type="tel" id="phoneNumber" placeholder="+1234567890">
+        <i class="material-icons">phone</i>
+      </div>
       <div id="recaptcha-container"></div>
       <button onclick="sendOTP()">Send OTP</button>
     </div>
 
     <div id="verification-container">
       <label for="otp">Enter OTP:</label>
-      <input type="text" id="otp" placeholder="Enter 6-digit code">
+      <div class="input-group">
+        <input type="text" id="otp" placeholder="Enter 6-digit code">
+        <i class="material-icons">lock</i>
+      </div>
       <button onclick="verifyOTP()">Verify OTP</button>
     </div>
 
