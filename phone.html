@@ -162,13 +162,13 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script>
     var firebaseConfig = {
-       apiKey: "AIzaSyA_jTQBeV41vfhJqTm8m-p8CKHam063oeA",
-  authDomain: "otp-dbed4.firebaseapp.com",
-  projectId: "otp-dbed4",
-  storageBucket: "otp-dbed4.appspot.com",
-  messagingSenderId: "190396990045",
-  appId: "1:190396990045:web:8df0c7fd64eeac0c50c3b4",
-  measurementId: "G-CVM866XCQX"
+      apiKey: "AIzaSyA_jTQBeV41vfhJqTm8m-p8CKHam063oeA",
+      authDomain: "otp-dbed4.firebaseapp.com",
+      projectId: "otp-dbed4",
+      storageBucket: "otp-dbed4.appspot.com",
+      messagingSenderId: "190396990045",
+      appId: "1:190396990045:web:8df0c7fd64eeac0c50c3b4",
+      measurementId: "G-CVM866XCQX"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -184,8 +184,8 @@
     function setupRecaptcha() {
       window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
         'size': 'invisible',
-        'callback': function(response) {
-          sendOTP(); 
+        'callback': function (response) {
+          sendOTP();
         }
       });
     }
@@ -197,7 +197,7 @@
       const appVerifier = window.recaptchaVerifier;
 
       firebase.auth().signInWithPhoneNumber(fullPhoneNumber, appVerifier)
-        .then(function(confirmationResult) {
+        .then(function (confirmationResult) {
           window.confirmationResult = confirmationResult;
           messageElement.textContent = "OTP sent!";
           messageElement.classList.remove("error-message");
@@ -205,7 +205,7 @@
           phoneForm.style.display = "none";
           verificationContainer.style.display = "block";
         })
-        .catch(function(error) {
+        .catch(function (error) {
           messageElement.textContent = `Error: ${error.message}`;
           messageElement.classList.remove("success-message");
           messageElement.classList.add("error-message");
@@ -217,13 +217,15 @@
 
       if (window.confirmationResult) {
         window.confirmationResult.confirm(otp)
-          .then(function(result) {
+          .then(function (result) {
             const user = result.user;
-            messageElement.textContent = "You are logged in successfully! User ID: " + user.uid;
+            const phoneNumber = user.phoneNumber;
+            messageElement.textContent = "Logged in! User ID: " + user.uid +
+              ", Phone: " + phoneNumber;
             messageElement.classList.remove("error-message");
             messageElement.classList.add("success-message");
           })
-          .catch(function(error) {
+          .catch(function (error) {
             messageElement.textContent = `Error: ${error.message}`;
             messageElement.classList.remove("success-message");
             messageElement.classList.add("error-message");
@@ -231,13 +233,13 @@
       }
     }
 
-    window.onload = function() {
+    window.onload = function () {
       setupRecaptcha();
     };
 
-    firebase.auth().onAuthStateChanged(function(user) {
+    firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
-        
+
       } else {
 
       }
