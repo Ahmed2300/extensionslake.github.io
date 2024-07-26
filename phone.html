@@ -162,13 +162,14 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script>
     var firebaseConfig = {
-      apiKey: "AIzaSyA_jTQBeV41vfhJqTm8m-p8CKHam063oeA",
+       apiKey: "AIzaSyA_jTQBeV41vfhJqTm8m-p8CKHam063oeA",
   authDomain: "otp-dbed4.firebaseapp.com",
   projectId: "otp-dbed4",
   storageBucket: "otp-dbed4.appspot.com",
   messagingSenderId: "190396990045",
   appId: "1:190396990045:web:8df0c7fd64eeac0c50c3b4",
   measurementId: "G-CVM866XCQX"
+    };
 
     firebase.initializeApp(firebaseConfig);
 
@@ -218,8 +219,7 @@
         window.confirmationResult.confirm(otp)
           .then(function(result) {
             const user = result.user;
-            const phoneNumber = user.phoneNumber; // Get the phone number
-            messageElement.textContent = "You are logged in successfully! User ID: " + user.uid + ", Phone Number: " + phoneNumber;
+            messageElement.textContent = "You are logged in successfully! User ID: " + user.uid;
             messageElement.classList.remove("error-message");
             messageElement.classList.add("success-message");
           })
