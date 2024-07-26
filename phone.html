@@ -134,9 +134,10 @@
         </select>
       </div>
       <div class="input-group">
-        <input type="tel" id="phoneNumber" placeholder="1234567890" inputmode="numeric">
+        <input type="tel" id="phoneNumber" placeholder="1234567890" inputmode="numeric" >
         <i class="material-icons">phone</i>
       </div>
+      <div id="recaptcha-container"></div>
       <button onclick="sendOTP()">Send OTP</button>
     </div>
 
@@ -157,7 +158,7 @@
   <script>
     // Firebase configuration (replace with your own)
     var firebaseConfig = {
-       apiKey: "AIzaSyCgy_AToJkB7iIkAf8A9yKYLGRcn6q3DGc",
+        apiKey: "AIzaSyCgy_AToJkB7iIkAf8A9yKYLGRcn6q3DGc",
       authDomain: "mypro-f9c43.firebaseapp.com",
       databaseURL: "https://mypro-f9c43-default-rtdb.firebaseio.com",
       projectId: "mypro-f9c43",
@@ -177,12 +178,22 @@
     const phoneForm = document.getElementById("phone-form");
     const verificationContainer = document.getElementById("verification-container");
 
+    function setupRecaptcha() {
+      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+        'size': 'invisible',
+        'callback': function(response) {
+          sendOTP(); 
+        }
+      });
+    }
+
     function sendOTP() {
       const countryCode = countryCodeInput.value;
       const phoneNumber = phoneNumberInput.value;
       const fullPhoneNumber = countryCode + phoneNumber;
+      const appVerifier = window.recaptchaVerifier;
 
-      firebase.auth().signInWithPhoneNumber(fullPhoneNumber)
+      firebase.auth().signInWithPhoneNumber(fullPhoneNumber, appVerifier)
         .then(function(confirmationResult) {
           window.confirmationResult = confirmationResult;
           messageElement.textContent = "OTP sent!";
@@ -208,6 +219,18 @@
           });
       }
     }
+
+    window.onload = function() {
+      setupRecaptcha();
+    };
+
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        console.log("USER LOGGED IN");
+      } else {
+        console.log("USER NOT LOGGED IN");
+      }
+    });
   </script>
 </body>
 </html>
