@@ -112,8 +112,14 @@
 
     p#message {
       margin-top: 20px;
-      color: #f44336;
       font-weight: 500;
+    }
+    .success-message {
+      color: #219C90;
+    }
+
+    .error-message {
+      color: #EE4E4E;
     }
   </style>
 </head>
@@ -130,11 +136,10 @@
           <option value="+91">+91 (IN)</option>
           <option value="+61">+61 (AU)</option>
           <option value="+20" selected>+20 (EG)</option>
-          <!-- Add more countries as needed -->
         </select>
       </div>
       <div class="input-group">
-        <input type="tel" id="phoneNumber" placeholder="1234567890" inputmode="numeric" >
+        <input type="tel" id="phoneNumber" placeholder="1234567890" inputmode="numeric">
         <i class="material-icons">phone</i>
       </div>
       <div id="recaptcha-container"></div>
@@ -156,9 +161,8 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script>
-    // Firebase configuration (replace with your own)
     var firebaseConfig = {
-        apiKey: "AIzaSyCgy_AToJkB7iIkAf8A9yKYLGRcn6q3DGc",
+       apiKey: "AIzaSyCgy_AToJkB7iIkAf8A9yKYLGRcn6q3DGc",
       authDomain: "mypro-f9c43.firebaseapp.com",
       databaseURL: "https://mypro-f9c43-default-rtdb.firebaseio.com",
       projectId: "mypro-f9c43",
@@ -197,11 +201,15 @@
         .then(function(confirmationResult) {
           window.confirmationResult = confirmationResult;
           messageElement.textContent = "OTP sent!";
+          messageElement.classList.remove("error-message");
+          messageElement.classList.add("success-message");
           phoneForm.style.display = "none";
           verificationContainer.style.display = "block";
         })
         .catch(function(error) {
           messageElement.textContent = `Error: ${error.message}`;
+          messageElement.classList.remove("success-message");
+          messageElement.classList.add("error-message");
         });
     }
 
@@ -213,9 +221,13 @@
           .then(function(result) {
             const user = result.user;
             messageElement.textContent = "You are logged in successfully!";
+            messageElement.classList.remove("error-message");
+            messageElement.classList.add("success-message");
           })
           .catch(function(error) {
             messageElement.textContent = `Error: ${error.message}`;
+            messageElement.classList.remove("success-message");
+            messageElement.classList.add("error-message");
           });
       }
     }
@@ -226,9 +238,9 @@
 
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
-        console.log("USER LOGGED IN");
+        
       } else {
-        console.log("USER NOT LOGGED IN");
+
       }
     });
   </script>
