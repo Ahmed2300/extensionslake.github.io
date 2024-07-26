@@ -152,14 +152,14 @@
       <button onclick="verifyOTP()">Verify OTP</button>
     </div>
 
-    <p id="message"></p>
+    <p id="message"></p> 
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script>
     var firebaseConfig = {
-       apiKey: "AIzaSyCgy_AToJkB7iIkAf8A9yKYLGRcn6q3DGc", 
+ apiKey: "AIzaSyCgy_AToJkB7iIkAf8A9yKYLGRcn6q3DGc", 
     authDomain: "mypro-f9c43.firebaseapp.com",
     databaseURL: "https://mypro-f9c43-default-rtdb.firebaseio.com",
     projectId: "mypro-f9c43",
@@ -168,7 +168,6 @@
     appId: "1:457342163754:web:9f428caeea9ad5c5d11c53",
     measurementId: "G-YS7GD676WC"
     };
-
     firebase.initializeApp(firebaseConfig);
     let windowConfirmationResult = null;
     const countryCodeInput = document.getElementById("countryCode");
@@ -189,20 +188,20 @@
     }
 
     async function sendOTP() {
-      const recaptchaToken = await getRecaptchaToken(); 
+      const recaptchaToken = await getRecaptchaToken();
       const countryCode = countryCodeInput.value;
       const phoneNumber = phoneNumberInput.value;
       const fullPhoneNumber = countryCode + phoneNumber;
 
       try {
-        const response = await fetch('/send-otp', { 
+        const response = await fetch('/send-otp', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ 
-            recaptchaToken: recaptchaToken, 
-            phoneNumber: fullPhoneNumber 
+          body: JSON.stringify({
+            recaptchaToken: recaptchaToken,
+            phoneNumber: fullPhoneNumber
           }),
         });
 
@@ -210,7 +209,7 @@
           throw new Error(`Server error: ${response.status}`);
         }
 
-        const data = await response.json(); 
+        const data = await response.json();
 
         if (data.success) {
           window.confirmationResult = data.confirmationResult;
@@ -220,7 +219,7 @@
           phoneForm.style.display = "none";
           verificationContainer.style.display = "block";
         } else {
-          throw new Error(data.error || 'Verification failed'); 
+          throw new Error(data.error || 'Verification failed');
         }
 
       } catch (error) {
@@ -230,11 +229,39 @@
       }
     }
 
-    function verifyOTP() {
+    async function verifyOTP() {
       const otp = otpInput.value;
+      
+      try {
+        const response = await fetch('/verify-otp', { 
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ otp: otp }),
+        });
 
-      // ... your OTP verification logic (should be handled on your server) 
-    }
+        if (!response.ok) {
+          throw new Error(`Server error: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data.success) {
+          messageElement.textContent = "OTP verified! You are logged in.";
+          messageElement.classList.remove("error-message");
+          messageElement.classList.add("success-message");
+          // Redirect to the home page or update the UI as needed
+        } else {
+          throw new Error(data.error || 'OTP verification failed'); 
+        }
+
+      } catch (error) {
+        messageElement.textContent = `Error: ${error.message}`;
+        messageElement.classList.remove("success-message");
+        messageElement.classList.add("error-message");
+      }
+    }    
   </script>
 </body>
 </html>
