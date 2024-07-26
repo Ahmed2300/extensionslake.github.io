@@ -44,15 +44,22 @@
       font-weight: 500;
     }
 
+    select,
     input[type="tel"],
     input[type="text"] {
-      width: 100%;
-      padding: 12px 15px;
+      width: calc(100% - 22px);
+      padding: 12px 10px;
       margin-bottom: 20px;
       border: 1px solid #ced4da;
       border-radius: 5px;
       box-sizing: border-box;
       font-size: 16px;
+      display: inline-block;
+    }
+
+    select {
+      width: 25%;
+      margin-right: 5px;
     }
 
     button {
@@ -97,8 +104,18 @@
     <h2>Phone Authentication</h2>
 
     <div id="phone-form">
-      <label for="phoneNumber">Enter your phone number:</label>
-      <input type="tel" id="phoneNumber" placeholder="+1234567890">
+      <label for="countryCode">Choose country code:</label>
+      <div style="display: flex;">
+        <select id="countryCode">
+          <option value="+20">Egypt (+20)</option>
+          <option value="+1">USA (+1)</option>
+          <option value="+44">UK (+44)</option>
+          <option value="+91">India (+91)</option>
+          <!-- Add more country codes as needed -->
+        </select>
+        <input type="tel" id="phoneNumber" placeholder="1234567890">
+      </div>
+      <div id="recaptcha-container"></div>
       <button onclick="sendOTP()">Send OTP</button>
     </div>
 
@@ -108,7 +125,6 @@
       <button onclick="verifyOTP()">Verify OTP</button>
     </div>
 
-    <div class="recaptcha-container" id="recaptcha-container"></div>
     <p class="message" id="message"></p>
   </div>
 
@@ -134,6 +150,7 @@
     const analytics = getAnalytics(app);
     const auth = getAuth(app);
 
+    const countryCodeSelect = document.getElementById("countryCode");
     const phoneNumberInput = document.getElementById("phoneNumber");
     const otpInput = document.getElementById("otp");
     const messageElement = document.getElementById("message");
@@ -142,7 +159,7 @@
 
     function setupRecaptcha() {
       window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
-        'size': 'invisible',
+        'size': 'normal',
         'callback': (response) => {
           sendOTP();
         }
@@ -151,7 +168,7 @@
 
     function sendOTP() {
       messageElement.textContent = "Sending OTP...";
-      const phoneNumber = phoneNumberInput.value;
+      const phoneNumber = countryCodeSelect.value + phoneNumberInput.value;
       const appVerifier = window.recaptchaVerifier;
 
       signInWithPhoneNumber(auth, phoneNumber, appVerifier)
