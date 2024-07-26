@@ -1,102 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>OTP</title>
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-  </head>
-  <body>
-	  
-    <div id="holder" style="max-width:240px;margin: auto;">
-      <div id="done"></div>
-      <h2>OTP Sign Up</h2>
-      Phone Number:<br>
-      <input type="tel" id="phoneNumber" class="w3-input w3-border w3-round-large" style="width:200px" /><br>
-      <button id="sign-in-button" onclick="submitPhoneNumberAuth()" class="w3-btn w3-ripple w3-blue w3-round-large" style="width:200px">
-        SIGN IN WITH PHONE
-      </button><br><br><br>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phone Authentication</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f8f9fa;
+      color: #343a40;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
 
-      <div id="recaptcha-container"></div><br><br>
+    .container {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+    }
 
-      OTP Code:<br>
-      <input type="text" id="code" class="w3-input w3-border w3-round-large" style="width:200px" /><br>
-      <button id="confirm-code" onclick="submitPhoneNumberAuthCode()" class="w3-btn w3-ripple w3-blue w3-round-large" style="width:200px">
-        ENTER CODE
-      </button>
-      <p id="notes" style="max-width:200px;word-wrap: break-word;">
-        1. Enter phone number with + and country code, then click Sign In with Phone<br>
-        2. Complete the recaptcha<br>
-        3. Get the OTP code from your SMS and type/paste it in, then click Enter Code
-      </p>
+    h2 {
+      color: #007bff; 
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      text-align: left;
+    }
+
+    input[type="tel"],
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ced4da;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #28a745; 
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    button:hover {
+      background-color: #218838; 
+    }
+
+    #verification-container {
+      display: none;
+    }
+
+    #recaptcha-container {
+      margin-bottom: 15px;
+    }
+
+    p#message {
+      margin-top: 20px;
+      color: #dc3545;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Phone Authentication</h2>
+
+    <div id="phone-form">
+      <label for="phoneNumber">Enter your phone number:</label>
+      <input type="tel" id="phoneNumber" placeholder="+1234567890">
+      <div id="recaptcha-container"></div>
+      <button onclick="sendOTP()">Send OTP</button>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <div id="verification-container">
+      <label for="otp">Enter OTP:</label>
+      <input type="text" id="otp" placeholder="Enter 6-digit code">
+      <button onclick="verifyOTP()">Verify OTP</button>
+    </div>
 
-    <script>
-      // Firebase configuration
-      var firebaseConfig = {
-    apiKey: "AIzaSyCgy_AToJkB7iIkAf8A9yKYLGRcn6q3DGc", 
-    authDomain: "mypro-f9c43.firebaseapp.com",
-    databaseURL: "https://mypro-f9c43-default-rtdb.firebaseio.com",
-    projectId: "mypro-f9c43",
-    storageBucket: "mypro-f9c43.appspot.com",
-    messagingSenderId: "457342163754",
-    appId: "1:457342163754:web:9f428caeea9ad5c5d11c53",
-    measurementId: "G-YS7GD676WC"
-};
+    <p id="message"></p>
+  </div>
 
-      // Initialize Firebase
-      firebase.initializeApp(firebaseConfig);
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script>
+    // Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyCgy_AToJkB7iIkAf8A9yKYLGRcn6q3DGc",
+      authDomain: "mypro-f9c43.firebaseapp.com",
+      databaseURL: "https://mypro-f9c43-default-rtdb.firebaseio.com",
+      projectId: "mypro-f9c43",
+      storageBucket: "mypro-f9c43.appspot.com",
+      messagingSenderId: "457342163754",
+      appId: "1:457342163754:web:9f428caeea9ad5c5d11c53",
+      measurementId: "G-YS7GD676WC"
+    };
 
-      // Initialize reCaptcha verifier
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    let windowConfirmationResult = null;
+    const phoneNumberInput = document.getElementById("phoneNumber");
+    const otpInput = document.getElementById("otp");
+    const messageElement = document.getElementById("message");
+    const phoneForm = document.getElementById("phone-form");
+    const verificationContainer = document.getElementById("verification-container");
+
+    function setupRecaptcha() {
       window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-        size: 'normal',
-        callback: function(response) {
-          console.log('reCaptcha resolved');
+        'size': 'normal',
+        'callback': function(response) {
+          // reCAPTCHA solved, allow sending OTP
+          sendOTP();
         }
       });
+    }
 
-      function submitPhoneNumberAuth() {
-        var phoneNumber = document.getElementById("phoneNumber").value;
-        var appVerifier = window.recaptchaVerifier;
+    function sendOTP() {
+      const phoneNumber = phoneNumberInput.value;
+      const appVerifier = window.recaptchaVerifier;
 
-        firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
-          .then(function(confirmationResult) {
-            window.confirmationResult = confirmationResult;
-            console.log('OTP sent');
-          })
-          .catch(function(error) {
-            console.error('Error during signInWithPhoneNumber', error);
-            alert(error.message);
-          });
-      }
+      firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+        .then(function(confirmationResult) {
+          window.confirmationResult = confirmationResult;
+          messageElement.textContent = "OTP sent!";
+          phoneForm.style.display = "none";
+          verificationContainer.style.display = "block";
+        })
+        .catch(function(error) {
+          messageElement.textContent = `Error: ${error.message}`;
+        });
+    }
 
-      function submitPhoneNumberAuthCode() {
-        var code = document.getElementById("code").value;
+    function verifyOTP() {
+      const otp = otpInput.value;
 
-        window.confirmationResult.confirm(code)
+      if (window.confirmationResult) {
+        window.confirmationResult.confirm(otp)
           .then(function(result) {
-            var user = result.user;
-            document.getElementById("done").innerHTML = "OTP completed";
-            console.log('User signed in successfully', user);
+            const user = result.user;
+            messageElement.textContent = "You are logged in successfully!";
+            // Redirect to home page or update UI
           })
           .catch(function(error) {
-            console.error('Error during confirmation', error);
-            alert(error.message);
-            document.getElementById("done").innerHTML = "Error: " + error.message;
+            messageElement.textContent = `Error: ${error.message}`;
           });
       }
+    }
 
-      firebase.auth().onAuthStateChanged(function(user) {
-        if (user) {
-          console.log("USER LOGGED IN");
-        } else {
-          console.log("USER NOT LOGGED IN");
-        }
-      });
-    </script>
-  </body>
+    // Initialize reCAPTCHA when the page loads
+    window.onload = function() {
+      setupRecaptcha();
+    };
+
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        console.log("USER LOGGED IN");
+      } else {
+        console.log("USER NOT LOGGED IN");
+      }
+    });
+  </script>
+</body>
 </html>
