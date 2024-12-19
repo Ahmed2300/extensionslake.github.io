@@ -1476,35 +1476,35 @@ function toggleHeart(icon) {
  googleSignInButton.addEventListener('click', googleSignIn);
 
  function updateAuthDisplay() {
-     if (currentUser) {
-         authButtons.style.display = "none";
-         userCard.innerHTML = `
-             <div class="user-card">
-                 <img src="${currentUser.photoURL || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'}" alt="User Profile Picture">
-                 <h3>${currentUser.displayName || currentUser.email.split('@')[0]}</h3>
-                 <p>${currentUser.email}</p>
-                 <button id="logoutBtn">Logout</button>
-                 <a href="add new product.html">
-                     <button id="addNewProductBtn" style="background-color: #50B498;">Add New Product</button>
-                 </a>
-             </div>
-         `;
+    if (currentUser) {
+        authButtons.style.display = "none";
+        userCard.innerHTML = `
+            <div class="user-card">
+                <img src="${currentUser.photoURL || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'}" alt="User Profile Picture">
+                <h3>${currentUser.displayName || currentUser.email.split('@')[0]}</h3>
+                <p>${currentUser.email}</p>
+                <button id="logoutBtn">Logout</button>
+                  <button id="addNewProductBtn" style="background-color: #50B498; text-decoration: none;">Add New Product</button>
+            </div>
+        `;
 
-         const logoutBtn = document.getElementById('logoutBtn');
-         const addNewProductBtn = document.getElementById('addNewProductBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const addNewProductBtn = document.getElementById('addNewProductBtn');
 
-         logoutBtn.addEventListener('click', () => {
-             localStorage.removeItem('currentUser');
-             currentUser = null;
-             updateAuthDisplay();
-             fetchProducts();
-         });
-     } else {
-         authButtons.style.display = "flex";
-         userCard.innerHTML = "";
-     }
- }
-
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('currentUser');
+            currentUser = null;
+            updateAuthDisplay();
+            fetchProducts();
+        });
+        addNewProductBtn.addEventListener('click', () => {
+             window.location.href = "add new product.html";
+        });
+    } else {
+        authButtons.style.display = "flex";
+        userCard.innerHTML = "";
+    }
+}
  updateAuthDisplay();
  window.addEventListener('load', () => {
    const cachedUser = localStorage.getItem('currentUser');
