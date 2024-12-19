@@ -1187,23 +1187,26 @@
     }
   }
 
-   function fetchProducts() {
-    fetch(`${databaseURL}/.json?auth=${apiKey}`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        allProducts = Object.values(data);
-        displayProducts(allProducts);
-      })
-      .catch(error => {
-        console.error('There has been a problem with your fetch operation:', error);
-        productsContainer.innerHTML = '<p>Error loading products. Please try again later.</p>';
-      });
-  }
+    function fetchProducts() {
+      fetch(`${databaseURL}/.json?auth=${apiKey}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Network response was not ok: ${response.status} - ${response.statusText}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+            if (!data) {
+            throw new Error('No data received from Firebase.');
+          }
+          allProducts = Object.values(data);
+          displayProducts(allProducts);
+        })
+        .catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+            productsContainer.innerHTML = '<p>Error loading products. Please try again later.</p>';
+        });
+    }
 
   function displayProducts(productsToDisplay) {
       productsContainer.innerHTML = '';
@@ -1294,23 +1297,21 @@
 
     const heartIcons = document.querySelectorAll('.heart-icon');
     heartIcons.forEach(icon => {
-        if (currentUser && Object.values(productsToDisplay).find(p => p.id === icon.closest('.product-card').dataset.productId).list_of_hearers.includes(currentUser.uid)) {
-            icon.textContent = 'favorite';
-            icon.style.color = '#FF6969';
-        } else {
+      if (currentUser && Object.values(productsToDisplay).find(p => p.id === icon.closest('.product-card').dataset.productId).list_of_hearers.includes(currentUser.uid)) {
+        icon.textContent = 'favorite';
+        icon.style.color = '#FF6969';
+       } else {
             icon.textContent = 'favorite_border';
             icon.style.color = '';
         }
-
-        icon.addEventListener('click', () => {
-            if (currentUser) {
-                toggleHeart(icon);
-            } else {
-                alert('Please sign in to interact with hearts.');
-            }
-        });
-    });
-
+      icon.addEventListener('click', () => {
+          if (currentUser) {
+              toggleHeart(icon);
+          } else {
+              alert('Please sign in to interact with hearts.');
+          }
+      });
+   });
 
       const readMoreSpans = document.querySelectorAll('.read-more');
       readMoreSpans.forEach(span => {
@@ -1365,7 +1366,7 @@
     return description;
   }
 
-   function toggleHeart(icon) {
+  function toggleHeart(icon) {
       if (!currentUser) {
           alert('Please sign in to interact with hearts.');
           return;
