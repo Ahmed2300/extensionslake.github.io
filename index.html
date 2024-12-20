@@ -1357,37 +1357,42 @@
 
  function toggleHeart(icon) {
     if (!currentUser) {
-      alert('Please sign in to interact with hearts.');
-      return;
+        alert('Please sign in to interact with hearts.');
+        return;
     }
-
+  
     const card = icon.closest('.product-card');
     const productId = card.dataset.productId;
     const heartCountSpan = card.querySelector('.heart-count');
     let currentCount = parseInt(heartCountSpan.textContent, 10);
-    const product = allProducts[productId]; 
-
+    const product = allProducts.find(prod => prod.id === productId);
+  
+    if(!product){
+      console.error("Product not found in allProducts", productId)
+      return;
+    }
+  
     const userIndex = product.list_of_hearers.indexOf(currentUser.uid);
 
     if (userIndex === -1) {
-      product.list_of_hearers.push(currentUser.uid);
-      icon.textContent = 'favorite';
-      icon.style.color = '#FF6969'; 
-      currentCount++;
+        product.list_of_hearers.push(currentUser.uid);
+        icon.textContent = 'favorite';
+        icon.style.color = '#FF6969';
+        currentCount++;
     } else {
-      product.list_of_hearers.splice(userIndex, 1);
-      icon.textContent = 'favorite_border';
-      icon.style.color = ''; 
-      currentCount--;
+        product.list_of_hearers.splice(userIndex, 1);
+        icon.textContent = 'favorite_border';
+        icon.style.color = '';
+        currentCount--;
     }
 
     heartCountSpan.textContent = currentCount;
-    product.Heart_Num = currentCount; 
+    product.Heart_Num = currentCount;
 
     updateProductInDatabase(productId, product);
-  }
+}
 
-  
+
   function updateProductInDatabase(productId, updatedProduct) {
      fetch(`${databaseURL}/${productId}.json?auth=${apiKey}`, {
          method: 'PATCH',
