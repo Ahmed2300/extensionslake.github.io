@@ -1128,7 +1128,7 @@
    <p>© 2023 Extensions Lake. All rights reserved.</p>
  </footer>
 <script type="module">
- import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-analytics.js";
  import { getAuth, GoogleAuthProvider, signInWithPopup } from 'https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js';
 
@@ -1197,6 +1197,7 @@
      })
      .then(data => {
        allProducts = Object.values(data);
+         allProducts = allProducts.map((product, index) => ({ ...product, id: product.id || index }));
        displayProducts(allProducts);
      })
      .catch(error => {
@@ -1355,7 +1356,7 @@
    return description;
  }
 
- function toggleHeart(icon) {
+  function toggleHeart(icon) {
     if (!currentUser) {
         alert('Please sign in to interact with hearts.');
         return;
@@ -1393,6 +1394,7 @@
 }
 
 
+  
   function updateProductInDatabase(productId, updatedProduct) {
      fetch(`${databaseURL}/${productId}.json?auth=${apiKey}`, {
          method: 'PATCH',
