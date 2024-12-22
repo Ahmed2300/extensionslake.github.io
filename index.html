@@ -716,6 +716,16 @@
              animation: floatIcon 15s linear infinite;
          }
 
+         #addNewProductBtn {
+    background-color: #69ffdf;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
          @keyframes floatIcon {
              0% {
                  transform: translateY(0) translateX(0) rotate(0deg);
@@ -1721,7 +1731,7 @@ input[type="text"] {
                 <h3>${currentUser.displayName || currentUser.email.split('@')[0]}</h3>
                 <p>${currentUser.email}</p>
                 <button id="logoutBtn">Logout</button>
-                  <button id="addNewProductBtn" style="background-color: #50B498; text-decoration: none;">Add New Product</button>
+                  <button id="addNewProductBtn" >Add New Product</button>
             </div>
         `;
 
