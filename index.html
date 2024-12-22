@@ -171,24 +171,25 @@
 
         #productsContainer {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
             overflow-y: auto;
             max-height: 80vh;
             padding: 10px;
         }
 
         .product-card {
-            border: 1px solid var(--card-border);
+            border: none;
             border-radius: 15px;
-            padding: 20px;
+            overflow: hidden;
             text-align: left;
             position: relative;
             background-color: var(--card-background);
             box-shadow: 0 4px 10px var(--shadow-color);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
-            backdrop-filter: blur(10px);
             cursor: pointer;
+            display: flex;
+            flex-direction: column;
         }
 
         .product-card:hover {
@@ -196,23 +197,49 @@
             box-shadow: 0 6px 12px var(--shadow-color);
         }
 
+        .extension-image {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .extension-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .extension-image img {
+            transform: scale(1.05);
+        }
+
+        .card-content {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
         .publisher-info {
             display: flex;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         .publisher-image {
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
-            margin-right: 10px;
+            margin-right: 12px;
+            object-fit: cover;
         }
 
         .publisher-name {
             font-weight: 600;
             display: flex;
             align-items: center;
+            color: var(--text-color);
         }
 
         .verified-icon {
@@ -224,40 +251,235 @@
         .publish-date {
             font-style: italic;
             color: #6c757d;
-            font-size: 0.8em;
-            margin-left: 10px;
+            font-size: 0.9em;
         }
 
-        h2 {
+        .product-card h2 {
             color: var(--text-color);
             margin-bottom: 10px;
+            font-size: 1.4em;
         }
 
-        p {
+        .description-text {
             line-height: 1.6;
             color: var(--text-color);
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
-        button {
+        .read-more {
+            color: var(--primary-color);
+            cursor: pointer;
+            display: block;
+            margin-top: 5px;
+        }
+
+        .price {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .button-group a {
+            text-decoration: none;
+            flex-grow: 1;
+        }
+
+        .button-group button {
             background-color: var(--primary-color);
             color: #ffffff;
             border: none;
-            padding: 12px 22px;
+            padding: 10px 18px;
             border-radius: 8px;
             cursor: pointer;
             font-family: inherit;
             transition: background-color 0.3s ease, transform 0.2s ease;
-            margin-bottom: 5px;
-            display: block;
-            text-align: left;
-            text-decoration: none;
+            box-shadow: 0px 2px 4px var(--shadow-color);
             width: 100%;
-            box-shadow: 0px 4px 8px var(--shadow-color);
+            text-align: center;
         }
 
-        button:hover {
+        .button-group button:hover {
             background-color: darken(var(--primary-color), 10%);
             transform: translateY(-2px);
+        }
+
+        .button-group .secondary-btn {
+            background-color: var(--secondary-color);
+        }
+
+        .button-group .secondary-btn:hover {
+            background-color: darken(var(--secondary-color), 10%);
+        }
+
+        .heart-container {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .heart-icon {
+            cursor: pointer;
+            font-size: 1.8em;
+            color: #ccc;
+            transition: color 0.2s ease;
+            margin-right: 5px;
+        }
+
+        .heart-icon.filled {
+            color: #FF6969;
+        }
+
+        .heart-count {
+            font-size: 1.1em;
+            color: var(--text-color);
+        }
+
+        .edit-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 8px 12px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            z-index: 2;
+        }
+
+        .edit-btn:hover {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .edit-btn .material-icons {
+            font-size: 1.2em;
+            vertical-align: middle;
+        }
+
+        .edit-dialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 600px;
+            background-color: var(--card-background);
+            border: 1px solid var(--card-border);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            text-align: left;
+            z-index: 1002;
+            backdrop-filter: blur(10px);
+        }
+
+        .edit-dialog h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .edit-dialog label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .edit-dialog input[type="text"],
+        .edit-dialog input[type="number"],
+        .edit-dialog textarea {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+
+        .edit-dialog textarea {
+            min-height: 120px;
+        }
+
+        .edit-dialog .image-upload-container {
+            margin-bottom: 15px;
+        }
+
+        .edit-dialog .image-upload-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .edit-dialog .file-input {
+            display: none;
+        }
+
+        .edit-dialog .file-upload-btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .edit-dialog .file-upload-btn:hover {
+            background-color: darken(var(--primary-color), 10%);
+        }
+
+        .edit-dialog .selected-image-preview {
+            max-width: 100%;
+            max-height: 200px;
+            margin-top: 10px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .edit-dialog .button-group {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .edit-dialog .save-btn,
+        .edit-dialog .cancel-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background-color 0.3s ease;
+            margin-left: 10px;
+        }
+
+        .edit-dialog .save-btn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .edit-dialog .save-btn:hover {
+            background-color: darken(var(--primary-color), 10%);
+        }
+
+        .edit-dialog .cancel-btn {
+            background-color: #ccc;
+            color: #333;
+        }
+
+        .edit-dialog .cancel-btn:hover {
+            background-color: #bbb;
         }
 
         .search-and-filters {
@@ -305,7 +527,6 @@
             font-weight: bold;
             white-space: nowrap;  /* Prevent labels from wrapping */
         }
-
 
         .filter-group select,
         .filter-group input[type="number"] {
@@ -487,36 +708,35 @@
              pointer-events: none;
              z-index: -10;
          }
-    
+
          .floating-icon {
              position: absolute;
              font-size: 24px;
              opacity: 0.6;
              animation: floatIcon 15s linear infinite;
          }
-    
+
          @keyframes floatIcon {
              0% {
                  transform: translateY(0) translateX(0) rotate(0deg);
              }
-    
+
              25% {
                  transform: translateY(20px) translateX(10px) rotate(90deg);
              }
-    
+
              50% {
                  transform: translateY(0px) translateX(-20px) rotate(180deg);
              }
-    
+
              75% {
                  transform: translateY(-20px) translateX(10px) rotate(270deg);
              }
-    
+
              100% {
                  transform: translateY(0) translateX(0) rotate(360deg);
              }
          }
-
 
         @media (max-width: 992px) {
             .container {
@@ -684,78 +904,6 @@
             }
         }
 
-        .extension-image {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 8px 8px 0 0;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .extension-image img {
-            max-width: 100%;
-            max-height: 100%;
-            border-radius: 8px 8px 0 0;
-        }
-
-        .button-group {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            margin-top: 10px;
-        }
-
-        .button-group a {
-            text-decoration: none;
-        }
-
-        .description-container p {
-            margin-bottom: 0;
-        }
-
-        .description-text {
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .read-more {
-            color: var(--primary-color);
-            cursor: pointer;
-            margin-top: 5px;
-            text-align: left;
-        }
-
-        .auth-buttons {
-            display: flex;
-            align-items: center;
-            margin-top: 10px;
-        }
-
-        .auth-buttons button {
-            margin-top: 50px;
-            padding: 10px 18px;
-            background-color: var(--secondary-color);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            width: auto;
-            box-shadow: 0px 4px 8px var(--shadow-color);
-        }
-
-        .auth-buttons button:hover {
-            background-color: white, 10%;
-            color: black;
-            transform: translateY(-2px);
-        }
-
         .user-card {
             background-color: var(--card-background);
             padding: 25px;
@@ -839,168 +987,156 @@
 
         .google-logo {
             width: 20px;
-            height: 20px;
+            height: 20px
         }
 
-        .btn-text {
-            font-weight: bold;
-        }
+.btn-text {
+    font-weight: bold;
+}
 
-        .dialog-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-        }
+.dialog-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
 
-        .signup-dialog h2 {
-            margin-top: 0;
-        }
+.signup-dialog h2 {
+    margin-top: 0;
+}
 
-        .signup-dialog label {
-            display: block;
-            margin-bottom: 5px;
-        }
+.signup-dialog label {
+    display: block;
+    margin-bottom: 5px;
+}
 
-        .signup-dialog input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-        }
+.signup-dialog input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
 
-        .signup-dialog button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            background-color: var(--primary-color);
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0px 4px 8px var(--shadow-color);
-        }
-        .signup-dialog button:hover{
-            background-color: darken(var(--primary-color), 10%);
-            transform: translateY(-2px);
-        }
+.signup-dialog button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--primary-color);
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0px 4px 8px var(--shadow-color);
+}
+.signup-dialog button:hover{
+    background-color: darken(var(--primary-color), 10%);
+    transform: translateY(-2px);
+}
 
-        #logoutBtn {
-            background-color: #FF6969;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+#logoutBtn {
+    background-color: #FF6969;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
 
-        #logoutBtn:hover {
-            background-color: darken(red, 10%);
-        }
+#logoutBtn:hover {
+    background-color: darken(red, 10%);
+}
 
-        .heart-icon {
-            cursor: pointer;
-            font-size: 1.5em;
-            margin-right: 5px;
-            vertical-align: middle;
-        }
+footer {
+    background-color: var(--footer-background);
+    color: var(--footer-text);
+    padding: 20px;
+    text-align: center;
+    margin-top: 50px;
+    width: 100%;
+    position: relative;
+    bottom: 0;
+}
 
-        .heart-count {
-            vertical-align: middle;
-        }
+footer p {
+    margin: 5px 0;
+}
 
-        footer {
-            background-color: var(--footer-background);
-            color: var(--footer-text);
-            padding: 20px;
-            text-align: center;
-            margin-top: 50px;
-            width: 100%;
-            position: relative;
-            bottom: 0;
-        }
+footer img {
+    margin: 0 5px;
+    vertical-align: middle;
+}
 
-        footer p {
-            margin: 5px 0;
-        }
+input[type="text"] {
+    padding: 12px;
+    border: none;
+    border-bottom: 2px solid rgba(108, 117, 125, 0.3);
+    border-radius: 4px 4px 0 0;
+    width: 100%;
+    font-family: inherit;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.15);
+    color: var(--text-color);
+    outline: none;
+}
 
-        footer img {
-            margin: 0 5px;
-            vertical-align: middle;
-        }
+.search-box{
+    position: relative;
+}
 
+.search-box input[type="text"],
+.signup-dialog input {
+    padding: 12px;
+    padding-left: 40px;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 5px;
+    width: 100%;
+    font-family: inherit;
+                background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+    transition: border-color 0.3s ease;
+    position: relative;
+    box-shadow: 0px 2px 4px var(--shadow-color);
+}
 
-        input[type="text"] {
-            padding: 12px;
-            border: none;
-            border-bottom: 2px solid rgba(108, 117, 125, 0.3);
-            border-radius: 4px 4px 0 0;
-            width: 100%;
-            font-family: inherit;
-            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
-            transition: border-color 0.3s ease;
-            background-color: rgba(255, 255, 255, 0.15);
-            color: var(--text-color);
-            outline: none;
-        }
+.search-box input[type="text"]:focus,
+.signup-dialog input:focus {
+    outline: none;
+    border-bottom-color: transparent;
+}
 
-
-        .search-box{
-            position: relative;
-        }
-
-        .search-box input[type="text"],
-        .signup-dialog input {
-            padding: 12px;
-            padding-left: 40px;
-            border: none;
-            border-bottom: 2px solid transparent;
-            border-radius: 5px;
-            width: 100%;
-            font-family: inherit;
-                        background-color: rgba(255, 255, 255, 0.1);
-            color: var(--text-color);
-            transition: border-color 0.3s ease;
-            position: relative;
-            box-shadow: 0px 2px 4px var(--shadow-color);
-        }
-
-        .search-box input[type="text"]:focus,
-        .signup-dialog input:focus {
-            outline: none;
-            border-bottom-color: transparent;
-        }
-
-        .search-box input[type="text"]::after,
-        .signup-dialog input::after{
-            content: "";
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            height: 2px;
-            background-image: linear-gradient(to right, #00c6ff, #007bff);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-        .search-box input[type="text"]:focus::after,
-        .signup-dialog input:focus::after{
-            transform: scaleX(1);
-        }
-        .search-box .material-icons {
-            position: absolute;
-            top: 50%;
-            left: 10px;
-            transform: translateY(-50%);
-            color: rgba(128, 128, 128, 0.6);
-            pointer-events: none;
-        }
-    </style>
+.search-box input[type="text"]::after,
+.signup-dialog input::after{
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    background-image: linear-gradient(to right, #00c6ff, #007bff);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+.search-box input[type="text"]:focus::after,
+.signup-dialog input:focus::after{
+    transform: scaleX(1);
+}
+.search-box .material-icons {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: rgba(128, 128, 128, 0.6);
+    pointer-events: none;
+}
+</style>
+   
 </head>
 <body>
   <div class="floating-icons">
@@ -1079,57 +1215,86 @@
 </div>
 
 <div class="dialog-overlay" id="dialogOverlay"></div>
+
+<!-- Signup Dialog -->
 <div class="signup-dialog" id="signupDialog">
     <div class="dialog-content">
         <h2 class="dialog-title">Sign Up with Google</h2>
         <p class="dialog-message">Access personalized features and contribute to the community by signing up.</p>
         <button id="googleSignInButton" class="google-signin-btn">
-          <span class="icon-container">
-            <img src="https://iili.io/dKDr0W7.png" alt="Google Logo" class="google-logo">
-          </span>
+            <span class="icon-container">
+                <img src="https://iili.io/dKDr0W7.png" alt="Google Logo" class="google-logo">
+            </span>
             <span class="btn-text">Sign Up with Google</span>
         </button>
     </div>
 </div>
 
+<!-- Edit Dialog -->
+<div class="edit-dialog" id="editDialog">
+    <h3>Edit Product</h3>
+    <form id="editForm">
+        <label for="editName">Name:</label>
+        <input type="text" id="editName" name="editName" required>
+
+        <label for="editDescription">Description:</label>
+        <textarea id="editDescription" name="editDescription" required></textarea>
+
+        <label for="editPrice">Price:</label>
+        <input type="number" id="editPrice" name="editPrice" min="0" step="0.01" required>
+
+        <div class="image-upload-container">
+            <label class="image-upload-label">Cover Image:</label>
+            <input type="file" id="editCoverImage" name="editCoverImage" class="file-input" accept="image/*">
+            <label for="editCoverImage" class="file-upload-btn">Choose File</label>
+            <img id="editCoverImagePreview" class="selected-image-preview" src="" alt="Cover Image Preview">
+        </div>
+
+        <div class="button-group">
+            <button type="button" class="save-btn" id="saveEditBtn">Save</button>
+            <button type="button" class="cancel-btn" id="cancelEditBtn">Cancel</button>
+        </div>
+    </form>
+</div>
+
 <div class="container">
     <div id="userCard"></div>
     <div class="search-and-filters">
-         <div class="search-box">
+        <div class="search-box">
             <span class="material-icons">search</span>
             <input type="text" id="searchInput" placeholder="Search products...">
         </div>
-         <div class="filter-container">
-        <div class="filter-group">
-            <label for="typeFilter">Type:</label>
-            <select id="typeFilter">
-                <option value="all">All</option>
-                <option value="free">Free</option>
-                <option value="paid">Paid</option>
-            </select>
-        </div>
-        <div class="filter-group">
-            <label for="dateFilter">Date:</label>
-            <select id="dateFilter">
-                <option value="newest">Newest to Oldest</option>
-                <option value="oldest">Oldest to Newest</option>
-            </select>
-        </div>
-           <div class="filter-group">
+        <div class="filter-container">
+            <div class="filter-group">
+                <label for="typeFilter">Type:</label>
+                <select id="typeFilter">
+                    <option value="all">All</option>
+                    <option value="free">Free</option>
+                    <option value="paid">Paid</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="dateFilter">Date:</label>
+                <select id="dateFilter">
+                    <option value="newest">Newest to Oldest</option>
+                    <option value="oldest">Oldest to Newest</option>
+                </select>
+            </div>
+            <div class="filter-group">
                 <label for="heartFilter">Hearts:</label>
                 <select id="heartFilter">
-                  <option value="all">All</option>
+                    <option value="all">All</option>
                     <option value="most">Most Hearted</option>
                     <option value="least">Least Hearted</option>
                 </select>
             </div>
-           <div class="filter-group" id="priceFilterGroup" style="display: none;">
-            <label for="minPrice">Min Price:</label>
-            <input type="number" id="minPrice" min="0" step="0.01">
-            <label for="maxPrice">Max Price:</label>
-            <input type="number" id="maxPrice" min="0" step="0.01">
+            <div class="filter-group" id="priceFilterGroup" style="display: none;">
+                <label for="minPrice">Min Price:</label>
+                <input type="number" id="minPrice" min="0" step="0.01">
+                <label for="maxPrice">Max Price:</label>
+                <input type="number" id="maxPrice" min="0" step="0.01">
+            </div>
         </div>
-         </div>
     </div>
     <div id="productsContainer">
         <div class="loading-animation">
@@ -1139,11 +1304,14 @@
         </div>
     </div>
 </div>
+
+<!-- Info Dialog -->
 <div class="info-dialog" id="infoDialog">
     <h3 id="dialogTitle"></h3>
     <p id="dialogDescription"></p>
     <button id="closeDialog">Close</button>
 </div>
+
 <footer>
     <p>About Us - We are a company dedicated to providing high-quality extensions.</p>
     <p>for
@@ -1153,6 +1321,7 @@
     </p>
     <p>© 2023 Extensions Lake. All rights reserved.</p>
 </footer>
+
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-analytics.js";
@@ -1195,6 +1364,16 @@
     const googleSignInButton = document.getElementById('googleSignInButton');
     const dateFilter = document.getElementById('dateFilter');
     const heartFilter = document.getElementById('heartFilter');
+    const editDialog = document.getElementById('editDialog');
+    const editForm = document.getElementById('editForm');
+    const saveEditBtn = document.getElementById('saveEditBtn');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+    const editNameInput = document.getElementById('editName');
+    const editDescriptionInput = document.getElementById('editDescription');
+    const editPriceInput = document.getElementById('editPrice');
+    const editCoverImageInput = document.getElementById('editCoverImage');
+    const editCoverImagePreview = document.getElementById('editCoverImagePreview');
+
     let allProducts = [];
     const maxDescriptionLength = 150;
     let currentUser = null;
@@ -1237,6 +1416,7 @@
         productsContainer.innerHTML = '';
 
         productsToDisplay.forEach((product, index) => {
+            let isOwner = currentUser && product.publisherId === currentUser.uid;
             if (!product.list_of_hearers) {
                 product.list_of_hearers = [];
             }
@@ -1247,12 +1427,14 @@
             let verifiedIcon = product.isVerified
                 ? `<span class="material-icons verified-icon">verified</span>`
                 : '';
-            let imageElement = document.createElement(product.coverImageURL.endsWith('.gif') ? 'img' : 'img');
+
+            let imageElement = document.createElement('img');
             imageElement.src = product.coverImageURL;
             imageElement.alt = `${product.name} Cover`;
             let extensionImageContainer = document.createElement('div');
             extensionImageContainer.classList.add('extension-image');
             extensionImageContainer.appendChild(imageElement);
+
             const truncatedDescription = truncateDescription(product.description, maxDescriptionLength);
             const heartCount = product.Heart_Num || 0;
 
@@ -1279,34 +1461,41 @@
                     break;
             }
             const productCard = `
-           <div class="product-card" data-type="${product.type}" data-product-id="${product.id}" style="background-color: var(--card-bg-${(index % 20) + 1});">
-               <div class="type-indicator ${product.type}" data-type="${product.type}">${product.type.toUpperCase()}</div>
-               <div class="publisher-info">
-                   <img class="publisher-image" src="${product.publisherImageURL}" alt="Publisher Image">
-                   <div>
-                       <span class="publisher-name">${product.publisherName} ${verifiedIcon}</span>
-                       <p class="publish-date">${product.date}</p>
-                   </div>
-               </div>
-               ${extensionImageContainer.outerHTML}
-               <h2>${product.name} <span class="material-icons" style="font-size: 1.2em; vertical-align: middle; color: #36BA98;">${fileTypeIcon}</span> <span style="vertical-align: middle; color: #36BA98;">${fileTypeLabel}</span></h2>
-               <div class="description-container">
-                   <p class="description-text" data-full-description="${product.description}">${truncatedDescription}</p>
-                   <span class="read-more" data-product-id="${product.id}" style="color: var(--primary-color); cursor: pointer;">Read More</span>
-               </div>
-               <p>Price: $${product.price.toFixed(2)}</p>
-               <div class="button-group">
-                   <a href="${buttonUrl}" target="_blank">
-                       <button>${buttonText}</button>
-                   </a>
-                   <a href="${product.topicURL}" target="_blank">
-                       <button style="background-color: #FF9843;">Visit Official Topic</button>
-                   </a>
-               </div>
-                 <span class="heart-icon material-icons" onclick="toggleHeart(this)" ${heartColor}>${heartIcon}</span>
-                 <span class="heart-count">${heartCount}</span>
-           </div>
-       `;
+                <div class="product-card" data-type="${product.type}" data-product-id="${product.id}" style="background-color: var(--card-bg-${(index % 20) + 1});">
+                    ${isOwner ? '<div class="edit-btn" onclick="openEditDialog(\'' + product.id + '\')"><span class="material-icons">edit</span></div>' : ''}
+                    <div class="type-indicator ${product.type}" data-type="${product.type}">${product.type.toUpperCase()}</div>
+                    <div class="extension-image">
+                        <img src="${product.coverImageURL}" alt="${product.name} Cover">
+                    </div>
+                    <div class="card-content">
+                        <div class="publisher-info">
+                            <img class="publisher-image" src="${product.publisherImageURL}" alt="Publisher Image">
+                            <div>
+                                <span class="publisher-name">${product.publisherName} ${verifiedIcon}</span>
+                                <p class="publish-date">${product.date}</p>
+                            </div>
+                        </div>
+                        <h2>${product.name} <span class="material-icons" style="font-size: 1.2em; vertical-align: middle; color: #36BA98;">${fileTypeIcon}</span> <span style="vertical-align: middle; color: #36BA98;">${fileTypeLabel}</span></h2>
+                        <div class="description-container">
+                            <p class="description-text" data-full-description="${product.description}">${truncatedDescription}</p>
+                            <span class="read-more" data-product-id="${product.id}" style="color: var(--primary-color); cursor: pointer;">Read More</span>
+                        </div>
+                        <p class="price">Price: $${product.price.toFixed(2)}</p>
+                        <div class="button-group">
+                            <a href="${buttonUrl}" target="_blank">
+                                <button>${buttonText}</button>
+                            </a>
+                            <a href="${product.topicURL}" target="_blank">
+                                <button class="secondary-btn">Visit Official Topic</button>
+                            </a>
+                        </div>
+                        <div class="heart-container">
+                            <span class="heart-icon material-icons" onclick="toggleHeart(this)" ${heartColor}>${heartIcon}</span>
+                            <span class="heart-count">${heartCount}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
             productsContainer.innerHTML += productCard;
         });
 
@@ -1339,7 +1528,6 @@
         });
     }
 
-
     function showInfoDialog(event) {
         const type = event.target.dataset.type;
         let dialogTitle, dialogMessage;
@@ -1364,6 +1552,7 @@
     dialogOverlay.addEventListener('click', () => {
         signupDialog.style.display = "none";
         infoDialog.style.display = 'none';
+        editDialog.style.display = 'none';
         dialogOverlay.style.display = 'none';
     });
 
@@ -1383,7 +1572,7 @@
         return description;
     }
 
-     function toggleHeart(icon) {
+    function toggleHeart(icon) {
         if (!currentUser) {
             alert('Please sign in to interact with hearts.');
             return;
@@ -1393,12 +1582,12 @@
         const productId = card.dataset.productId;
         const heartCountSpan = card.querySelector('.heart-count');
         let currentCount = parseInt(heartCountSpan.textContent, 10);
-         const product = allProducts.find(prod => prod.id === productId);
+        const product = allProducts.find(prod => prod.id === productId);
 
-         if(!product){
-             console.error("Product not found in allProducts", productId)
-             return;
-         }
+        if (!product) {
+            console.error("Product not found in allProducts", productId)
+            return;
+        }
 
         const userIndex = product.list_of_hearers.indexOf(currentUser.uid);
 
@@ -1457,47 +1646,43 @@
     minPriceInput.addEventListener('input', applyFilters);
     maxPriceInput.addEventListener('input', applyFilters);
 
+    function applyFilters() {
+        const selectedDateOrder = dateFilter.value;
+        const selectedHeartOrder = heartFilter.value;
+        const searchTerm = searchInput.value.toLowerCase();
+        const selectedType = typeFilter.value;
+        const minPrice = parseFloat(minPriceInput.value) || 0;
+        const maxPrice = parseFloat(maxPriceInput.value) || Infinity;
 
-  function applyFilters() {
-     const selectedDateOrder = dateFilter.value;
-    const selectedHeartOrder = heartFilter.value;
-     const searchTerm = searchInput.value.toLowerCase();
-     const selectedType = typeFilter.value;
-     const minPrice = parseFloat(minPriceInput.value) || 0;
-     const maxPrice = parseFloat(maxPriceInput.value) || Infinity;
+        let sortedProducts = [...allProducts];
 
-   
-     let sortedProducts = [...allProducts];
-
-      // Sort by date
+        // Sort by date
         sortedProducts.sort((a, b) => {
             const dateA = new Date(a.date);
             const dateB = new Date(b.date);
-          if (selectedDateOrder === 'newest') {
+            if (selectedDateOrder === 'newest') {
                 return dateB - dateA;
             } else {
-              return dateA - dateB;
+                return dateA - dateB;
             }
         });
 
-
-     // Sort by hearts
-      if (selectedHeartOrder === 'most') {
-          sortedProducts.sort((a, b) => (b.Heart_Num || 0) - (a.Heart_Num || 0));
+        // Sort by hearts
+        if (selectedHeartOrder === 'most') {
+            sortedProducts.sort((a, b) => (b.Heart_Num || 0) - (a.Heart_Num || 0));
         } else if (selectedHeartOrder === 'least') {
-          sortedProducts.sort((a, b) => (a.Heart_Num || 0) - (b.Heart_Num || 0));
-      }
-   
-    const filteredProducts = sortedProducts.filter(product => {
-        const matchesType = selectedType === 'all' || product.type === selectedType;
-       const matchesPrice = product.price >= minPrice && product.price <= maxPrice;
-        const matchesSearch = product.name.toLowerCase().includes(searchTerm) ||
-                              product.description.toLowerCase().includes(searchTerm);
-        return matchesType && matchesPrice && matchesSearch;
-    });
-    displayProducts(filteredProducts);
- }
+            sortedProducts.sort((a, b) => (a.Heart_Num || 0) - (b.Heart_Num || 0));
+        }
 
+        const filteredProducts = sortedProducts.filter(product => {
+            const matchesType = selectedType === 'all' || product.type === selectedType;
+            const matchesPrice = product.price >= minPrice && product.price <= maxPrice;
+            const matchesSearch = product.name.toLowerCase().includes(searchTerm) ||
+                product.description.toLowerCase().includes(searchTerm);
+            return matchesType && matchesPrice && matchesSearch;
+        });
+        displayProducts(filteredProducts);
+    }
 
     themeToggle.addEventListener('change', () => {
         document.body.classList.toggle('dark-theme', themeToggle.checked);
@@ -1549,9 +1734,9 @@
                 updateAuthDisplay();
                 fetchProducts();
             });
-             addNewProductBtn.addEventListener('click', () => {
-                 window.location.href = "add new product.html";
-             });
+            addNewProductBtn.addEventListener('click', () => {
+                window.location.href = "add new product.html";
+            });
         } else {
             authButtons.style.display = "flex";
             userCard.innerHTML = "";
@@ -1566,6 +1751,84 @@
             fetchProducts();
         }
     });
+
+    function openEditDialog(productId) {
+        const product = allProducts.find(p => p.id === productId);
+        if (!product) return;
+
+        editNameInput.value = product.name;
+        editDescriptionInput.value = product.description;
+        editPriceInput.value = product.price;
+        editCoverImagePreview.src = product.coverImageURL;
+
+        editDialog.dataset.productId = productId;
+        editDialog.style.display = 'block';
+        dialogOverlay.style.display = 'block';
+    }
+
+    saveEditBtn.addEventListener('click', () => {
+        const productId = editDialog.dataset.productId;
+        const updatedProduct = {
+            name: editNameInput.value,
+            description: editDescriptionInput.value,
+            price: parseFloat(editPriceInput.value),
+            coverImageURL: editCoverImagePreview.src
+        };
+
+        if (editCoverImageInput.files.length > 0) {
+            const file = editCoverImageInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                updatedProduct.coverImageURL = e.target.result;
+                updateProductAndCloseDialog(productId, updatedProduct);
+            };
+
+            reader.onerror = function(error) {
+                console.error('Error reading file:', error);
+                alert('Error reading file. Please try again.');
+            };
+
+            reader.readAsDataURL(file);
+        } else {
+            updateProductAndCloseDialog(productId, updatedProduct);
+        }
+    });
+
+    function updateProductAndCloseDialog(productId, updatedProduct) {
+        const productIndex = allProducts.findIndex(p => p.id === productId);
+        if (productIndex !== -1) {
+            allProducts[productIndex] = { ...allProducts[productIndex], ...updatedProduct };
+            updateProductInDatabase(productId, updatedProduct);
+        }
+
+        editDialog.style.display = 'none';
+        dialogOverlay.style.display = 'none';
+        displayProducts(allProducts);
+    }
+
+    cancelEditBtn.addEventListener('click', () => {
+        editDialog.style.display = 'none';
+        dialogOverlay.style.display = 'none';
+    });
+
+    editCoverImageInput.addEventListener('change', () => {
+        if (editCoverImageInput.files.length > 0) {
+            const file = editCoverImageInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                editCoverImagePreview.src = e.target.result;
+            };
+
+            reader.onerror = function(error) {
+                console.error('Error reading file:', error);
+                alert('Error reading file. Please try again.');
+            };
+
+            reader.readAsDataURL(file);
+        }
+    });
 </script>
 </body>
-</html>
+</html> 
