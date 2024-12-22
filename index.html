@@ -76,7 +76,7 @@
         /* Hello Page Specific Styles */
         .container {
             display: flex;
-            width: 80%;
+            width: 90%; /* Adjusted width */
             max-width: 1100px; /* Increased max-width */
             border-radius: 15px;
             background-color: rgba(255, 255, 255, 0.15); /* Light mode frosted glass */
@@ -93,7 +93,7 @@
 
         .content-section {
             flex: 1;
-            padding: 50px; /* Increased padding */
+            padding: 40px; /* Increased padding */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -249,13 +249,30 @@
             transform: translateX(20px);
         }
 
+        /* Media Queries for Responsiveness */
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
+                width: 95%; /* Adjusted width */
             }
 
             .image-section {
-                min-height: 250px; /* Adjusted min-height */
+                min-height: 250px;
+                width: 100%; /* Full width on smaller screens */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .content-section {
+                padding: 30px; /* Reduced padding */
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .btn {
+                padding: 10px 20px;
             }
         }
     </style>
@@ -322,7 +339,7 @@
             </div>
             <h1>Holla, Welcome Back</h1>
             <p>Hey, welcome back to your special place</p>
-            <a href="home.html" class="btn btn-secondary">Continue Anonymously</a>
+            <a href="index.html" class="btn btn-secondary">Continue Anonymously</a>
             <button id="googleSignInButton" class="google-signin-btn">
                 <span class="icon-container">
                     <img src="https://iili.io/dKDr0W7.png" alt="Google Logo" class="google-logo">
@@ -362,8 +379,8 @@
                 const result = await signInWithPopup(auth, provider);
                 // User is signed in.
                 // You can access the user via result.user
-                // Redirect to home.html after successful sign-in
-                window.location.href = 'home.html';
+                // Redirect to index.html after successful sign-in
+                window.location.href = 'index.html';
             } catch (error) {
                 console.error("Error signing in with Google:", error);
             }
