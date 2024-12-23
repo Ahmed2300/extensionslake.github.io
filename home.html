@@ -1441,7 +1441,9 @@ input[type="text"] {
         productsContainer.innerHTML = '';
 
         productsToDisplay.forEach((product, index) => {
+            // Check if the current user is the product owner
             let isOwner = currentUser && product.publisherId === currentUser.uid;
+
             if (!product.list_of_hearers) {
                 product.list_of_hearers = [];
             }
