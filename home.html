@@ -1146,7 +1146,7 @@ input[type="text"] {
     pointer-events: none;
 }
 </style>
-   
+
 </head>
 <body>
   <div class="floating-icons">
@@ -1259,6 +1259,18 @@ input[type="text"] {
             <label for="editCoverImage" class="file-upload-btn">Choose File</label>
             <img id="editCoverImagePreview" class="selected-image-preview" src="" alt="Cover Image Preview">
         </div>
+
+        <label for="editType">Type:</label>
+        <select id="editType" name="editType">
+            <option value="free">Free</option>
+            <option value="paid">Paid</option>
+        </select>
+
+        <label for="editPaymentUrl">Payment URL:</label>
+        <input type="text" id="editPaymentUrl" name="editPaymentUrl">
+
+        <label for="editTopicUrl">Topic URL:</label>
+        <input type="text" id="editTopicUrl" name="editTopicUrl">
 
         <div class="button-group">
             <button type="button" class="save-btn" id="saveEditBtn">Save</button>
@@ -1383,6 +1395,9 @@ input[type="text"] {
     const editPriceInput = document.getElementById('editPrice');
     const editCoverImageInput = document.getElementById('editCoverImage');
     const editCoverImagePreview = document.getElementById('editCoverImagePreview');
+    const editTypeInput = document.getElementById('editType');
+    const editPaymentUrlInput = document.getElementById('editPaymentUrl');
+    const editTopicUrlInput = document.getElementById('editTopicUrl');
 
     let allProducts = [];
     const maxDescriptionLength = 150;
@@ -1744,7 +1759,7 @@ input[type="text"] {
                 updateAuthDisplay();
                 fetchProducts();
             });
-            addNewProductBtn.addEventListener('click', () => {
+             addNewProductBtn.addEventListener('click', () => {
                 window.location.href = "add new product.html";
             });
         } else {
@@ -1762,7 +1777,7 @@ input[type="text"] {
         }
     });
 
-    function openEditDialog(productId) {
+     function openEditDialog(productId) {
         const product = allProducts.find(p => p.id === productId);
         if (!product) return;
 
@@ -1770,19 +1785,24 @@ input[type="text"] {
         editDescriptionInput.value = product.description;
         editPriceInput.value = product.price;
         editCoverImagePreview.src = product.coverImageURL;
-
+         editTypeInput.value = product.type;
+        editPaymentUrlInput.value = product.paymentUrl;
+         editTopicUrlInput.value = product.topicURL;
         editDialog.dataset.productId = productId;
         editDialog.style.display = 'block';
         dialogOverlay.style.display = 'block';
     }
 
-    saveEditBtn.addEventListener('click', () => {
+  saveEditBtn.addEventListener('click', () => {
         const productId = editDialog.dataset.productId;
         const updatedProduct = {
             name: editNameInput.value,
             description: editDescriptionInput.value,
             price: parseFloat(editPriceInput.value),
-            coverImageURL: editCoverImagePreview.src
+            coverImageURL: editCoverImagePreview.src,
+              type: editTypeInput.value,
+            paymentUrl: editPaymentUrlInput.value,
+              topicURL: editTopicUrlInput.value,
         };
 
         if (editCoverImageInput.files.length > 0) {
@@ -1805,7 +1825,7 @@ input[type="text"] {
         }
     });
 
-    function updateProductAndCloseDialog(productId, updatedProduct) {
+   function updateProductAndCloseDialog(productId, updatedProduct) {
         const productIndex = allProducts.findIndex(p => p.id === productId);
         if (productIndex !== -1) {
             allProducts[productIndex] = { ...allProducts[productIndex], ...updatedProduct };
@@ -1841,4 +1861,4 @@ input[type="text"] {
     });
 </script>
 </body>
-</html> 
+</html>
