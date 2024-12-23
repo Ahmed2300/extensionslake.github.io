@@ -219,6 +219,8 @@
         .card-content {
             padding: 20px;
             flex-grow: 1;
+            display: flex;
+            flex-direction: column; /* Ensure content stacks vertically */
         }
 
         .publisher-info {
@@ -1145,6 +1147,39 @@ input[type="text"] {
     color: rgba(128, 128, 128, 0.6);
     pointer-events: none;
 }
+        /* Updated styles for edit button positioning */
+        .card-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column; /* Ensure content stacks vertically */
+        }
+
+        .heart-edit-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Position elements on opposite ends */
+            margin-top: auto; /* Push the container to the bottom */
+        }
+
+        .edit-btn {
+            /* Remove absolute positioning */
+            /* top: 10px;
+            right: 10px; */
+            padding: 8px 12px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            /* Remove z-index */
+        }
+
+                .edit-btn {
+            /* ... other styles ... */
+            margin-left: 10px; /* Add some space between heart and edit buttons */
+        }
+
 </style>
 
 </head>
@@ -1488,41 +1523,43 @@ input[type="text"] {
                     break;
             }
             const productCard = `
-                <div class="product-card" data-type="${product.type}" data-product-id="${product.id}" style="background-color: var(--card-bg-${(index % 20) + 1});">
-                    ${isOwner ? '<div class="edit-btn" onclick="openEditDialog(\'' + product.id + '\')"><span class="material-icons">edit</span></div>' : ''}
-                    <div class="type-indicator ${product.type}" data-type="${product.type}">${product.type.toUpperCase()}</div>
-                    <div class="extension-image">
-                        <img src="${product.coverImageURL}" alt="${product.name} Cover">
-                    </div>
-                    <div class="card-content">
-                        <div class="publisher-info">
-                            <img class="publisher-image" src="${product.publisherImageURL}" alt="Publisher Image">
-                            <div>
-                                <span class="publisher-name">${product.publisherName} ${verifiedIcon}</span>
-                                <p class="publish-date">${product.date}</p>
-                            </div>
-                        </div>
-                        <h2>${product.name} <span class="material-icons" style="font-size: 1.2em; vertical-align: middle; color: #36BA98;">${fileTypeIcon}</span> <span style="vertical-align: middle; color: #36BA98;">${fileTypeLabel}</span></h2>
-                        <div class="description-container">
-                            <p class="description-text" data-full-description="${product.description}">${truncatedDescription}</p>
-                            <span class="read-more" data-product-id="${product.id}" style="color: var(--primary-color); cursor: pointer;">Read More</span>
-                        </div>
-                        <p class="price">Price: $${product.price.toFixed(2)}</p>
-                        <div class="button-group">
-                            <a href="${buttonUrl}" target="_blank">
-                                <button>${buttonText}</button>
-                            </a>
-                            <a href="${product.topicURL}" target="_blank">
-                                <button class="secondary-btn">Visit Official Topic</button>
-                            </a>
-                        </div>
-                        <div class="heart-container">
-                            <span class="heart-icon material-icons" onclick="toggleHeart(this)" ${heartColor}>${heartIcon}</span>
-                            <span class="heart-count">${heartCount}</span>
-                        </div>
-                    </div>
+    <div class="product-card" data-type="${product.type}" data-product-id="${product.id}" style="background-color: var(--card-bg-${(index % 20) + 1});">
+        <div class="type-indicator ${product.type}" data-type="${product.type}">${product.type.toUpperCase()}</div>
+        <div class="extension-image">
+            <img src="${product.coverImageURL}" alt="${product.name} Cover">
+        </div>
+        <div class="card-content">
+            <div class="publisher-info">
+                <img class="publisher-image" src="${product.publisherImageURL}" alt="Publisher Image">
+                <div>
+                    <span class="publisher-name">${product.publisherName} ${verifiedIcon}</span>
+                    <p class="publish-date">${product.date}</p>
                 </div>
-            `;
+            </div>
+            <h2>${product.name} <span class="material-icons" style="font-size: 1.2em; vertical-align: middle; color: #36BA98;">${fileTypeIcon}</span> <span style="vertical-align: middle; color: #36BA98;">${fileTypeLabel}</span></h2>
+            <div class="description-container">
+                <p class="description-text" data-full-description="${product.description}">${truncatedDescription}</p>
+                <span class="read-more" data-product-id="${product.id}" style="color: var(--primary-color); cursor: pointer;">Read More</span>
+            </div>
+            <p class="price">Price: $${product.price.toFixed(2)}</p>
+            <div class="button-group">
+                <a href="${buttonUrl}" target="_blank">
+                    <button>${buttonText}</button>
+                </a>
+                <a href="${product.topicURL}" target="_blank">
+                    <button class="secondary-btn">Visit Official Topic</button>
+                </a>
+            </div>
+            <div class="heart-edit-container">
+                <div class="heart-container">
+                    <span class="heart-icon material-icons" onclick="toggleHeart(this)" ${heartColor}>${heartIcon}</span>
+                    <span class="heart-count">${heartCount}</span>
+                </div>
+                ${isOwner ? '<div class="edit-btn" onclick="openEditDialog(\'' + product.id + '\')"><span class="material-icons">edit</span></div>' : ''}
+            </div>
+        </div>
+    </div>
+`;
             productsContainer.innerHTML += productCard;
         });
 
@@ -1584,8 +1621,7 @@ input[type="text"] {
     });
 
     function showFullDescription(productId) {
-        const productCard = document.querySelector(`.product-card[data-product-id="${productId}"]`);
-        const fullDescription = productCard.querySelector('.description-text').dataset.fullDescription;
+        const productCard = document.querySelector(`.product-card[data-product-id="${productId}"]`);        const fullDescription = productCard.querySelector('.description-text').dataset.fullDescription;
         dialogTitle.textContent = productCard.querySelector('h2').textContent;
         dialogDescription.textContent = fullDescription;
         infoDialog.style.display = 'block';
