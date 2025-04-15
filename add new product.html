@@ -550,10 +550,10 @@
           topicURL: addProductForm.topicURL.value,
           publisherImageURL: addProductForm.publisherImageURL.value,
           publisherName: currentUser.displayName || currentUser.email.split('@')[0],
-          publisher_ID: currentUser.uid,
+          publisherId: currentUser.uid,
           isVerified: addProductForm.isVerified.checked,
           date: new Date().toISOString().slice(0, 10),
-          price: price 
+          price: price
         };
 
         const productURL = `${databaseURL}/${encodeURIComponent(productName)}.json?auth=${apiKey}`;
