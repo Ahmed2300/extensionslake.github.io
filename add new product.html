@@ -400,9 +400,19 @@
     const analytics = getAnalytics(app);
     const auth = getAuth(app);
 
+    // --- Consolidated DOMContentLoaded Listener ---
     document.addEventListener('DOMContentLoaded', () => {
+      // --- Login Check ---
+      if (localStorage.getItem('isLoggedIn') !== 'true') {
+          console.log('User not logged in, redirecting to index.html');
+          window.location.href = 'index.html';
+          return; // Stop further execution if not logged in
+      }
+
+      // --- Form Initialization (only if logged in) ---
+      console.log('User logged in, initializing add product form...');
       const databaseURL = "https://mypro-f9c43-default-rtdb.firebaseio.com/";
-      const apiKey = "AIzaSyBfDYW18AJSfb03Cm_lR-SCZpTbcnLH1Qk"; 
+      const apiKey = "AIzaSyBfDYW18AJSfb03Cm_lR-SCZpTbcnLH1Qk";
       const addProductForm = document.getElementById('addProductForm');
       const successMessage = document.getElementById('successMessage');
       const userCard = document.getElementById('userCard');
@@ -652,8 +662,11 @@
         }
       }
 
-      // initApp(); // Moved call inside login check
+      // Call initApp here, now that all functions/variables are defined
+      initApp();
     });
+    // --- End Consolidated Listener ---
+
   </script>
 </body>
 </html>
