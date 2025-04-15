@@ -1208,6 +1208,7 @@ input[type="text"] {
                 <li><a href="#">Products</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="contacts.html">Contact</a></li>
+                <li><a href="myproducts.html">My Products</a></li>
             </ul>
         </nav>
 
@@ -1441,8 +1442,14 @@ input[type="text"] {
 
     function displayProducts(productsToDisplay) {
         productsContainer.innerHTML = '';
+        const displayedProductIds = new Set();
 
         productsToDisplay.forEach((product, index) => {
+            if (displayedProductIds.has(product.id)) {
+                return; // Skip rendering duplicate product
+            }
+            displayedProductIds.add(product.id);
+
             let isOwner = currentUser && product.publisherId === currentUser.uid;
             if (!product.list_of_hearers) {
                 product.list_of_hearers = [];
