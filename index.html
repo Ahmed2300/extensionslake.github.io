@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Extensions Lake</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="icon" href="https://iili.io/JpYa2r7.png" type="image/png">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #f97316;
+            --background-light: #ffffff;
+            --text-light: #1f2937;
+            --surface-light: #ffffff;
+            --surface-dark: #1e293b;
+            --background-dark: #0f172a;
+            --text-dark: #f3f4f6;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--background-light);
+            color: var(--text-light);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+        }
+
+        body.dark-theme {
+            background-color: var(--background-dark);
+            color: var(--text-dark);
+        }
+
+        .floating-icons {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        .floating-icon {
+            position: absolute;
+            font-size: 20px;
+            color: var(--primary-color);
+            filter: blur(0.5px);
+            animation: floatIcon 20s linear infinite;
+        }
+
+        @keyframes floatIcon {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(10px, 15px) rotate(90deg);
+            }
+            50% {
+                transform: translate(-5px, -10px) rotate(180deg);
+            }
+            75% {
+                transform: translate(-15px, 5px) rotate(270deg);
+            }
+        }
+
+        .main-container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            min-height: 100vh;
+            padding: 2rem;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            min-height: 600px;
+            background: var(--surface-light);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: background-color var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        .dark-theme .container {
+            background: var(--surface-dark);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .content-section {
+            flex: 1;
+            padding: 3.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .image-section {
+            flex: 1;
+            background-image: url('https://iili.io/2OH7o8l.png');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .image-section::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, rgba(37, 99, 235, 0.2), rgba(249, 115, 22, 0.2));
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .logo-icon {
+            display: grid;
+            place-items: center;
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 12px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            font-size: 1.125rem;
+            color: #6b7280;
+            margin-bottom: 2.5rem;
+        }
+
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .google-signin-btn {
+            background-color: #ffffff;
+            color: #1f2937;
+            border: 1px solid #e5e7eb;
+            gap: 0.75rem;
+        }
+
+        .dark-theme .google-signin-btn {
+            background-color: var(--surface-dark);
+            color: var(--text-dark);
+            border-color: #374151;
+        }
+
+        .theme-switcher {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--surface-light);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color var(--transition-speed);
+        }
+
+        .dark-theme .theme-switcher {
+            background: var(--surface-dark);
+        }
+
+        .theme-switcher label {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .theme-toggle {
+            width: 44px;
+            height: 24px;
+            background: #e5e7eb;
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color var(--transition-speed);
+        }
+
+        .theme-toggle::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            top: 2px;
+            left: 2px;
+            transition: transform var(--transition-speed);
+        }
+
+        .theme-toggle.active {
+            background: var(--primary-color);
+        }
+
+        .theme-toggle.active::before {
+            transform: translateX(20px);
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                max-width: 90%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .image-section {
+                min-height: 200px;
+                order: -1;
+            }
+
+            .content-section {
+                padding: 2rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-container {
+                padding: 1rem;
+            }
+
+            .content-section {
+                padding: 1.5rem;
+            }
+
+            .theme-switcher {
+                top: 1rem;
+                right: 1rem;
+            }
+
+            :root {
+        --primary-color: #2563eb;
+        --secondary-color: #f97316;
+        --background-light: #ffffff;
+        --text-light: #1f2937;
+        --glass-background-light: rgba(255, 255, 255, 0.7);
+        --glass-border-light: rgba(255, 255, 255, 0.5);
+        --glass-background-dark: rgba(30, 41, 59, 0.7);
+        --glass-border-dark: rgba(255, 255, 255, 0.1);
+        --transition-speed: 0.3s;
+    }
+
+    body {
+        background: linear-gradient(135deg, #4f46e5, #0ea5e9, #6366f1);
+        color: var(--text-light);
+        font-family: 'Inter', sans-serif;
+        min-height: 100vh;
+        display: flex;
+        margin: 0;
+        padding: 0;
+    }
+
+    body.dark-theme {
+        background: linear-gradient(135deg, #1e1b4b, #0c4a6e, #1e1b4b);
+        color: var(--text-dark);
+    }
+
+    .container {
+        background: var(--glass-background-light);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--glass-border-light);
+        box-shadow: 
+            0 4px 6px -1px rgba(0, 0, 0, 0.1),
+            0 2px 4px -1px rgba(0, 0, 0, 0.06),
+            inset 0 0 80px rgba(255, 255, 255, 0.2);
+        border-radius: 24px;
+        overflow: hidden;
+        position: relative;
+        width: 100%;
+        max-width: 1200px;
+        margin: 2rem;
+        display: flex;
+    }
+
+    .dark-theme .container {
+        background: var(--glass-background-dark);
+        border-color: var(--glass-border-dark);
+        box-shadow: 
+            0 4px 6px -1px rgba(0, 0, 0, 0.2),
+            0 2px 4px -1px rgba(0, 0, 0, 0.1),
+            inset 0 0 80px rgba(0, 0, 0, 0.2);
+    }
+
+    .content-section {
+        flex: 1;
+        padding: 3.5rem;
+        position: relative;
+        z-index: 1;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+
+    .dark-theme .content-section {
+        background: rgba(0, 0, 0, 0.1);
+    }
+
+    .image-section {
+        flex: 1;
+        background-image: url('https://iili.io/2OH7o8l.png');
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+
+    .image-section::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(45deg, 
+            rgba(37, 99, 235, 0.3), 
+            rgba(249, 115, 22, 0.3)
+        );
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+    }
+
+    .btn {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-secondary {
+        background: var(--secondary-color);
+        border: none;
+    }
+
+    .google-signin-btn {
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    .dark-theme .google-signin-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .theme-switcher {
+        background: var(--glass-background-light);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--glass-border-light);
+    }
+
+    .dark-theme .theme-switcher {
+        background: var(--glass-background-dark);
+        border-color: var(--glass-border-dark);
+    }
+
+    .floating-icons {
+        z-index: -1;
+    }
+
+    .floating-icon {
+        color: rgba(255, 255, 255, 0.3);
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+
+    .dark-theme .floating-icon {
+        color: rgba(255, 255, 255, 0.15);
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+
+    /* Add subtle light reflection effect */
+    .container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -50%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.1),
+            transparent
+        );
+        transform: skewX(-15deg);
+        animation: reflectionAnim 8s infinite;
+    }
+
+    @keyframes reflectionAnim {
+        0% { transform: skewX(-15deg) translateX(-100%); }
+        50% { transform: skewX(-15deg) translateX(100%); }
+        100% { transform: skewX(-15deg) translateX(100%); }
+    }
+
+    /* Enhance text readability */
+    h1 {
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    p {
+        color: rgba(0, 0, 0, 0.7);
+    }
+
+    .dark-theme p {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* Add responsive glass morphism */
+    @media (max-width: 768px) {
+        .container {
+            margin: 1rem;
+            flex-direction: column;
+        }
+
+        .image-section {
+            min-height: 200px;
+        }
+
+        .content-section {
+            padding: 2rem;
+        }
+    }
+
+    /* Maintain glass effect on mobile */
+    @media (max-width: 480px) {
+        .container {
+            margin: 0.5rem;
+            border-radius: 16px;
+        }
+
+        .theme-switcher {
+            top: 0.5rem;
+            right: 0.5rem;
+        }
+    }
+        }
+
+        .container {
+            display: flex;
+            width: 90%; /* Adjusted width */
+            max-width: 1100px; /* Increased max-width */
+            border-radius: 15px;
+            background-color: rgba(255, 255, 255, 0.15); /* Light mode frosted glass */
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37); /* More pronounced shadow */
+            backdrop-filter: blur(10px); /* Frosted glass effect */
+            -webkit-backdrop-filter: blur(10px); /* For Safari */
+            border: 1px solid rgba(255, 255, 255, 0.18); /* Subtle border */
+            overflow: hidden;
+        }
+
+        .dark-theme .container {
+            background-color: rgba(33, 37, 43, 0.5); /* Dark mode frosted glass */
+        }
+
+        .content-section {
+            flex: 1;
+            padding: 40px; /* Increased padding */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-icons">
+        <!-- Technology Icons -->
+        <i class="material-icons floating-icon" style="top: 5%; left: 10%;">code</i>
+        <i class="material-icons floating-icon" style="top: 15%; left: 25%;">developer_mode</i>
+        <i class="material-icons floating-icon" style="top: 25%; left: 40%;">memory</i>
+        <i class="material-icons floating-icon" style="top: 35%; left: 15%;">devices</i>
+        <i class="material-icons floating-icon" style="top: 45%; left: 30%;">computer</i>
+        
+        <!-- Extension/Plugin Icons -->
+        <i class="material-icons floating-icon" style="top: 10%; left: 60%;">extension</i>
+        <i class="material-icons floating-icon" style="top: 20%; left: 75%;">apps</i>
+        <i class="material-icons floating-icon" style="top: 30%; left: 90%;">widgets</i>
+        <i class="material-icons floating-icon" style="top: 40%; left: 70%;">dashboard</i>
+        
+        <!-- Development Icons -->
+        <i class="material-icons floating-icon" style="top: 55%; left: 20%;">bug_report</i>
+        <i class="material-icons floating-icon" style="top: 65%; left: 40%;">build</i>
+        <i class="material-icons floating-icon" style="top: 75%; left: 10%;">settings</i>
+        <i class="material-icons floating-icon" style="top: 85%; left: 30%;">code_off</i>
+        
+        <!-- Cloud/Network Icons -->
+        <i class="material-icons floating-icon" style="top: 50%; left: 80%;">cloud</i>
+        <i class="material-icons floating-icon" style="top: 60%; left: 95%;">cloud_done</i>
+        <i class="material-icons floating-icon" style="top: 70%; left: 85%;">dns</i>
+        <i class="material-icons floating-icon" style="top: 80%; left: 70%;">storage</i>
+        
+        <!-- Additional Tech Icons -->
+        <i class="material-icons floating-icon" style="top: 15%; left: 45%;">api</i>
+        <i class="material-icons floating-icon" style="top: 35%; left: 55%;">terminal</i>
+        <i class="material-icons floating-icon" style="top: 55%; left: 65%;">schema</i>
+        <i class="material-icons floating-icon" style="top: 75%; left: 50%;">dataset</i>
+        
+        <!-- Security Icons -->
+        <i class="material-icons floating-icon" style="top: 25%; left: 5%;">security</i>
+        <i class="material-icons floating-icon" style="top: 45%; left: 85%;">lock</i>
+        <i class="material-icons floating-icon" style="top: 65%; left: 25%;">shield</i>
+        
+        <!-- Integration Icons -->
+        <i class="material-icons floating-icon" style="top: 5%; left: 80%;">integration_instructions</i>
+        <i class="material-icons floating-icon" style="top: 85%; left: 90%;">share</i>
+        <i class="material-icons floating-icon" style="top: 95%; left: 15%;">link</i>
+        
+        <!-- Analytics Icons -->
+        <i class="material-icons floating-icon" style="top: 30%; left: 35%;">analytics</i>
+        <i class="material-icons floating-icon" style="top: 50%; left: 45%;">monitoring</i>
+        <i class="material-icons floating-icon" style="top: 70%; left: 60%;">assessment</i>
+        
+        <!-- Additional Features -->
+        <i class="material-icons floating-icon" style="top: 40%; left: 5%;">schedule</i>
+        <i class="material-icons floating-icon" style="top: 60%; left: 15%;">update</i>
+        <i class="material-icons floating-icon" style="top: 80%; left: 40%;">sync</i>
+        <i class="material-icons floating-icon" style="top: 90%; left: 75%;">cached</i>
+    </div>
+
+    <div class="theme-switcher">
+        <label for="themeToggle">Dark Mode</label>
+        <div class="theme-toggle" id="themeToggle"></div>
+    </div>
+
+    <main class="main-container">
+        <div class="container">
+            <div class="content-section">
+                <div class="logo">
+                    <span class="logo-icon">
+                        <i class="material-icons">extension</i>
+                    </span>
+                    Extensions Lake
+                </div>
+                <h1>Welcome Back</h1>
+                <p>Pick up right where you left off</p>
+                <div class="buttons-container">
+                    <a href="home.html" class="btn btn-secondary">Continue Anonymously</a>
+                    <button id="googleSignInButton" class="btn google-signin-btn">
+                        <img src="https://iili.io/dKDr0W7.png" alt="Google Logo" width="20" height="20">
+                        <span>Sign In with Google</span>
+                    </button>
+                </div>
+            </div>
+            <div class="image-section"></div>
+        </div>
+    </main>
+
+    <script type="module">
+        // Keep your existing Firebase configuration and authentication logic
+
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-theme');
+            themeToggle.classList.toggle('active');
+            
+            localStorage.setItem('theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
+        });
+
+        // Initialize theme from localStorage
+        if (localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-theme');
+            themeToggle.classList.add('active');
+        }
+
+        // --- Firebase and Auth Logic ---
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCgy_AToJkB7iIkAf8A9yKYLGRcn6q3DGc",
+            authDomain: "mypro-f9c43.firebaseapp.com",
+            databaseURL: "https://mypro-f9c43-default-rtdb.firebaseio.com",
+            projectId: "mypro-f9c43",
+            storageBucket: "mypro-f9c43.appspot.com",
+            messagingSenderId: "457342163754",
+            appId: "1:457342163754:web:9f428caeea9ad5c5d11c53",
+            measurementId: "G-YS7GD676WC"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const provider = new firebase.auth.GoogleAuthProvider();
+
+        // Check login status on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                console.log('User already logged in, redirecting to home.html');
+                window.location.href = 'home.html';
+            }
+        });
+
+        // Google Sign-In Button Logic
+        const googleSignInButton = document.getElementById('googleSignInButton');
+        if (googleSignInButton) {
+            googleSignInButton.addEventListener('click', () => {
+                auth.signInWithPopup(provider)
+                    .then((result) => {
+                        // This gives you a Google Access Token. You can use it to access the Google API.
+                        const credential = result.credential;
+                        const token = credential.accessToken;
+                        // The signed-in user info.
+                        const user = result.user;
+                        console.log('Google Sign-In successful:', user);
+
+                        // Store login state in localStorage
+                        localStorage.setItem('isLoggedIn', 'true');
+                        // Optionally store user info (be mindful of sensitive data)
+                        localStorage.setItem('userDisplayName', user.displayName);
+                        localStorage.setItem('userEmail', user.email);
+                        localStorage.setItem('userPhotoURL', user.photoURL);
+
+
+                        // Redirect to home page
+                        window.location.href = 'home.html';
+
+                    }).catch((error) => {
+                        // Handle Errors here.
+                        const errorCode = error.code;
+                        const errorMessage = error.message;
+                        // The email of the user's account used.
+                        const email = error.email;
+                        // The firebase.auth.AuthCredential type that was used.
+                        const credential = error.credential;
+                        console.error('Google Sign-In Error:', errorCode, errorMessage);
+                        alert(`Sign-in failed: ${errorMessage}`);
+                    });
+            });
+        } else {
+            console.error('Google Sign-In button not found!');
+        }
+
+    </script>
+</body>
+</html>
